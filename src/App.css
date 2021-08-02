@@ -36,3 +36,32 @@
     transform: rotate(360deg);
   }
 }
+
+.rounded-10 {
+  border-radius: 10px !important;
+}
+
+.rounded-25 {
+  border-radius: 25px !important;
+}
+
+.white-bg {
+  min-height: 100vh;
+  background: url(assets/images/white-bg.png) no-repeat fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.max-w-content {
+  max-width: max-content;
+}
+
+.dropdown-toggle::after {
+  display: none !important;
+}
+
+.cursor-pointer:hover {
+  cursor: pointer;
+}
