@@ -1,0 +1,100 @@
+.blue-bg2 {
+    background-image: url('./assets/images/blue-bg.png');
+    min-height: 100vh;
+    /* Center and scale the image nicely */
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.blue-bg{
+    background-image: url('./assets/images/blue-bg.png');
+    background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        min-height:100vh;
+}
+.header{
+    color:#02353C;
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: bolder;
+    /*line-height: 56px;*/
+    align-items: center;
+    text-align: center;
+}
+.header-block{
+    padding-bottom: 20px;
+}
+
+.form{
+    padding-top: 3rem;
+}
+
+.myform {
+    position: relative;
+    display: flex;
+    /*padding: 1rem;*/
+    background-color: #fff;
+    background-clip: padding-box;
+    border-radius: 1.0rem;
+    outline: 0;
+}
+
+p {
+    font-size: smaller;
+}
+#caption{
+    color: grey;
+}
+
+.upperCard{
+    height: 50%;
+    background-color: #02353C;
+}
+
+.lowerCard{
+    height: 50%;
+    background-image: url('/Users/max_sp/Documents/ku-route_frontend/src/assets/images/blue-bg.png');
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 0 0 1rem 1rem;
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) {  
+    .lowerCard{
+        border-radius: 0 0 1rem 1rem;
+    }
+
+    .header-block{
+        padding-bottom: 4vh;
+    }
+}
+ 
+/* Medium devices (tablets, 768px and up) The navbar toggle appears at this breakpoint */
+@media (min-width: 768px) {  
+}
+ 
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) { 
+    .upperCard{
+        border-radius: 0 1rem 0 0;
+    }
+    .lowerCard{
+        border-radius: 0 0 1rem 0;
+    }
+}
+ 
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {  
+    .upperCard{
+        border-radius: 0 1rem 0 0;
+    }
+    .lowerCard{
+        border-radius: 0 0 1rem 0;
+    }
+}

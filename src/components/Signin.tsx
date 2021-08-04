@@ -1,22 +1,27 @@
 import '../Sign.css';
-import { useEffect, useState } from "react";
-import { Container,Form, Jumbotron, Image} from 'react-bootstrap'
+import React from "react";
+import { Container,Form, Jumbotron} from 'react-bootstrap'
 import logo_long from '../assets/icons/logo-long.png'
 import KU_ROUTE from '../assets/icons/KU-ROUTE.png'
 
-const SignPage = () => {
-    const [Name, setName] = useState<string>('');
-    const [Email, setEmail] = useState<string>('');
-    const [Password, setPassword] = useState<string>('');
-
-    const onChangeName = (e:React.ChangeEvent<HTMLInputElement>) => {
-        setName(e.target.value);
+type userState ={
+    Email: string,
+    Password: string,
+    Search: string
+}
+export default class Signin extends React.Component<userState> {
+    state: userState = {
+        Email: '',
+        Password: '',
+        Search: ''
+    };
+    onSubmit = () => {
+        console.log(this.state);
     }
-
-    const onSubmit = () =>{
-        
+    onSearch = () => {
+        console.log(this.state);
     }
-    
+    render() {
     return(
         <Jumbotron className='blue-bg jumbotron jumbotron-fluid mb-0'>
             <Container className='text-center header-block'>
@@ -27,28 +32,16 @@ const SignPage = () => {
             <Container className='shadow rounded mx-auto' style={{maxWidth:'60vw', minWidth:'300px',backgroundColor:''}}>
                 <div className='row myform'>
                     <Container className='col-lg-6 px-4 px-sm-5 pt-5' style={{paddingTop:"4vh", paddingBottom:"2.5vh"}}>
-                        <h2 className='my-3'>เข้าสู่ระบบ</h2>
+                        <h2>ลงทะเบียนเข้าใช้งาน</h2>
+                        <p className='mt-3 mb-2'>KU-ROUTE คือ ​เว็บสำหรับแลกเปลี่ยนข่าวสารต่าง ๆ ภายในมหาวิทยาลัยเกษตรศาสตร์</p>
                         <Form>
-                            <div className="mb-2">
-                            <label className='mb-0' style={{fontWeight:'bold'}}>Name</label>
-                            <input
-                                type="text"
-                                required
-                                className="form-control"
-                                value={Name}
-                                onChange={onChangeName} // try coding style_1
-                                placeholder="Enter name"
-                            />
-                            </div> 
-
                             <div className="mb-2">
                             <label className='mb-0' style={{fontWeight:'bold'}}>Email</label>
                             <input
                                 type="text"
                                 required
                                 className="form-control"
-                                value={Email}
-                                onChange={(e) => setEmail(e.target.value)} // try coding style_2 (shorter)
+                                onChange={(e) => this.setState(this.state.Email = e.target.value)} // try coding style_2 (shorter)
                                 placeholder="Enter email"
                             />
                             </div>
@@ -59,27 +52,28 @@ const SignPage = () => {
                                 type="password"
                                 required
                                 className="form-control"
-                                value={Password}
-                                onChange={(e) => setPassword(e.target.value)} // try coding style_2 (shorter)
+                                onChange={(e) => this.setState(this.state.Password = e.target.value)} // try coding style_2 (shorter)
                                 placeholder="Enter password"
                             />
                             </div>
-                            <p className='pt-1 my-1' id='caption'>Use 8 or more characters with a mix of letters, numbers & symbols.</p>
                             <div className='mb-2'>
                                 <button
                                     type="submit"
                                     className=" btn btn-block btn-primary"
                                     style={{backgroundColor:'#3FD0C9'}}
-                                    onClick={onSubmit}
+                                    onClick={this.onSubmit}
                                 >
-                                    Get Started!
+                                    Log in
                                 </button>
                                 </div>
                             <div className="mb-4">
                             <p id='caption'>
-                                Already signed up? {""}
-                                <a href="/signin" id="signin">
-                                 Log in</a>
+                                <a href = 'http://localhost:3000'>Forgot password?</a>
+                            </p>
+                            <p id='caption'>
+                                New to KU-ROUTE? {""}
+                                <a href="/" id="signin">
+                                 Sign up</a>
                             </p>
                             </div>
                         </Form>
@@ -98,8 +92,7 @@ const SignPage = () => {
                                     <input
                                         type="text"
                                         className="form-control"
-                                        /*value={this.state.email}
-                                        onChange={this.onChangeEmail}*/
+                                        onChange={(e) => this.setState(this.state.Search = e.target.value)}
                                         placeholder="เรื่องที่อยากรู้..."
                                     />
                                     </div>
@@ -107,6 +100,7 @@ const SignPage = () => {
                                     type="submit"
                                     className="btn btn-primary btn-sm"
                                     style={{backgroundColor:'#02353C'}}
+                                    onClick={this.onSearch}
                                     >
                                     search
                                 </button>
@@ -118,6 +112,5 @@ const SignPage = () => {
             </Container>
         </Jumbotron>
     )
+    }
 }
-
-export default SignPage;
