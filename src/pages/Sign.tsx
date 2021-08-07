@@ -1,123 +1,89 @@
-import '../Sign.css';
-import { useEffect, useState } from "react";
-import { Container,Form, Jumbotron, Image} from 'react-bootstrap'
+import React from "react";
+import Signup from "components/Signup";
+import Signin from "components/Signin";
+import { useState } from "react";
+import { Jumbotron, Container, Form } from "react-bootstrap";
 import logo_long from '../assets/icons/logo-long.png'
 import KU_ROUTE from '../assets/icons/KU-ROUTE.png'
 
 const SignPage = () => {
-    const [Name, setName] = useState<string>('');
-    const [Email, setEmail] = useState<string>('');
-    const [Password, setPassword] = useState<string>('');
+  const [Name, setName] = useState<string>('');
+  const [Email, setEmail] = useState<string>('');
+  const [Password, setPassword] = useState<string>('');
+  const [Search, setSearch] = useState<string>('');
 
-    const onChangeName = (e:React.ChangeEvent<HTMLInputElement>) => {
-        setName(e.target.value);
-    }
+  const page = window.location.href.split('/').slice(-1)[0];
 
-    const onSubmit = () =>{
-        
-    }
-    
-    return(
-        <Jumbotron className='blue-bg jumbotron jumbotron-fluid mb-0'>
-            <Container className='text-center header-block'>
-                <h3 className='header' style={{fontSize:'40px'}}>SIGN UP</h3>
-                <h5 style={{color:'#02353C'}}>ลงทะเบียนเข้าใช้งานเพื่อเริ่มต้นใช้งานเว็บไซต์</h5>
-            </Container>
-            
-            <Container className='shadow rounded mx-auto' style={{maxWidth:'60vw', minWidth:'300px',backgroundColor:''}}>
-                <div className='row myform'>
-                    <Container className='col-lg-6 px-4 px-sm-5 pt-5' style={{paddingTop:"4vh", paddingBottom:"2.5vh"}}>
-                        <h2 className='my-3'>เข้าสู่ระบบ</h2>
-                        <Form>
-                            <div className="mb-2">
-                            <label className='mb-0' style={{fontWeight:'bold'}}>Name</label>
-                            <input
-                                type="text"
-                                required
-                                className="form-control"
-                                value={Name}
-                                onChange={onChangeName} // try coding style_1
-                                placeholder="Enter name"
-                            />
-                            </div> 
+  const onChangeName = (e: any) => { setName(e.target.value) }
+  const onChangeEmail = (e: any) => { setEmail(e.target.value) }
+  const onChangePassword = (e: any) => { setPassword(e.target.value) }
+  const onChangeSearch = (e: any) => { setSearch(e.target.value) }
+  const onSubmit = () => {
+    console.log(Name, Email, Password);
+  }
+  return (
+    <Jumbotron className='blue-bg jumbotron jumbotron-fluid mb-0'>
+      <Container className='text-center header-block'>
+        {console.log(page)}
+        {page === 'signin' ? (
+          <>
+            <h3 className='header' style={{ fontSize: '40px' }}>SIGN IN</h3>
+            <h5 style={{ color: '#02353C' }}>เข้าสู่ระบบเพื่อเข้าใช้งานเว็บไซต์</h5>
+          </>
+        ) : (
+          <>
+            <h3 className='header' style={{ fontSize: '40px' }}>SIGN UP</h3>
+            <h5 style={{ color: '#02353C' }}>ลงทะเบียนเข้าใช้งานเพื่อเริ่มต้นใช้งานเว็บไซต์</h5>
+          </>
+        )}
+      </Container>
 
-                            <div className="mb-2">
-                            <label className='mb-0' style={{fontWeight:'bold'}}>Email</label>
-                            <input
-                                type="text"
-                                required
-                                className="form-control"
-                                value={Email}
-                                onChange={(e) => setEmail(e.target.value)} // try coding style_2 (shorter)
-                                placeholder="Enter email"
-                            />
-                            </div>
+      <Container className='shadow rounded mx-auto' style={{ maxWidth: '60vw', minWidth: '300px', backgroundColor: '' }}>
+        <div className='row myform'>
+          {page === 'signin' ? (<Signin
+            setEmail={onChangeEmail}
+            setPassword={onChangePassword}
+            setSearch={onChangeSearch}
+            onSubmit={onSubmit}
+          />) : (<Signup
+            setName={onChangeName}
+            setEmail={onChangeEmail}
+            setPassword={onChangePassword}
+            setSearch={onChangeSearch}
+            onSubmit={onSubmit}
+          />)}
+          <Container className='col-lg-6 px-0' style={{ minHeight: '500px' }}>
+            <div className='upperCard d-flex align-items-center'>
+              <img src={logo_long} className='mx-auto pl-3' width='284px' height='54px' alt='logolong' />
+            </div>
 
-                            <div className="mb-2">
-                            <label className='mb-0' style={{fontWeight:'bold'}}>Password</label>
-                            <input
-                                type="password"
-                                required
-                                className="form-control"
-                                value={Password}
-                                onChange={(e) => setPassword(e.target.value)} // try coding style_2 (shorter)
-                                placeholder="Enter password"
-                            />
-                            </div>
-                            <p className='pt-1 my-1' id='caption'>Use 8 or more characters with a mix of letters, numbers & symbols.</p>
-                            <div className='mb-2'>
-                                <button
-                                    type="submit"
-                                    className=" btn btn-block btn-primary"
-                                    style={{backgroundColor:'#3FD0C9'}}
-                                    onClick={onSubmit}
-                                >
-                                    Get Started!
-                                </button>
-                                </div>
-                            <div className="mb-4">
-                            <p id='caption'>
-                                Already signed up? {""}
-                                <a href="/signin" id="signin">
-                                 Log in</a>
-                            </p>
-                            </div>
-                        </Form>
-                    </Container>
-                    <Container className='col-lg-6 px-0' style={{minHeight:'500px'}}>
-                        <div className='upperCard d-flex align-items-center'>
-                            <img src={logo_long} className='mx-auto pl-3' width='284px' height='54px' alt='logolong'/>
-                        </div>
-                        {/*<div className='lowerCard text-center pt-5 pb-4 pt-sm-5 py-sm-3 px-3 px-sm-5'>*/}
-                        <div className='lowerCard d-flex align-items-center'>
-                            <Container className='px-5 text-center'>
-                                <img src={KU_ROUTE} className='mx-auto d-block mb-2' width='130px' height='20px' alt='KU_ROUTE'/>
-                                <p className='mb-2' style={{color:'#137D54', fontWeight:'bolder'}}> ค้นหาชื่อวิชา / รหัสวิชาที่อยากรู้</p>
-                                <Form>
-                                    <div className="form-group shadow">
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        /*value={this.state.email}
-                                        onChange={this.onChangeEmail}*/
-                                        placeholder="เรื่องที่อยากรู้..."
-                                    />
-                                    </div>
-                                    <button
-                                    type="submit"
-                                    className="btn btn-primary btn-sm"
-                                    style={{backgroundColor:'#02353C'}}
-                                    >
-                                    search
-                                </button>
-                                </Form>
-                            </Container>
-                        </div>
-                    </Container>
-                </div>
-            </Container>
-        </Jumbotron>
-    )
+            <div className='lowerCard d-flex align-items-center'>
+              <Container className='px-5 text-center'>
+                <img src={KU_ROUTE} className='mx-auto d-block mb-2' width='130px' height='20px' alt='KU_ROUTE' />
+                <p className='mb-2' style={{ color: '#137D54', fontWeight: 'bolder' }}> ค้นหาชื่อวิชา / รหัสวิชาที่อยากรู้</p>
+                <Form>
+                  <div className="form-group shadow">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="เรื่องที่อยากรู้..."
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="btn btn-primary btn-sm"
+                    style={{ backgroundColor: '#02353C' }}
+                  >
+                    search
+                  </button>
+                </Form>
+              </Container>
+            </div>
+          </Container>
+        </div>
+      </Container>
+    </Jumbotron>
+  )
 }
 
 export default SignPage;
