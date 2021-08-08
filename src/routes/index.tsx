@@ -8,12 +8,12 @@ import PostPage from 'pages/Post';
 import CreatePostPage from 'pages/CreatePost';
 import PublicRoute from './PublicRoute';
 import PrivateRoute from './PrivateRoute';
-import Navbar from '../components/Navbar'
+import NavBar from '../components/Navbar'
 
 const Routes: React.FC = (): JSX.Element => {
   return (
     <Router>
-      <Navbar />
+      <NavBar/>
       <Switch>
         <PublicRoute restricted={false} exact path={['/', '/home']} component={HomePage} />
         <PrivateRoute exact path="/post" component={PostPage} />

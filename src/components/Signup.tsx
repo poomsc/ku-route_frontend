@@ -53,7 +53,7 @@ const Signup = ({ setName, setEmail, setPassword, setSearch, onSubmit }: userSta
           <button
             type="submit"
             className=" btn btn-block btn-primary"
-            style={{ backgroundColor: '#3FD0C9' }}
+            style={{ backgroundColor: '#3FD0C9' , borderWidth:'0px'}}
             onClick={onSubmit}
           >
             Get Started!

@@ -64,6 +64,7 @@ p {
     border-radius: 0 0 1rem 1rem;
 }
 
+
 /* Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) {  
     .lowerCard{

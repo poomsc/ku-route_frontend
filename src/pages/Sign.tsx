@@ -72,7 +72,7 @@ const SignPage = () => {
                   <button
                     type="submit"
                     className="btn btn-primary btn-sm"
-                    style={{ backgroundColor: '#02353C' }}
+                    style={{ backgroundColor: '#02353C' , borderWidth:'0px'}}
                   >
                     search
                   </button>

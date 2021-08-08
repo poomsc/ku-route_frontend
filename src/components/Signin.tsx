@@ -41,7 +41,7 @@ const Signin = ({ setEmail, setPassword, setSearch, onSubmit }: userState) => {
           <button
             type="submit"
             className=" btn btn-block btn-primary"
-            style={{ backgroundColor: '#3FD0C9' }}
+            style={{ backgroundColor: '#3FD0C9' , borderWidth:'0px'}}
             onClick={onSubmit}
           >
             Log in
