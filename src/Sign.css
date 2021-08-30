@@ -63,7 +63,7 @@ p {
 
 .lowerCard{
     height: 50%;
-    background-image: url('/Users/max_sp/Documents/ku-route_frontend/src/assets/images/blue-bg.png');
+    background-image: url('./assets/images/blue-bg.png');
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
