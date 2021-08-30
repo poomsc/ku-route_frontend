@@ -3,8 +3,8 @@ import Signup from "components/Signup";
 import Signin from "components/Signin";
 import { useState } from "react";
 import { Jumbotron, Container, Form } from "react-bootstrap";
-import logo_long from '../assets/icons/logo-long.png'
-import KU_ROUTE from '../assets/icons/KU-ROUTE.png'
+import logo_short_light from '../assets/icons/logo-short-light.png'
+import KU_ROUTE_light from '../assets/icons/KU-ROUTE-light.png'
 
 const SignPage = () => {
   const [Name, setName] = useState<string>('');
@@ -53,6 +53,15 @@ const SignPage = () => {
             onSubmit={onSubmit}
           />)}
           <Container className='col-lg-6 px-0' style={{ minHeight: '500px' }}>
+            <div className='rightCard text-center pt-5 justify-content-center'>
+              <div className='d-block pt-5'>
+                <img src={logo_short_light} className='mx-auto pt-4 pb-3' width='170px' height='auto' alt='logolong' />
+              </div>
+              <div className='d-block'>
+                <img src={KU_ROUTE_light} className='mx-auto ' width='170px' height='auto' alt='logolong'/>
+              </div>
+            </div>
+            {/*
             <div className='upperCard d-flex align-items-center'>
               <img src={logo_long} className='mx-auto pl-3' width='284px' height='54px' alt='logolong' />
             </div>
@@ -79,6 +88,7 @@ const SignPage = () => {
                 </Form>
               </Container>
             </div>
+            */}
           </Container>
         </div>
       </Container>

@@ -1,6 +1,7 @@
 import '../Sign.css';
 import React from "react";
 import { Container, Form } from 'react-bootstrap'
+import google from '../assets/icons/google.png'
 
 type userState = {
   setName: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -16,16 +17,21 @@ const Signup = ({ setName, setEmail, setPassword, setSearch, onSubmit }: userSta
       <h2>ลงทะเบียนเข้าใช้งาน</h2>
       <p className='mt-3 mb-2'>KU-ROUTE คือ ​เว็บสำหรับแลกเปลี่ยนข่าวสารต่าง ๆ ภายในมหาวิทยาลัยเกษตรศาสตร์</p>
       <Form>
-        <div className="mb-2">
-          <label className='mb-0' style={{ fontWeight: 'bold' }}>Name</label>
-          <input
-            type="text"
-            required
-            className="form-control"
-            onChange={setName} // try coding style_1
-            placeholder="Enter name"
-          />
+        <div className='mt-3 mb-2 gg-shadow'>
+          <button
+            type="submit"
+            className=" btn btn-block btn-primary "
+            style={{ backgroundColor: '#4385F5', borderWidth: '0px', paddingLeft: '2px', paddingTop: '2px', paddingBottom: '2px' }}
+            onClick={onSubmit}
+          >
+            <div className=''>
+              <img src={google} className='rounded d-flex float-left p-1' width='32px' height='auto' alt='googleicon' style={{ backgroundColor: 'white' }} />
+              <div className='p-1'>Sign up with Google</div>
+            </div>
+          </button>
         </div>
+
+        <hr />
 
         <div className="mb-2">
           <label className='mb-0' style={{ fontWeight: 'bold' }}>Email</label>
@@ -53,10 +59,10 @@ const Signup = ({ setName, setEmail, setPassword, setSearch, onSubmit }: userSta
           <button
             type="submit"
             className=" btn btn-block btn-primary"
-            style={{ backgroundColor: '#3FD0C9' , borderWidth:'0px'}}
+            style={{ backgroundColor: '#3FD0C9', borderWidth: '0px' }}
             onClick={onSubmit}
           >
-            Get Started!
+            Sign up with email
           </button>
         </div>
         <div className="mb-4">
