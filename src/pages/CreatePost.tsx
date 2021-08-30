@@ -1,94 +1,109 @@
-import React, { useState } from "react";
+import React, { useState } from 'react'
 import {
   Dropdown,
   DropdownButton,
   FormControl,
   InputGroup,
-} from "react-bootstrap";
-import { removeElementFromArray } from "utils";
-import { BsFillCaretDownFill } from "react-icons/bs";
-import { GoFile } from "react-icons/go";
+} from 'react-bootstrap'
+import { removeElementFromArray } from 'utils'
+import { BsFillCaretDownFill } from 'react-icons/bs'
+import { GoFile } from 'react-icons/go'
 import facebook from 'assets/icons/facebook.png'
 import instagram from 'assets/icons/instagram.png'
 import mail from 'assets/icons/mail.png'
 import phone from 'assets/icons/phone.png'
 
-const topics = ["รีวิวรายวิชา", "คลังความรู้", "เรื่องทั่วไป"];
+const topics = ['รีวิวรายวิชา', 'คลังความรู้', 'เรื่องทั่วไป']
+const subjects = ['02212641-55 สเปกโทรสโกปีอินฟราเรดใกล้ขั้นสูง', '02743552-60 นิติการบัญชีและการเงิน', '01204111-55 คอมพิวเตอร์และการโปรแกรม']
 const colors = [
-  "#5697C4",
-  "#E0598B",
-  "#E278A3",
-  "#9163B6",
-  "#993767",
-  "#A34974",
-  "#BE5168",
-  "#C84A52",
-  "#E16452",
-  "#F19670",
-  "#E9D78E",
-  "#E4BE7F",
-  "#74C493",
-];
-const mockTags = ["ทั่วไป", "รีวิวรายวิชา", "คลังความรู้", "อื่นๆ"];
+  '#5697C4',
+  '#E0598B',
+  '#E278A3',
+  '#9163B6',
+  '#993767',
+  '#A34974',
+  '#BE5168',
+  '#C84A52',
+  '#E16452',
+  '#F19670',
+  '#E9D78E',
+  '#E4BE7F',
+  '#74C493',
+]
+const mockTags = ['ทั่วไป', 'รีวิวรายวิชา', 'คลังความรู้', 'อื่นๆ']
 const contractChannels = [
-  { Icon: mail, Placeholder: "hello@kuroute.com" },
-  { Icon: phone, Placeholder: "09-234-5678" },
-  { Icon: facebook, Placeholder: "https://www.facebook.com/kuroute" },
-  { Icon: instagram, Placeholder: "https://www.instagram.com/kuroute" },
-];
+  { Icon: mail, Placeholder: 'hello@kuroute.com' },
+  { Icon: phone, Placeholder: '09-234-5678' },
+  { Icon: facebook, Placeholder: 'https://www.facebook.com/kuroute' },
+  { Icon: instagram, Placeholder: 'https://www.instagram.com/kuroute' },
+]
 const CreatePostPage = () => {
-  const [topicSelected, setTopicSelected] = useState(topics[0]);
-  const [title, setTitle] = useState<string>();
-  const [description, setDescription] = useState<string>();
-  const [tagsSelected, setTagSelected] = useState<string[]>([]);
-  const [allTag, setAllTag] = useState<string[]>(mockTags);
-  const [fileUploaded, setFileUploaded] = useState<File[]>();
-  const maxColor = colors.length;
+  const [topicSelected, setTopicSelected] = useState(topics[0])
+  const [title, setTitle] = useState<string>()
+  const [description, setDescription] = useState<string>()
+  const [tagsSelected, setTagSelected] = useState<string[]>([])
+  const [allTag, setAllTag] = useState<string[]>(mockTags)
+  const [fileUploaded, setFileUploaded] = useState<File[]>()
+  const [holdOnDropdown, setHoldOnDropdown] = useState(false)
+  const maxColor = colors.length
 
-  const handleOnTagChange = (value: string, event: "add" | "remove") => {
-    if (event === "add") {
-      setTagSelected([...tagsSelected, value]);
-      setAllTag(removeElementFromArray(allTag, value));
+  const handleOnTagChange = (value: string, event: 'add' | 'remove') => {
+    if (event === 'add') {
+      setTagSelected([...tagsSelected, value])
+      setAllTag(removeElementFromArray(allTag, value))
     } else {
-      setTagSelected(removeElementFromArray(tagsSelected, value));
-      setAllTag([...allTag, value]);
+      setTagSelected(removeElementFromArray(tagsSelected, value))
+      setAllTag([...allTag, value])
     }
-  };
+  }
+
+  const handleOnSelectSubject = (value: string) => {
+    setHoldOnDropdown(false)
+    setTopicSelected(value)
+  }
 
   const handleOnBrowsFile = (event: any) => {
-    console.log(Array.from(event.target.files));
+    console.log(Array.from(event.target.files))
 
-    setFileUploaded(Array.from(event.target.files));
-  };
+    setFileUploaded(Array.from(event.target.files))
+  }
+  
   return (
     <div className="white-bg py-5">
       <h2 className="font-weight-bold text-center mb-5">สร้างโพสต์</h2>
 
+      
       <div
         className="bg-secondary p-5 rounded-25 shadow mx-auto"
-        style={{ maxWidth: "70rem" }}
+        style={{ maxWidth: '70rem' }}
       >
         {/* <div className="bg-secondary p-4" style={{borderRadius: '20px'}}> */}
         <p className="font-weight-bold">หัวเรื่อง</p>
         <InputGroup className="rounded-10 bg-white mb-4">
-          <DropdownButton
+          {/* <DropdownButton
             title={
-              <>
+              <div onClick={() => setHoldOnDropdown(true)}>
                 {topicSelected} <BsFillCaretDownFill />
-              </>
+              </div>
             }
             variant="outline-primary"
             className="rounded-10"
+            show={holdOnDropdown}
           >
+            <Dropdown.Item
+            // onSelect={() => setTopicSelected(topic)}
+            >
+              <input />
+            </Dropdown.Item>
             {topics.map((topic) => (
               <Dropdown.Item
-                onSelect={() => setTopicSelected(topic)}
+                onSelect={() => handleOnSelectSubject(topic)}
                 key={topic}
               >
                 {topic}
               </Dropdown.Item>
             ))}
-          </DropdownButton>
+          </DropdownButton> */}
           <FormControl
             aria-label="title"
             className="rounded-10 border-0"
@@ -98,7 +113,7 @@ const CreatePostPage = () => {
           />
           <div
             style={{
-              position: "absolute",
+              position: 'absolute',
               top: -25,
               right: 0,
               fontSize: 14,
@@ -121,7 +136,7 @@ const CreatePostPage = () => {
           />
           <div
             style={{
-              position: "absolute",
+              position: 'absolute',
               top: -25,
               right: 0,
               fontSize: 14,
@@ -132,7 +147,7 @@ const CreatePostPage = () => {
           </div>
         </InputGroup>
 
-        {topicSelected === "คลังความรู้" && (
+        {topicSelected === 'คลังความรู้' && (
           <>
             <p className="font-weight-bold">อัพโหลดความรู้</p>
             <div className="input-group mb-4">
@@ -149,17 +164,17 @@ const CreatePostPage = () => {
 
             {fileUploaded &&
               fileUploaded.map((file) =>
-                file.type.includes("image") ? (
+                file.type.includes('image') ? (
                   <img
                     alt="preview"
                     src={URL.createObjectURL(file)}
-                    style={{ maxWidth: "200px", maxHeight: "150px" }}
+                    style={{ maxWidth: '200px', maxHeight: '150px' }}
                     className="mx-2"
                   />
                 ) : (
                   <GoFile
                     className="w-100 h-100"
-                    style={{ maxWidth: "120px", maxHeight: "120px" }}
+                    style={{ maxWidth: '120px', maxHeight: '120px' }}
                   />
                 )
               )}
@@ -172,7 +187,7 @@ const CreatePostPage = () => {
             <div
               className="max-w-content px-2 rounded cursor-pointer align-self-center px-2 py-1 mr-2"
               key={tag}
-              onClick={() => handleOnTagChange(tag, "remove")}
+              onClick={() => handleOnTagChange(tag, 'remove')}
               style={{
                 backgroundColor: colors[maxColor - (idx % maxColor) - 1],
               }}
@@ -194,7 +209,7 @@ const CreatePostPage = () => {
                   eventKey={idx}
                   style={{ backgroundColor: colors[idx % maxColor] }}
                   className="rounded my-2"
-                  onClick={() => handleOnTagChange(tag, "add")}
+                  onClick={() => handleOnTagChange(tag, 'add')}
                   key={tag}
                 >
                   {tag}
@@ -207,34 +222,33 @@ const CreatePostPage = () => {
 
       <div
         className="bg-secondary p-5 rounded-25 shadow mx-auto"
-        style={{ maxWidth: "70rem", marginTop: "5rem" }}
+        style={{ maxWidth: '70rem', marginTop: '5rem' }}
       >
         <h5 className="font-weight-bold mb-5">ช่องทางติดต่อ (ไม่บังคับ)</h5>
-          {contractChannels.map(({Icon, Placeholder}) =>
-        <InputGroup className="mb-3" style={{height:'50px'}}>
-          <>
-          <InputGroup.Text
-            className="border-0 h-100"
-            style={{
-              borderRadius: "10px 0 0 10px",
-              backgroundColor: "#E1E1E1",
-              width: '70px'
-            }}
-          >
-            <img src={Icon} alt="icon" className="h-75"/>
-          </InputGroup.Text>
-          <FormControl
-            className="border-0 h-100"
-            placeholder={Placeholder}
-            aria-label={Placeholder}
-          />
-          </>
-
-        </InputGroup>
-          )}
+        {contractChannels.map(({ Icon, Placeholder }) => (
+          <InputGroup className="mb-3" style={{ height: '50px' }}>
+            <>
+              <InputGroup.Text
+                className="border-0 h-100"
+                style={{
+                  borderRadius: '10px 0 0 10px',
+                  backgroundColor: '#E1E1E1',
+                  width: '70px',
+                }}
+              >
+                <img src={Icon} alt="icon" className="h-75" />
+              </InputGroup.Text>
+              <FormControl
+                className="border-0 h-100"
+                placeholder={Placeholder}
+                aria-label={Placeholder}
+              />
+            </>
+          </InputGroup>
+        ))}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CreatePostPage;
+export default CreatePostPage
