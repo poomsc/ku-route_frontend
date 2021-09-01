@@ -1,28 +1,38 @@
-import React, { useCallback } from 'react'
-import { useDropzone } from 'react-dropzone'
+import 'react-dropzone-uploader/dist/styles.css'
+import Dropzone from 'react-dropzone-uploader'
 
 const DropFileZone = () => {
-  const onDrop = useCallback((acceptedFiles) => {
-    acceptedFiles.forEach((file) => {
-      const reader = new FileReader()
+  // specify upload params and url for your files
+  const getUploadParams = ({ meta }) => {
+    return { url: 'https://httpbin.org/post' }
+  }
 
-      reader.onabort = () => console.log('file reading was aborted')
-      reader.onerror = () => console.log('file reading has failed')
-      reader.onload = () => {
-        // Do whatever you want with the file contents
-        const binaryStr = reader.result
-        console.log(binaryStr)
-      }
-      reader.readAsArrayBuffer(file)
-    })
-  }, [])
-  const { getRootProps, getInputProps } = useDropzone({ onDrop })
+  // called every time a file's `status` changes
+  const handleChangeStatus = ({ meta, file }, status) => {
+    console.log(status, meta, file)
+  }
+
+  // receives array of files that are done uploading when submit button is clicked
+  const handleSubmit = (files, allFiles) => {
+    console.log(files.map((f) => f.meta))
+    allFiles.forEach((f) => f.remove())
+  }
 
   return (
-    <div {...getRootProps()}>
-      <input {...getInputProps()} />
-      <p>Drag 'n' drop some files here, or click to select files</p>
-    </div>
+    <Dropzone
+      styles={{
+        dropzone: {
+          borderStyle: 'dashed',
+          borderRadius: '10px',
+          overflowX: 'hidden',
+          overflow: 'auto',
+        },
+      }}
+      getUploadParams={getUploadParams}
+      onChangeStatus={handleChangeStatus}
+      // onSubmit={handleSubmit}
+      // accept="image/*,audio/*,video/*"
+    />
   )
 }
 

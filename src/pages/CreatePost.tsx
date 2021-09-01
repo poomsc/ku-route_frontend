@@ -1,5 +1,6 @@
 import React, { SyntheticEvent, useState } from 'react'
 import {
+  Button,
   Dropdown,
   DropdownButton,
   FormControl,
@@ -32,22 +33,6 @@ const subjects = [
     text: '01204111-55 คอมพิวเตอร์และการโปรแกรม',
   },
 ]
-
-const colors = [
-  '#5697C4',
-  '#E0598B',
-  '#E278A3',
-  '#9163B6',
-  '#993767',
-  '#A34974',
-  '#BE5168',
-  '#C84A52',
-  '#E16452',
-  '#F19670',
-  '#E9D78E',
-  '#E4BE7F',
-  '#74C493',
-]
 const mockTags = ['ทั่วไป', 'รีวิวรายวิชา', 'คลังความรู้', 'อื่นๆ']
 const contractChannels = [
   { Icon: mail, Placeholder: 'hello@kuroute.com' },
@@ -70,7 +55,6 @@ const CreatePostPage = () => {
   const [description, setDescription] = useState<string>()
   const [tags, setTags] = useState<{ [name: string]: string }[]>(preprocessTags)
   const [tagsSelected, setTagSelected] = useState<string[]>([])
-  const [fileUploaded, setFileUploaded] = useState<File[]>()
 
   const handleOnTagChange = (value: string, event: 'add' | 'remove') => {
     if (event === 'add') {
@@ -82,12 +66,6 @@ const CreatePostPage = () => {
 
   const handleOnSelectSubject = (event: any) => {
     setTopicSelected(event.target.innerText)
-  }
-
-  const handleOnBrowsFile = (event: any) => {
-    console.log(Array.from(event.target.files))
-
-    setFileUploaded(Array.from(event.target.files))
   }
 
   return (
@@ -163,38 +141,6 @@ const CreatePostPage = () => {
           </div>
         </InputGroup>
 
-        <>
-          <p className="font-weight-bold">อัพโหลดความรู้</p>
-          <div className="input-group mb-4">
-            <div className="custom-file">
-              <input
-                type="file"
-                className="custom-file-input"
-                multiple
-                onChange={(e) => handleOnBrowsFile(e)}
-              />
-              <label className="custom-file-label">Choose file</label>
-            </div>
-          </div>
-
-          {fileUploaded &&
-            fileUploaded.map((file) =>
-              file.type.includes('image') ? (
-                <img
-                  alt="preview"
-                  src={URL.createObjectURL(file)}
-                  style={{ maxWidth: '200px', maxHeight: '150px' }}
-                  className="mx-2"
-                />
-              ) : (
-                <GoFile
-                  className="w-100 h-100"
-                  style={{ maxWidth: '120px', maxHeight: '120px' }}
-                />
-              )
-            )}
-        </>
-
         <p className="font-weight-bold">Tag</p>
         <div className="d-flex">
           {tagsSelected.map((tag, idx) => (
@@ -240,15 +186,16 @@ const CreatePostPage = () => {
         className="bg-secondary p-5 rounded-25 shadow mx-auto mb-4"
         style={{ maxWidth: '70rem' }}
       >
+        <h5 className="font-weight-bold mb-3">แนบไฟล์เพิ่มเติม</h5>
         <DropFileZone />
       </div>
       <div
         className="bg-secondary p-5 rounded-25 shadow mx-auto"
         style={{ maxWidth: '70rem' }}
       >
-        <h5 className="font-weight-bold mb-5">ช่องทางติดต่อ (ไม่บังคับ)</h5>
-        {contractChannels.map(({ Icon, Placeholder }) => (
-          <InputGroup className="mb-3" style={{ height: '50px' }}>
+        <h5 className="font-weight-bold mb-3">ช่องทางติดต่อ</h5>
+        {contractChannels.map(({ Icon, Placeholder }, idx) => (
+          <InputGroup className="mb-3" style={{ height: '50px' }} key={idx}>
             <>
               <InputGroup.Text
                 className="border-0 h-100"
@@ -268,6 +215,15 @@ const CreatePostPage = () => {
             </>
           </InputGroup>
         ))}
+      </div>
+      <div className="mx-auto my-5" style={{ maxWidth: '70rem' }}>
+        <div className="d-flex justify-content-end">
+          <Button variant="danger" style={{ width: '7rem' }}>
+            DELETE
+          </Button>
+          <div className="mx-2"></div>
+          <Button style={{ width: '7rem' }}>PUBLISH</Button>
+        </div>
       </div>
     </div>
   )
