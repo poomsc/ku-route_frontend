@@ -2,6 +2,7 @@ import '../Sign.css';
 import React from "react";
 import { Container, Form } from 'react-bootstrap'
 import google from '../assets/icons/google.png'
+import { Link } from 'react-router-dom'
 
 type userState = {
   setName: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -68,8 +69,8 @@ const Signup = ({ setName, setEmail, setPassword, setSearch, onSubmit }: userSta
         <div className="mb-4">
           <p id='caption'>
             Already signed up? {""}
-            <a href="/signin" id="signin">
-              Sign in</a>
+            <Link to="/signin" id="signin">
+              Sign in</Link>
           </p>
         </div>
       </Form>

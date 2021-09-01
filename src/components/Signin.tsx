@@ -1,6 +1,7 @@
 import '../Sign.css';
 import React from "react";
-import { Container, Form, Jumbotron } from 'react-bootstrap'
+import { Container, Form, Jumbotron} from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 import google from '../assets/icons/google.png'
 
 type userState = {
@@ -65,12 +66,12 @@ const Signin = ({ setEmail, setPassword, setSearch, onSubmit }: userState) => {
         </div>
         <div className="mb-4">
           <p id='caption'>
-            <a href='/'>Forgot password?</a>
+            <Link to='/'>Forgot password?</Link>
           </p>
           <p id='caption'>
             New to KU-ROUTE? {""}
-            <a href="/signup" id="signup">
-              Sign up</a>
+            <Link to="/signup" id="signup">
+              Sign up</Link>
           </p>
         </div>
       </Form>

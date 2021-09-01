@@ -33,7 +33,7 @@ const NavBar = () => {
                         <Navbar.Collapse id="basic-navbar-nav">
                             <Nav >
                                 <Nav.Link href="/signin">SIGN IN</Nav.Link>
-                                <Nav.Link href="/signup" style={{ border: '0.1px solid', borderRadius: '5px' }}>SIGN UP</Nav.Link>
+                                <Nav.Link style={{border: '0.1px solid', borderRadius: '5px'}} href="/signup">SIGN UP</Nav.Link>
                             </Nav>
                         </Navbar.Collapse>
                     </>)}
