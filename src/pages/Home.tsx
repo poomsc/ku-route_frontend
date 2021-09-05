@@ -8,7 +8,7 @@ const HomePage = () => {
       <br />
       <Link to="/">Home</Link>
       <br />
-      <Link to="/sign">sign</Link>
+      <Link to="/signin">sign</Link>
       <br />
       <Link to="/post">post</Link>
       <br />
