@@ -51,7 +51,10 @@
     ]
   },
   "devDependencies": {
+    "@types/firebase": "^3.2.1",
     "@types/react-router-dom": "^5.1.8",
+    "firebase": "^9.0.1",
     "prettier": "2.3.2"
-  }
+  },
+  "type": "module"
 }
