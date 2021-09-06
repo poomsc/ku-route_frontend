@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch } from 'react-router-dom';
-
+import { withRouter } from "react-router";
 import NotFound from 'pages/NotFound';
 import HomePage from 'pages/Home';
 import SignPage from 'pages/Sign';
@@ -10,10 +10,12 @@ import PublicRoute from './PublicRoute';
 import PrivateRoute from './PrivateRoute';
 import NavBar from '../components/Navbar2'
 
+const NAVBAR = withRouter(NavBar)
+
 const Routes: React.FC = (): JSX.Element => {
   return (
     <Router>
-      <NavBar/>
+      <NAVBAR/>
       <Switch>
         <PublicRoute restricted={false} exact path={['/', '/home']} component={HomePage} />
         <PrivateRoute exact path="/post" component={PostPage} />

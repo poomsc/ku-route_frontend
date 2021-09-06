@@ -38,7 +38,8 @@ const PostPage = () => {
     return (
         <div className="white-bg py-5">
             <Container className='rounded box-shadow bg-white mx-auto mb-4'>
-                <div className="d-flex">
+                <div className=''>
+                    <div className='d-inline-flex'>
                     {allTag.map((tag, idx) => (
                         <div
                             className="max-w-content px-2 rounded cursor-pointer align-self-center px-2 py-1 mr-2"
@@ -49,7 +50,10 @@ const PostPage = () => {
                         >
                             {tag}
                         </div>
-                    ))}
+                    ))}</div>
+                    <div className='float-right'>
+                        {mockSubjectName}
+                    </div>
                 </div>
                 <h2 style={{ fontWeight: 'bold' }}>{title}</h2>
 
