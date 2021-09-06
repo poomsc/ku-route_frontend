@@ -8,7 +8,7 @@ import PostPage from 'pages/Post';
 import CreatePostPage from 'pages/CreatePost';
 import PublicRoute from './PublicRoute';
 import PrivateRoute from './PrivateRoute';
-import NavBar from '../components/Navbar2'
+import NavBar from 'components/Navbar'
 
 const NAVBAR = withRouter(NavBar)
 
