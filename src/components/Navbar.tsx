@@ -81,7 +81,7 @@ const NavBar = () => {
                   {userName}
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                  <Dropdown.Item href="#">EDIT PROFILE</Dropdown.Item>
+                  <Dropdown.Item href="/edit-profile">EDIT PROFILE</Dropdown.Item>
                   <div className="dropdown-divider"></div>
                   <Dropdown.Item href="#">LOG OUT</Dropdown.Item>
                 </Dropdown.Menu>

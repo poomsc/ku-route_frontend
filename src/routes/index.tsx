@@ -9,6 +9,8 @@ import CreatePostPage from 'pages/CreatePost';
 import PublicRoute from './PublicRoute';
 import PrivateRoute from './PrivateRoute';
 import NavBar from 'components/Navbar'
+import EditProfilePage from 'pages/EditProfile'
+import Test from 'components/UploadImage'
 
 const Routes: React.FC = (): JSX.Element => {
   return (
@@ -20,6 +22,8 @@ const Routes: React.FC = (): JSX.Element => {
         <PublicRoute restricted={false} path="/signin" component={SignPage} />
         <PublicRoute restricted={false} path="/signup" component={SignPage} />
         <PublicRoute restricted={false} path="/create-post" component={CreatePostPage} />
+        <PublicRoute restricted={false} path="/edit-profile" component={EditProfilePage} />
+        <PublicRoute restricted={false} path="/up" component={Test} />
         <PublicRoute restricted={false} component={NotFound} />
       </Switch>
     </Router>
