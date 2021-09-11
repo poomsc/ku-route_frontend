@@ -25,7 +25,8 @@
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^2.0.3",
     "typescript": "^4.1.2",
-    "web-vitals": "^1.0.1"
+    "web-vitals": "^1.0.1",
+    "yarn": "^1.22.11"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -52,7 +53,10 @@
     ]
   },
   "devDependencies": {
+    "@types/firebase": "^3.2.1",
     "@types/react-router-dom": "^5.1.8",
+    "firebase": "^9.0.1",
     "prettier": "2.3.2"
-  }
+  },
+  "type": "module"
 }
