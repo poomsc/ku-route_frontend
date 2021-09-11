@@ -32,7 +32,11 @@ const Signup = ({ setName, setEmail, setPassword, setSearch, onSubmit }: userSta
           </button>
         </div>
 
-        <hr />
+        <div className='d-flex align-middle'>
+          <hr />
+          <p className='mb-0 mt-2 px-3' style={{ color: 'grey' }}>or</p>
+          <hr />
+        </div>
 
         <div className="mb-2">
           <label className='mb-0' style={{ fontWeight: 'bold' }}>Email</label>
