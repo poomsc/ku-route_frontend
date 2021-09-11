@@ -27,7 +27,7 @@ const Signin = ({ setEmail, setPassword, setSearch, onSubmit }: userState) => {
           >
             <div className=''>
               <img src={google} className='rounded d-flex float-left p-1' width='32px' height='auto' alt='googleicon' style={{ backgroundColor: 'white' }} />
-              <div className='p-1'>Sign up with Google</div>
+              <div className='p-1'>Sign in with Google</div>
             </div>
           </button>
         </div>
@@ -59,7 +59,7 @@ const Signin = ({ setEmail, setPassword, setSearch, onSubmit }: userState) => {
             type="submit"
             className=" btn btn-block btn-primary"
             style={{ backgroundColor: '#3FD0C9' , borderWidth:'0px'}}
-            onClick={onSubmit}
+            //onClick={onSubmit}
           >
             Log in
           </button>

@@ -6,7 +6,10 @@ import { getAuth,
     UserCredential,
     signInWithPopup,
     GoogleAuthProvider,
-    AuthProvider} from 'firebase/auth'
+    AuthProvider,
+    fetchSignInMethodsForEmail,
+    linkWithCredential,
+    EmailAuthProvider} from 'firebase/auth'
 import { register } from 'service/user';
 
 interface signupProps {
@@ -17,16 +20,6 @@ interface signupProps {
   }
 
 firebaseAuth.languageCode = 'th'
-
-async function providersignIn (provider):
-Promise<UserCredential> {
-    const user_credential = await signInWithPopup(firebaseAuth, provider)
-    const credential = provider.credentialFromResult
-    if(credential?.accessToken)
-        localStorage.setItem('providerToken', credential?.accessToken)
-    console.log(user_credential)
-    return user_credential
-}
 
 async function signUp_EmailPassword ({Name, Surname, Email, password}:signupProps) {
     createUserWithEmailAndPassword(firebaseAuth, Email, password)
@@ -45,9 +38,9 @@ async function signUp_EmailPassword ({Name, Surname, Email, password}:signupProp
     });
 }
 
-async function signIn_EmailPassword (email:string, password:string): Promise<void> {
-    await signInWithEmailAndPassword(firebaseAuth, email, password)
-    .then((userCredential) => {
+async function signIn_EmailPassword (email:string, password:string) {
+    try {
+        const userCredential = await signInWithEmailAndPassword(firebaseAuth, email, password)
         // Signed in 
         const user = userCredential.user;
         if(!user.emailVerified) {
@@ -57,18 +50,14 @@ async function signIn_EmailPassword (email:string, password:string): Promise<voi
         else
             console.log("Login successfully.")
         return userCredential
-    })
-    .catch((error) => {
-        const errorCode = error.code
-        const errorMessage = error.message
-        console.log(errorMessage)
-    });
-
+    } catch (error) {
+        console.log(error)
+    }
 }
 
-async function signOut(): Promise<void> {
+async function signOut() {
     await firebaseAuth.signOut()
-    localStorage.removeItem('idToken')
+    // localStorage.removeItem('idToken')
     localStorage.removeItem('providerToken')
 }
 
@@ -77,29 +66,25 @@ async function signIn_Google() {
     provider.addScope('https://www.googleapis.com/auth/contacts.readonly')
     provider.addScope('https://www.googleapis.com/auth/userinfo.email')
     provider.addScope('https://www.googleapis.com/auth/userinfo.profile')
-    const user_credential = signInWithPopup(firebaseAuth, provider)
-    .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result)
-        if(credential?.accessToken)
-            localStorage.setItem('providerToken', credential?.accessToken)
+    try {
+        const user_credential = await signInWithPopup(firebaseAuth, provider)
+        const email = user_credential.user.email
+        const credential = GoogleAuthProvider.credentialFromResult(user_credential)
+        const token = credential?.accessToken
+        if(token)
+            localStorage.setItem('providerToken', token)
         // The signed-in user info.
-        const user = result.user
-        // console.log(credential)
+        const user = user_credential.user
+        console.log(user_credential)
+        console.log(user)
+        console.log(email)
+        console.log(token)
         return user_credential
-        // ...
-    }).catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error)
-        // ...
-        return user_credential
-    });
+    } catch (e) {
+        console.error(e)
+    }
 }
+
 
 export {
     signIn_EmailPassword,
