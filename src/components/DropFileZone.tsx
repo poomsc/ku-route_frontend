@@ -29,8 +29,8 @@ const DropFileZone = () => {
         },
       }}
       getUploadParams={getUploadParams}
-      onChangeStatus={handleChangeStatus}
-      // onSubmit={handleSubmit}
+      // onChangeStatus={handleChangeStatus}
+      onSubmit={handleSubmit}
       // accept="image/*,audio/*,video/*"
     />
   )
