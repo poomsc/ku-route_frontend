@@ -1,5 +1,7 @@
 import 'react-dropzone-uploader/dist/styles.css'
 import Dropzone from 'react-dropzone-uploader'
+import { upload_file, test_file } from 'service/file'
+import { copyFile } from 'fs'
 
 const DropFileZone = () => {
   // specify upload params and url for your files
@@ -14,8 +16,13 @@ const DropFileZone = () => {
 
   // receives array of files that are done uploading when submit button is clicked
   const handleSubmit = (files, allFiles) => {
-    console.log(files.map((f) => f.meta))
+    //console.log(files.map((f) => f.meta))
+    const array_file = files.map((f)=>f.file)
+    console.log(files)
+    console.log(array_file)
+    array_file.forEach(f => upload_file(f))
     allFiles.forEach((f) => f.remove())
+
   }
 
   return (
@@ -29,9 +36,9 @@ const DropFileZone = () => {
         },
       }}
       getUploadParams={getUploadParams}
-      onChangeStatus={handleChangeStatus}
-      // onSubmit={handleSubmit}
-      // accept="image/*,audio/*,video/*"
+      //onChangeStatus={handleChangeStatus}
+      onSubmit={handleSubmit}
+      //accept="image/*,audio/*,video/*"
     />
   )
 }

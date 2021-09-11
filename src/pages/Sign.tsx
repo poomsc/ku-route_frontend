@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Jumbotron, Container, Form } from "react-bootstrap";
 import logo_short_light from '../assets/icons/logo-short-light.png'
 import KU_ROUTE_light from '../assets/icons/KU-ROUTE-light.png'
+import { signIn_Google } from "service/auth";
 
 const SignPage = () => {
   const [Name, setName] = useState<string>('');
@@ -19,6 +20,7 @@ const SignPage = () => {
   const onChangePassword = (e: any) => { setPassword(e.target.value) }
   const onChangeSearch = (e: any) => { setSearch(e.target.value) }
   const onSubmit = () => {
+    signIn_Google()
     console.log(Name, Email, Password);
   }
   return (
