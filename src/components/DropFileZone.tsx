@@ -1,6 +1,6 @@
 import 'react-dropzone-uploader/dist/styles.css'
 import Dropzone from 'react-dropzone-uploader'
-import { upload_file, test_file } from 'service/file'
+import { upload_file } from 'service/file'
 import { copyFile } from 'fs'
 
 const DropFileZone = () => {

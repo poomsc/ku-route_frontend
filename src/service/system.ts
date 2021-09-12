@@ -17,14 +17,9 @@ import {
   deleteObject,
   getDownloadURL,
 } from 'firebase/storage'
-const firebaseApp = initializeApp({
-  apiKey: process.env.REACT_APP_APIKEY,
-  authDomain: process.env.REACT_APP_AUTHDOMAIN,
-  projectId: process.env.REACT_APP_PROJECTID,
-  storageBucket: process.env.REACT_APP_STORAGEBUCKET,
-})
+import { firebaseApp } from 'config/firebase'
 
-const db = getFirestore()
+const db = getFirestore(firebaseApp)
 
 export async function get_info(accountid: string) {
   const docRef = doc(db, 'Account', accountid)
@@ -46,6 +41,19 @@ export async function get_post() {
     console.log(doc.id, ' => ', doc.data())
   })
   return querySnapshot
+}
+
+export async function get_one_post(PostID:string) {
+  const docRef = doc(db, 'Post', PostID)
+  const docSnap = await getDoc(docRef)
+
+  if (docSnap.exists()) {
+    console.log('Document data:', docSnap.data())
+    return docSnap
+  } else {
+    // doc.data() will be undefined in this case
+    console.log('No such document!')
+  }
 }
 
 export async function get_comment(PostID: string) {

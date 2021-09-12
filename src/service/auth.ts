@@ -7,9 +7,9 @@ import { getAuth,
     signInWithPopup,
     GoogleAuthProvider,
     AuthProvider,
-    fetchSignInMethodsForEmail,
-    linkWithCredential,
-    EmailAuthProvider} from 'firebase/auth'
+    EmailAuthProvider,
+    onAuthStateChanged } from 'firebase/auth'
+import { useEffect, useState } from 'react';
 import { register } from 'service/user';
 
 interface signupProps {
@@ -21,24 +21,35 @@ interface signupProps {
 
 firebaseAuth.languageCode = 'th'
 
-async function signUp_EmailPassword ({Name, Surname, Email, password}:signupProps) {
-    createUserWithEmailAndPassword(firebaseAuth, Email, password)
-    .then((userCredential) => {
-        // Signed in 
-        const user = userCredential.user;
-        const UID = user.uid
-        // ...
-        register({UID, Name, Surname, Email})
+async function checkAuthState() {
+    onAuthStateChanged(firebaseAuth, (user) => {
+        if (user) {
+            // User is signed in, see docs for a list of available properties
+            // https://firebase.google.com/docs/reference/js/firebase.User
+            const UID = user.uid
+            console.log(UID)
+            console.log(user)
+            return true
+        }
+        else
+            console.log("Auth State Changed")
+            return false
     })
-    .catch((error) => {
-        const errorCode = error.code
-        const errorMessage = error.message
-        // ..
-        console.log(errorMessage)
-    });
 }
 
-async function signIn_EmailPassword (email:string, password:string) {
+async function signUp_EmailPassword({Name, Surname, Email, password}:signupProps) {
+    try {
+        const userCrendential = await createUserWithEmailAndPassword(firebaseAuth, Email, password)
+        // Signed up
+        const user = userCrendential.user
+        const UID = user.uid
+        register({UID, Name, Surname, Email})
+    } catch(error) {
+        alert(error)
+    }
+}
+
+async function signIn_EmailPassword(email:string, password:string) {
     try {
         const userCredential = await signInWithEmailAndPassword(firebaseAuth, email, password)
         // Signed in 
@@ -51,14 +62,19 @@ async function signIn_EmailPassword (email:string, password:string) {
             console.log("Login successfully.")
         return userCredential
     } catch (error) {
-        console.log(error)
+        alert(error)
     }
 }
 
 async function signOut() {
-    await firebaseAuth.signOut()
-    // localStorage.removeItem('idToken')
-    localStorage.removeItem('providerToken')
+    try {
+        await firebaseAuth.signOut()
+        localStorage.removeItem('providerToken')
+        return true
+    } catch (error) {
+        alert(error)
+        return false
+    }
 }
 
 async function signIn_Google() {
@@ -67,26 +83,28 @@ async function signIn_Google() {
     provider.addScope('https://www.googleapis.com/auth/userinfo.email')
     provider.addScope('https://www.googleapis.com/auth/userinfo.profile')
     try {
-        const user_credential = await signInWithPopup(firebaseAuth, provider)
-        const email = user_credential.user.email
-        const credential = GoogleAuthProvider.credentialFromResult(user_credential)
+        const userCredential = await signInWithPopup(firebaseAuth, provider)
+        const email = userCredential.user.email
+        const credential = GoogleAuthProvider.credentialFromResult(userCredential)
         const token = credential?.accessToken
         if(token)
             localStorage.setItem('providerToken', token)
         // The signed-in user info.
-        const user = user_credential.user
-        console.log(user_credential)
+        const user = userCredential.user
+        console.log(credential)
         console.log(user)
         console.log(email)
         console.log(token)
-        return user_credential
-    } catch (e) {
-        console.error(e)
+        return userCredential
+    } catch (error) {
+        alert(error)
+        return false
     }
 }
 
 
 export {
+    checkAuthState,
     signIn_EmailPassword,
     signUp_EmailPassword,
     signIn_Google,

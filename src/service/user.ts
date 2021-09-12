@@ -30,7 +30,7 @@ interface commentProps {
   Description:string
 }
 
-export async function register({UID, Name, Surname, Email}:registerProps){
+async function register({UID, Name, Surname, Email}:registerProps){
   const data =  {
     Name,
     Surname,
@@ -51,33 +51,21 @@ export async function register({UID, Name, Surname, Email}:registerProps){
   }
 }
 
-export async function edit_info() {
-
-}
-
-export async function PUT(props: any, col) {
-  const docRef = await setDoc(doc(firestore, col), 
-  {
-      ...props,
-      DateEdited: serverTimestamp()
+async function create_post({AccountID, FileID, TagID, SubjectID, Title, Description}:postProps) {
+  const data = {
+    AccountID,
+    FileID,
+    TagID,
+    SubjectID,
+    Title,
+    Description,
+    DateCreate: serverTimestamp(),
+    DateEdited: serverTimestamp(),
+    Status: true,
   }
-  );
-}
-
-export async function create_post({AccountID, FileID, TagID, SubjectID, Title, Description}:postProps) {
   try{
     console.log("Post is being added...");
-    const docRef = await addDoc(collection(firestore, "Post"), {
-      AccountID,
-      FileID,
-      TagID,
-      SubjectID,
-      Title,
-      Description,
-      DateCreate: serverTimestamp(),
-      DateEdited: serverTimestamp(),
-      Status: true,
-    });
+    const docRef = await addDoc(collection(firestore, "Post"), data);
     console.log("Post written with ID: ", docRef.id);
     return true
   } catch (e) {
@@ -86,17 +74,18 @@ export async function create_post({AccountID, FileID, TagID, SubjectID, Title, D
   }
 }
 
-export async function create_comment({AccountID, PostID, Description}:commentProps) {
+async function create_comment({AccountID, PostID, Description}:commentProps) {
+  const data = {
+    AccountID,
+    PostID,
+    Description,
+    DateCreate: serverTimestamp(),
+    DateEdited: serverTimestamp(),
+    Status: true,
+  }
   try{
     console.log("Comment is being added...");
-    const docRef = await addDoc(collection(firestore, "Comment"), {
-      AccountID,
-      PostID,
-      Description,
-      DateCreate: serverTimestamp(),
-      DateEdited: serverTimestamp(),
-      Status: true,
-    });
+    const docRef = await addDoc(collection(firestore, "Comment"), data);
     console.log("Comment written with ID: ", docRef.id);
     return true
   } catch (e) {
@@ -105,7 +94,34 @@ export async function create_comment({AccountID, PostID, Description}:commentPro
   }
 }
 
-export {
-  
+async function like (AccountID:string, PostID:string) {
+
 }
 
+async function edit(props: any, col) {
+  const docRef = await setDoc(doc(firestore, col), 
+  {
+      ...props,
+      DateEdited: serverTimestamp()
+  }
+  );
+}
+
+async function disable(props: any, col) {
+  const docRef = await setDoc(doc(firestore, col), 
+  {
+      ...props,
+      DateEdited: serverTimestamp(),
+      Status: false
+  }
+  );
+}
+
+export {
+  register,
+  create_post,
+  create_comment,
+  like,
+  edit,
+  disable,
+}

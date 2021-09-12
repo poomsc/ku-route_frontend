@@ -56,12 +56,3 @@ export async function upload_file(file: File) {
     }
     ); 
 }
-
-export async function test_file(file) {
-    const storageRef = ref(storage, 'some-child')
-
-    // 'file' comes from the Blob or File API
-    uploadBytes(storageRef, file).then((snapshot) => {
-    console.log('Uploaded a blob or file!')
-});
-}

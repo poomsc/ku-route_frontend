@@ -6,6 +6,7 @@ import { Jumbotron, Container, Form } from "react-bootstrap";
 import logo_short_light from '../assets/icons/logo-short-light.png'
 import KU_ROUTE_light from '../assets/icons/KU-ROUTE-light.png'
 import { signIn_Google } from "service/auth";
+import { Redirect } from "react-router";
 
 const SignPage = () => {
   const [Name, setName] = useState<string>('');
@@ -20,9 +21,15 @@ const SignPage = () => {
   const onChangePassword = (e: any) => { setPassword(e.target.value) }
   const onChangeSearch = (e: any) => { setSearch(e.target.value) }
   const onSubmit = () => {
-    signIn_Google()
     console.log(Name, Email, Password);
   }
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    const sG = signIn_Google()
+    //if ()
+      //return <Redirect to = "/"
+  }
+
   return (
     <Jumbotron className='blue-bg jumbotron jumbotron-fluid mb-0'>
       <Container className='text-center header-block'>
