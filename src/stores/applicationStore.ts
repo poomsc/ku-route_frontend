@@ -5,9 +5,10 @@ import { observer } from "mobx-react-lite"
 import { User, UserCredential } from "@firebase/auth"
 
 class applicationStore {
-    user = {} as User
+    user: User
 
     constructor() {
+        this.user = undefined as any
         makeAutoObservable(this)
     }
 
