@@ -42,11 +42,10 @@ const PostPage = () => {
     const maxColor = colors.length;
     return (
         <div className="white-bg py-5">
-            <Container className='rounded box-shadow bg-white mx-auto mb-4'
-                        style={{width: "1700px"}}
-            >
-                <div >
-                    <div className='d-inline-flex my-3'>{allTag.map((tag, idx) => (
+            <Container className='rounded box-shadow bg-white mx-auto mb-4'>
+                <div className=''>
+                    <div className='d-inline-flex'>
+                    {allTag.map((tag, idx) => (
                         <div
                             className="max-w-content rounded cursor-pointer align-self-center px-2 py-1  ml-3 my-2" 
                             key={tag}
