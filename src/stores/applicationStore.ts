@@ -13,7 +13,6 @@ class applicationStore {
 
     setUser(user: User | null) {
         this.user = user as User
-        console.log('เข้ามายัง', user)
     }
 }
 

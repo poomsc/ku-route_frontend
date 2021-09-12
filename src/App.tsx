@@ -5,7 +5,7 @@ import { checkAuthState, signOut , signIn_Google} from "service/auth";
 import { delete_post, get_comment, get_info, get_post, delete_comment, get_file, get_pathfile, delete_file, get_one_post} from "service/system";
 
 const App = () => {
-  //checkAuthState()
+  checkAuthState()
   //signOut()
   //get_one_post('TPkRmWLZdLRIUWIa8ptS')
 
