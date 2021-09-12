@@ -8,9 +8,13 @@ import KU_ROUTE_light from '../assets/icons/KU-ROUTE-light.png'
 import { signIn_Google } from "service/auth";
 import { Redirect } from "react-router";
 import { observer } from 'mobx-react-lite'
+import applicationStore from 'stores/applicationStore'
 
 
 const SignPage = observer( () => {
+  if(applicationStore.user)
+    return <Redirect push to = '/'></Redirect>
+
   const [Name, setName] = useState<string>('')
   const [Email, setEmail] = useState<string>('')
   const [Password, setPassword] = useState<string>('')

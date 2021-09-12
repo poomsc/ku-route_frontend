@@ -8,9 +8,9 @@ import applicationStore from 'stores/applicationStore'
 
 const NavBar = observer ( () => {
   let isLoggedin = 'loggedin'
-  let userName = 'userName'
-  console.log('ที่นี่คือ NavBar')
-  console.log(applicationStore.user)
+  let userName = applicationStore.user ? applicationStore.user.displayName : 'userName'
+  //console.log('ที่นี่คือ NavBar')
+  //console.log(applicationStore.user)
   return (
     <Navbar
       sticky="top"
