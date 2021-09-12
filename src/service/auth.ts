@@ -11,6 +11,7 @@ import { getAuth,
     onAuthStateChanged } from 'firebase/auth'
 import { useEffect, useState } from 'react';
 import { register } from 'service/user';
+import applicationStore from 'stores/applicationStore';
 
 interface signupProps {
     Name:string
@@ -23,6 +24,7 @@ firebaseAuth.languageCode = 'th'
 
 async function checkAuthState() {
     onAuthStateChanged(firebaseAuth, (user) => {
+        applicationStore.setUser(user)
         if (user) {
             // User is signed in, see docs for a list of available properties
             // https://firebase.google.com/docs/reference/js/firebase.User
@@ -91,10 +93,11 @@ async function signIn_Google() {
             localStorage.setItem('providerToken', token)
         // The signed-in user info.
         const user = userCredential.user
-        console.log(credential)
-        console.log(user)
-        console.log(email)
-        console.log(token)
+        // console.log(userCredential)
+        // console.log(user)
+        // console.log(email)
+        // console.log(token)
+        applicationStore.setUser(user)
         return userCredential
     } catch (error) {
         alert(error)

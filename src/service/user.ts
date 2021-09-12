@@ -104,7 +104,7 @@ async function edit(props: any, col) {
       ...props,
       DateEdited: serverTimestamp()
   }
-  );
+  )
 }
 
 async function disable(props: any, col) {
@@ -114,7 +114,7 @@ async function disable(props: any, col) {
       DateEdited: serverTimestamp(),
       Status: false
   }
-  );
+  )
 }
 
 export {

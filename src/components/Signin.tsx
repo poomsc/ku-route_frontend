@@ -9,9 +9,10 @@ type userState = {
   setPassword: (e: React.ChangeEvent<HTMLInputElement>) => void;
   setSearch: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSubmit: () => void;
+  onGoogleLogIn: () => void;
 }
 
-const Signin = ({ setEmail, setPassword, setSearch, onSubmit }: userState) => {
+const Signin = ({ setEmail, setPassword, setSearch, onSubmit, onGoogleLogIn }: userState) => {
 
   return (
     <Container className='col-lg-6 px-4 px-sm-5 pt-5' style={{ paddingTop: "4vh", paddingBottom: "2.5vh" }}>
@@ -23,7 +24,7 @@ const Signin = ({ setEmail, setPassword, setSearch, onSubmit }: userState) => {
             type="submit"
             className=" btn btn-block btn-primary "
             style={{ backgroundColor: '#4385F5', borderWidth: '0px', paddingLeft: '2px', paddingTop: '2px', paddingBottom: '2px' }}
-            onClick={onSubmit}
+            onClick={onGoogleLogIn}
           >
             <div className='align-middle'>
               <img src={google} className='rounded d-flex float-left p-1' width='32px' height='auto' alt='googleicon' style={{ backgroundColor: 'white' }} />
