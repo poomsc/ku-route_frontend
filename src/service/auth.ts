@@ -72,6 +72,7 @@ async function signOut() {
     try {
         await firebaseAuth.signOut()
         localStorage.removeItem('providerToken')
+        applicationStore.setUser(null)
         return true
     } catch (error) {
         alert(error)

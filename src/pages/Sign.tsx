@@ -12,8 +12,9 @@ import applicationStore from 'stores/applicationStore'
 
 
 const SignPage = observer( () => {
-  if(applicationStore.user)
+  if(applicationStore.user) {
     return <Redirect push to = '/'></Redirect>
+  }
 
   const [Name, setName] = useState<string>('')
   const [Email, setEmail] = useState<string>('')
