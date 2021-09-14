@@ -1,14 +1,7 @@
-import React, { SyntheticEvent, useState } from 'react'
-import {
-  Button,
-  Dropdown,
-  DropdownButton,
-  FormControl,
-  InputGroup,
-} from 'react-bootstrap'
-import { removeElementFromArray } from 'utils'
+import { useState } from 'react'
+import { Button, Dropdown, FormControl, InputGroup } from 'react-bootstrap'
+import { generateRandomColor, removeElementFromArray } from 'utils'
 import { BsFillCaretDownFill } from 'react-icons/bs'
-import { GoFile } from 'react-icons/go'
 import facebook from 'assets/icons/facebook.png'
 import instagram from 'assets/icons/instagram.png'
 import mail from 'assets/icons/mail.png'
@@ -41,14 +34,11 @@ const contractChannels = [
   { Icon: instagram, Placeholder: 'https://www.instagram.com/kuroute' },
 ]
 const CreatePostPage = () => {
-  const preprocessTags = mockTags.map((tag) => {
-    const hue = Math.floor(Math.random() * 360)
-    const pastel = 'hsl(' + hue + ', 100%, 80%)'
-    return {
-      text: tag,
-      color: pastel,
-    }
-  })
+  const preprocessTags = generateRandomColor(
+    mockTags.map((t) => {
+      return { text: t }
+    })
+  )
 
   const [topicSelected, setTopicSelected] = useState(subjects[0].text)
   const [title, setTitle] = useState<string>()
