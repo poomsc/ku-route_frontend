@@ -1,5 +1,4 @@
 // Initialize Cloud Firestore through Firebase
-import { initializeApp } from 'firebase/app'
 import {
   getFirestore,
   collection,

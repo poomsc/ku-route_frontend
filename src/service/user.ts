@@ -1,10 +1,6 @@
-import { firebaseApp, firestore } from "config/firebase"
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getFirestore, 
-      collection,
+import { firestore } from "config/firebase"
+import {  collection,
       doc, 
-      getDoc, 
       setDoc, serverTimestamp, 
       addDoc } from 'firebase/firestore/';
 
@@ -64,12 +60,12 @@ async function create_post({AccountID, FileID, TagID, SubjectID, Title, Descript
     Status: true,
   }
   try{
-    console.log("Post is being added...");
+    console.log("Post is being added...")
     const docRef = await addDoc(collection(firestore, "Post"), data);
     console.log("Post written with ID: ", docRef.id);
     return true
   } catch (e) {
-    console.error("Error adding post: ", e);
+    console.error("Error adding post: ", e)
     return false
   }
 }
@@ -84,22 +80,36 @@ async function create_comment({AccountID, PostID, Description}:commentProps) {
     Status: true,
   }
   try{
-    console.log("Comment is being added...");
+    console.log("Comment is being added...")
     const docRef = await addDoc(collection(firestore, "Comment"), data);
     console.log("Comment written with ID: ", docRef.id);
     return true
   } catch (e) {
-    console.error("Error adding Comment: ", e);
+    console.error("Error adding Comment: ", e)
     return false
   }
 }
 
-async function like (AccountID:string, PostID:string) {
-
+async function like(AccountID:string, PostID:string) {
+  const data = {
+    AccountID,
+    PostID,
+    DateCreate: serverTimestamp(),
+    DateEdited: serverTimestamp(),
+    Status: true
+  }
+  try{
+    console.log("Like is being added...")
+    const docRef = await setDoc(doc(firestore, "Like", "Like:" + AccountID + "_" + PostID), data);
+    console.log("Like was written")// with ID ");
+  } catch(e) {
+    console.error("Error adding Like: ", e)
+  }
 }
 
-async function edit(props: any, col) {
-  const docRef = await setDoc(doc(firestore, col), 
+
+async function edit(props: any, UID, col) { //edit_post, edit_comment, edit_info
+  const docRef = await setDoc(doc(firestore, col, UID), 
   {
       ...props,
       DateEdited: serverTimestamp()
@@ -107,7 +117,7 @@ async function edit(props: any, col) {
   )
 }
 
-async function disable(props: any, col) {
+async function disable(props: any, col) { //unlike, disable_post, disable_comment
   const docRef = await setDoc(doc(firestore, col), 
   {
       ...props,

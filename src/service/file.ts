@@ -1,6 +1,5 @@
 import { storage } from "config/firebase";
-import { ref, uploadBytesResumable, getDownloadURL, uploadBytes } from "firebase/storage";
-import { serverTimestamp } from 'firebase/firestore'
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 export async function upload_file(file: File) {
 // Create the file metadata
