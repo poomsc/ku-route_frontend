@@ -8,9 +8,13 @@ import PostPage from 'pages/Post';
 import CreatePostPage from 'pages/CreatePost';
 import PublicRoute from './PublicRoute';
 import PrivateRoute from './PrivateRoute';
+<<<<<<< HEAD
 import NavBar from 'components/Navbar'
 import EditProfilePage from 'pages/EditProfile'
 import Test from 'components/UploadImage'
+=======
+import NavBar from 'components/Navbar2'
+>>>>>>> 4bf1f47b688f0ccec1b9f9c716a8c707b388759c
 
 const NAVBAR = withRouter(NavBar)
 
