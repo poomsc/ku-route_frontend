@@ -1,8 +1,6 @@
-import React, { SyntheticEvent, useState } from 'react'
+import React, { SyntheticEvent, useState, useEffect } from 'react'
 import {
   Button,
-  Dropdown,
-  DropdownButton,
   FormControl,
   InputGroup,
 } from 'react-bootstrap'
@@ -10,7 +8,8 @@ import defaultUserProfile from 'assets/icons/user-icon.png'
 import { Dropdown as SMTDropdown } from 'semantic-ui-react'
 import DropFileZone from 'components/DropFileZone'
 import ImageUploader from 'react-images-upload';
-
+import { BsFillCaretDownFill } from 'react-icons/bs'
+import { DocumentData } from '@firebase/firestore'
 import IconButton from "@material-ui/core/IconButton";
 import InputLabel from "@material-ui/core/InputLabel";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -19,16 +18,50 @@ import LockLabelOff from "@material-ui/icons/LockOpen"
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import Input from "@material-ui/core/Input";
+import { get_info } from 'service/system'
+import FormControl1 from '@material-ui/core/FormControl';
+import { FormHelperText, TextField } from '@material-ui/core'
+
+
+const subjects = [
+  {
+    value: '02212641-55',
+    text: 'วิศวกรรมศาสตร์',
+  },
+  {
+    value: '02743552-60',
+    text: 'คหกรรม',
+  },
+  {
+    value: '01204111-55',
+    text: 'บัญชี',
+  },
+]
 
 const EditProfilePage = () => {
   const [title, setTitle] = useState<string>()
+  const [about, setAbout] = useState<string>()
+  const [topicSelected, setTopicSelected] = useState(subjects[0].text)
+  const [userInfo, setUserInfo] = useState<DocumentData>();
 
+  useEffect(() => {
+    async function fetch () {
+      const rawInfo = await get_info('accout01')
+      setUserInfo(rawInfo)
+    }
+    fetch()
+  }, [])
+  
   const [values, setValues] = React.useState({
     password: "",
     showPassword: false,
     lock: true,
   });
-  
+
+  const handleOnSelectSubject = (event: any) => {
+    setTopicSelected(event.target.innerText)
+  }
+
   const handleClickShowPassword = () => {
     setValues({ ...values, showPassword: !values.showPassword });
   };
@@ -54,42 +87,14 @@ const EditProfilePage = () => {
       >
         <h2 className="font-weight-bold text-center mb-5">แก้ไขข้อมูลส่วนตัว</h2>
         <div className="edit-profile-picture-section">
-          <div>
-            <img src={defaultUserProfile} alt="current-user-profile"
-              style={{
-                display: 'block',
-                margin: '4rem auto',
-                width: '10rem',
-                borderRadius: '50%',
-                border: '0.25rem solid #A0A0A0'
-                }}
-            />
-          </div>
-          <div>
-            <ImageUploader
-
-            withIcon={false}
-            buttonText='อัปโหลดภาพโปรไฟล์'
-            accept='image/*'
-            
-          >+</ImageUploader>
-          </div>
-          
-          {/* <Button className="font-weight-bold text-center mb-5" 
-            href="/up"
-            style={{
-                color: 'white',
-                position: 'relative',
-                textAlign: "justify",
-                fontSize: '20px',
-                margin: '-14.75% 0 0 54%',
-                padding: '0',
-                width: '2rem',
-                height: '2rem',
-                borderRadius: '50%',
-                border: 'none',
-                backgroundColor: '#4782fa',
-              }}>+</Button> */}
+          <img src={defaultUserProfile} 
+                 className="img-fluid mx-auto my-5 d-block" 
+                 alt="Responsive image"
+                 style={{
+                  borderRadius: '50%',
+                  border: '0.25rem solid #A0A0A0'
+                 }}
+          />
         </div >
         
         <div
@@ -99,73 +104,52 @@ const EditProfilePage = () => {
           <div
            style={{ width: '48%' }}
           >
-            <p className="font-weight-bold">ชื่อจริง</p>
-            <InputGroup className="rounded-10 bg-white mb-4">
-              <FormControl
-                aria-label="title"
-                className="rounded-10 border-0"
-                placeholder="ชื่อจริงของคุณ"
-                onChange={(e) => setTitle(e.target.value)}
-                maxLength={50}
-              />
-              {/* <InputAdornment position="end" >
-                <IconButton
-                  onClick={handleClickLock}
-                >
-                  {values.lock ? <LockLabel /> : <LockLabelOff />}
-                </IconButton>
-              </InputAdornment> */}
-              <div
-                style={{
-                  position: 'absolute',
-                  top: -25,
-                  right: 0,
-                  fontSize: 14,
-                  opacity: 0.5,
-                }}
-              >
-                {title?.length}/50
+            <p className="font-weight-bold" >ชื่อจริง</p>
+            <div className="rounded-10 bg-white mb-4 p-2 clearfix">
+              <div className="d-inline-block float-left">
+                <p className="h6 d-inline-block text-muted px-1">{userInfo?.Name}</p>
               </div>
-            </InputGroup>
+              <div className="d-inline-block float-right ">
+                <LockLabel />
+              </div> 
+            </div>
           </div>
-         
+
           <div
-          style={{
-            margin: '0 0% 0 4%',
-            width: '48%'
+            style={{
+              margin: '0 0% 0 4%',
+              width: '48%'
           }}
           >
             <p className="font-weight-bold">นามสกุล</p>
-            <InputGroup className="rounded-10 bg-white mb-4">
-              <FormControl
-                aria-label="title"
-                className="rounded-10 border-0"
-                placeholder="นามสกุลจริงของคุณ"
-                onChange={(e) => setTitle(e.target.value)}
-                maxLength={50}
-              />
-              <div
-                style={{
-                  position: 'absolute',
-                  top: -25,
-                  right: 0,
-                  fontSize: 14,
-                  opacity: 0.5,
-                }}
-              >
-                {title?.length}/50
+            <div className="rounded-10 bg-white mb-4 p-2 clearfix">
+              <div className="d-inline-block float-left">
+                <p className="h6 d-inline-block text-muted px-1">{userInfo?.Surname}</p>
               </div>
-            </InputGroup>
+              <div className="d-inline-block float-right ">
+                <LockLabel />
+              </div> 
+            </div>
           </div>
-          
         </div>
-        
+
         <p className="font-weight-bold">อีเมล</p>
-        <InputGroup className="rounded-10 bg-white mb-4">
+        <div className="rounded-10 bg-white mb-4 p-2 clearfix">
+          <div className="d-inline-block float-left">
+            <p className="h6 d-inline-block text-muted px-1">{userInfo?.Email}</p>
+          </div>
+          <div className="d-inline-block float-right ">
+            <LockLabel />
+          </div> 
+        </div>
+
+        <p className="font-weight-bold">ชื่อเล่น</p>
+        <InputGroup className="rounded-10 bg-white shadow mb-4">
           <FormControl
             aria-label="title"
+            defaultValue={userInfo?.DisplayName}
             className="rounded-10 border-0"
-            placeholder="example@ku.th"
+            placeholder="ฉันมีชื่อเล่นว่า"
             onChange={(e) => setTitle(e.target.value)}
             maxLength={50}
           />
@@ -178,122 +162,61 @@ const EditProfilePage = () => {
               opacity: 0.5,
             }}
           >
+            {title?.length}/50
           </div>
         </InputGroup>
 
-        <p className="font-weight-bold">บันทึกการเปลี่ยนแปลง (ใส่รหัสผ่าน)</p>
-        <div>
-          <InputLabel htmlFor="standard-adornment-password">
-          </InputLabel>
-          <Input 
-            type={values.showPassword ? "text" : "password"}
-            onChange={handlePasswordChange("password")}
-            value={values.password}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                >
-                  {values.showPassword ? <Visibility /> : <VisibilityOff />}
-                </IconButton>
-              </InputAdornment>
-            }
-            style={{backgroundColor: "white"}}
-          />
-        </div>
-        
-
-        <div className="d-flex justify-content-end">
-          <Button variant="danger" style={{ width: '7rem' }} href='/'>
-            ยกโลก
-          </Button>
-          <div className="mx-2"></div>
-          <Button style={{ width: '7rem' }}>บันทึก</Button>
-        </div>
+        <p className="font-weight-bold">คณะ</p>
+        <div
+        className="rounded-25 shadow mx-auto mb-4"
+        style={{ maxWidth: '70rem' }}
+      >
+        <SMTDropdown
+          placeholder="กรุณาเลือกคณะ"
+          fluid
+          search
+          selection
+          options={subjects}
+          onChange={handleOnSelectSubject}
+          className="rounded-10 bg-primary-dark text-white font-weight-bold d-flex"
+          icon={
+            <div className="ml-auto">
+              <BsFillCaretDownFill />
+            </div>
+          }
+        />
       </div>
 
-      <div className="bg-secondary p-5 rounded-25 shadow mx-auto mb-4"
-        style={{ maxWidth: '70rem'}}
-      >
-        <h2 className="font-weight-bold text-center mb-5">เปลี่ยนรหัสผ่าน</h2>
-        <h5 className="font-weight-bold"
-          style={{ margin: "0 0 2rem 0" }}
-        >ใส่รหัสผ่านเดิมและรหัสผ่านใกม่เพื่อทำการเปลี่ยนรหัสผ่าน</h5>
-
-        <p className="font-weight-bold">รหัสผ่านเดิม</p>
-        <div>
-          <InputLabel htmlFor="standard-adornment-password">
-          </InputLabel>
-          <Input 
-            type={values.showPassword ? "text" : "password"}
-            onChange={handlePasswordChange("password")}
-            value={values.password}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                >
-                  {values.showPassword ? <Visibility /> : <VisibilityOff />}
-                </IconButton>
-              </InputAdornment>
-            }
-            style={{backgroundColor: "white"}}
+        <p className="font-weight-bold">เกี่ยวกับตัวฉัน</p>
+        <InputGroup className="rounded-10 bg-white shadow mb-4">
+          <FormControl
+            as="textarea"
+            defaultValue={userInfo?.About}
+            aria-label="title"
+            className="rounded-10 border-0"
+            placeholder="คำอธิบายของตัวท่าน"
+            onChange={(e) => setAbout(e.target.value)}
+            rows={6}
+            maxLength={1000}
+            style={{ minHeight: "10rem" }}
           />
-        </div>
-
-        <p className="font-weight-bold">รหัสผ่านใหม่</p>
-        <div>
-          <InputLabel htmlFor="standard-adornment-password">
-          </InputLabel>
-          <Input 
-            type={values.showPassword ? "text" : "password"}
-            onChange={handlePasswordChange("password")}
-            value={values.password}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                >
-                  {values.showPassword ? <Visibility /> : <VisibilityOff />}
-                </IconButton>
-              </InputAdornment>
-            }
-            style={{backgroundColor: "white"}}
-          />
-        </div>
-        <p className="font-weight-normal">รหัสผ่านต้องมีความยาวไม่ต่ำกว่า 8 ตัวอักษร ประกอบด้วยตัวเลข ตัวอักษรภาษาอังกฤษ และอักขระพิเศษ</p>
-
-        <p className="font-weight-bold">ยืนยันรหัสผ่านใหม่</p>
-        <div>
-          <InputLabel htmlFor="standard-adornment-password">
-          </InputLabel>
-          <Input 
-            type={values.showPassword ? "text" : "password"}
-            onChange={handlePasswordChange("password")}
-            value={values.password}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                >
-                  {values.showPassword ? <Visibility /> : <VisibilityOff />}
-                </IconButton>
-              </InputAdornment>
-            }
-            style={{backgroundColor: "white"}}
-          />
-        </div>
+          <div
+            style={{
+              position: 'absolute',
+              top: -25,
+              right: 0,
+              fontSize: 14,
+              opacity: 0.5,
+            }}
+          >
+            {about?.length}/1000
+          </div>
+        </InputGroup>
         
+
         <div className="d-flex justify-content-end">
-          <Button variant="danger" style={{ width: '7rem' }} href='/'>
-            ยกโลก
-          </Button>
           <div className="mx-2"></div>
-          <Button style={{ width: '7rem' }}>เปลี่ยนแปลง</Button>
+          <Button style={{ width: '7rem' }}>บันทึก</Button>
         </div>
       </div>
     </div>

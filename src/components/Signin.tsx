@@ -29,7 +29,7 @@ const Signin = ({
       <Form>
         <div className="mt-3 mb-2 gg-shadow">
           <button
-            type="submit"
+            type="button"
             className=" btn btn-block btn-primary "
             style={{
               backgroundColor: '#4385F5',

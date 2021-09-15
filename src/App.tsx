@@ -6,7 +6,7 @@ import { delete_post, get_comment, get_info, get_post, delete_comment, get_file,
 
 const App = () => {
   checkAuthState()
-  //signOut()
+  // signOut()
   //get_one_post('TPkRmWLZdLRIUWIa8ptS')
 
   return <Routes />;
