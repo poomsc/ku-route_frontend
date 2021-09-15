@@ -5,15 +5,15 @@ import { useState } from 'react'
 import { Jumbotron, Container, Form } from 'react-bootstrap'
 import logo_short_light from '../assets/icons/logo-short-light.png'
 import KU_ROUTE_light from '../assets/icons/KU-ROUTE-light.png'
-import { signIn_Google } from "service/auth";
-import { Redirect, useHistory } from "react-router";
+import { signIn_Google } from 'service/auth'
+import { Redirect, useHistory } from 'react-router'
 import { observer } from 'mobx-react-lite'
 import applicationStore from 'stores/applicationStore'
 
-
-const SignPage = observer( () => {
+const SignPage = observer(() => {
   const history = useHistory()
-  if(applicationStore.user) {
+  if (applicationStore.user) {
+    //console.log('laaaa')
     history.push('/')
   }
 

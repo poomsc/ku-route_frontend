@@ -1,37 +1,40 @@
-import React from 'react';
-import { BrowserRouter as Router, Switch } from 'react-router-dom';
-import { withRouter } from "react-router";
-import NotFound from 'pages/NotFound';
-import HomePage from 'pages/Home';
-import SignPage from 'pages/Sign';
-import PostPage from 'pages/Post';
-import CreatePostPage from 'pages/CreatePost';
-import PublicRoute from './PublicRoute';
-import PrivateRoute from './PrivateRoute';
-
+import React from 'react'
+import { BrowserRouter as Router, Switch } from 'react-router-dom'
+import { withRouter } from 'react-router'
+import NotFound from 'pages/NotFound'
+import HomePage from 'pages/Home'
+import SignPage from 'pages/Sign'
+import PostPage from 'pages/Post'
+import CreatePostPage from 'pages/CreatePost'
+import PublicRoute from './PublicRoute'
+import PrivateRoute from './PrivateRoute'
 import NavBar from 'components/Navbar'
-import EditProfilePage from 'pages/EditProfile'
-import Test from 'components/UploadImage'
-// >>>>>>> 4bf1f47b688f0ccec1b9f9c716a8c707b388759c
 
 const NAVBAR = withRouter(NavBar)
 
 const Routes: React.FC = (): JSX.Element => {
   return (
     <Router>
-      <NAVBAR/>
+      <NAVBAR />
       <Switch>
-        <PublicRoute restricted={false} exact path={['/', '/home']} component={HomePage} />
+        <PublicRoute
+          restricted={false}
+          exact
+          path={['/', '/home']}
+          component={HomePage}
+        />
         <PrivateRoute exact path="/post" component={PostPage} />
         <PublicRoute restricted={false} path="/signin" component={SignPage} />
         <PublicRoute restricted={false} path="/signup" component={SignPage} />
-        <PublicRoute restricted={false} path="/create-post" component={CreatePostPage} />
-        <PublicRoute restricted={false} path="/edit-profile" component={EditProfilePage} />
-        <PublicRoute restricted={false} path="/up" component={Test} />
+        <PublicRoute
+          restricted={false}
+          path="/create-post"
+          component={CreatePostPage}
+        />
         <PublicRoute restricted={false} component={NotFound} />
       </Switch>
     </Router>
-  );
-};
+  )
+}
 
-export default Routes;
+export default Routes

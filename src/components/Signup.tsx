@@ -106,7 +106,6 @@ const Signup = ({
           </p>
         </div>
       </Form>
-      
     </Container>
   )
 }
