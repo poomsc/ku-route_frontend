@@ -6,8 +6,6 @@ import { observer } from 'mobx-react-lite'
 import applicationStore from 'stores/applicationStore'
 
 const NavBar = observer ( (props) => {
-  console.log('ที่นี่คือ NavBar2')
-  console.log(applicationStore.userCredential)
   let isLoggedin = 'loggedin'
   let userName = 'userName'
   // const { location } = props
