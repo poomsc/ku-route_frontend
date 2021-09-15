@@ -12,10 +12,10 @@ import applicationStore from 'stores/applicationStore'
 
 const SignPage = observer(() => {
   const history = useHistory()
-  // if(applicationStore.user) {
-  //   //console.log('laaaa')
-  //   history.push('/')
-  // }
+  if (applicationStore.user) {
+    //console.log('laaaa')
+    history.push('/')
+  }
 
   const [Name, setName] = useState<string>('')
   const [Email, setEmail] = useState<string>('')

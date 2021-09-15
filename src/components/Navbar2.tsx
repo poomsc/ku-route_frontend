@@ -9,6 +9,7 @@ const NavBar = (props) => {
   let isLoggedin = 'loggedin'
   let userName = 'userName'
   const { location } = props
+  //console.log('ที่นี่คือ NavBar2')
   //const currentPage = 'Hello W' as any
   const currentPage = location.pathname
   const navDropdownTitle = (

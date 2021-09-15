@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button, Dropdown, FormControl, InputGroup } from 'react-bootstrap'
 import { generateRandomColor, removeElementFromArray } from 'utils'
 import { BsFillCaretDownFill } from 'react-icons/bs'
@@ -8,6 +8,10 @@ import mail from 'assets/icons/mail.png'
 import phone from 'assets/icons/phone.png'
 import { Dropdown as SMTDropdown } from 'semantic-ui-react'
 import DropFileZone from 'components/DropFileZone'
+import { get_one_post } from 'service/system'
+import { DocumentData } from '@firebase/firestore'
+import { get_post, get_info, get_file } from 'service/system'
+import { info } from 'console'
 
 const subjects = [
   {
@@ -34,6 +38,19 @@ const contractChannels = [
   { Icon: instagram, Placeholder: 'https://www.instagram.com/kuroute' },
 ]
 const CreatePostPage = () => {
+  // const [infoData, setInfoData] = useState<DocumentData>();
+
+  // useEffect(() => {
+  //   async function fetch () {
+  //     const info = await get_file('NBkkT1UeCLn6nVE6bhxN/') as DocumentData
+  //     setInfoData(info)
+  //   }
+  //   fetch()
+  // }, [])
+
+  // if (infoData != undefined)
+  //   console.log(infoData[0])
+
   const preprocessTags = generateRandomColor(
     mockTags.map((t) => {
       return { text: t }
