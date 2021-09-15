@@ -5,12 +5,12 @@ import user_icon from '../assets/icons/user-icon.png'
 import { observer } from 'mobx-react-lite'
 import applicationStore from 'stores/applicationStore'
 
-const NavBar = observer ( (props) => {
+const NavBar = (props) => {
   let isLoggedin = 'loggedin'
   let userName = 'userName'
-  // const { location } = props
-  const currentPage = 'Hello W' as any
-  // const currentPage = location.pathname
+  const { location } = props
+  //const currentPage = 'Hello W' as any
+  const currentPage = location.pathname
   const navDropdownTitle = (
     <div style={{ color: '#02353C' }}>
       <img
@@ -97,5 +97,5 @@ const NavBar = observer ( (props) => {
       </Container>
     </Navbar>
   )
-})
+}
 export default NavBar
