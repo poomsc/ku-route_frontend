@@ -94,7 +94,6 @@ const NavBar = observer ( (props) => {
             </Navbar.Collapse>
           </div>
         )}
-        {applicationStore.userCredential.user.displayName}
       </Container>
     </Navbar>
   )
