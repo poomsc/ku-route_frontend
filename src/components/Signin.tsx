@@ -15,10 +15,10 @@ type userState = {
 const Signin = ({ setEmail, setPassword, setSearch, onSubmit, onGoogleLogIn }: userState) => {
 
   return (
-    <Container className='col-lg-6 px-4 px-sm-5 pt-5' style={{ paddingTop: "4vh", paddingBottom: "2.5vh" }}>
-      <h2 className='mb-4'>เข้าสู่ระบบ</h2>
-      {/* <p className='mt-3 mb-2'>KU-ROUTE คือ ​เว็บสำหรับแลกเปลี่ยนข่าวสารต่าง ๆ ภายในมหาวิทยาลัยเกษตรศาสตร์</p> */}
-      <Form>
+    <Container className='col-lg-6 px-4 px-sm-5 pt-5' style={{ paddingTop: "4vh", paddingBottom: "2.5vh", minHeight: '500px' }}>
+      <h2 className=''>เข้าสู่ระบบ</h2>
+      <p className='mt-3 mb-2'>เข้าสู่ระบบเพื่อเริ่มต้นใช้งานเว็บไซต์ KU-ROUTE</p>
+      <Form style={{marginTop:'12vh'}}>
         <div className='mt-3 mb-2 gg-shadow'>
           <button
             type="submit"
@@ -28,12 +28,12 @@ const Signin = ({ setEmail, setPassword, setSearch, onSubmit, onGoogleLogIn }: u
           >
             <div className='align-middle'>
               <img src={google} className='rounded d-flex float-left p-1' width='32px' height='auto' alt='googleicon' style={{ backgroundColor: 'white' }} />
-              <div className='p-1'>Sign in with Google</div>
+              <div style={{paddingTop:'5px'}}>Sign in with Google</div>
             </div>
           </button>
         </div>
 
-        <div className='d-flex align-middle'>
+        {/* <div className='d-flex align-middle'>
           <hr />
           <p className='mb-0 mt-2 px-3' style={{ color: 'grey' }}>or</p>
           <hr />
@@ -74,13 +74,14 @@ const Signin = ({ setEmail, setPassword, setSearch, onSubmit, onGoogleLogIn }: u
         <div className="mb-4">
           <p id='caption'>
             <Link to='/'>Forgot password?</Link>
-          </p>
+          </p> */}
+        <div>
           <p id='caption'>
             New to KU-ROUTE? {""}
             <Link to="/signup" id="signup">
               Sign up</Link>
           </p>
-        </div>
+        </div> 
       </Form>
     </Container>
   )

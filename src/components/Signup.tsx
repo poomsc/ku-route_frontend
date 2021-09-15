@@ -15,10 +15,11 @@ type userState = {
 
 const Signup = ({ setName, setEmail, setPassword, setSearch, onSubmit, onGoogleLogIn }: userState) => {
   return (
-    <Container className='col-lg-6 px-4 px-sm-5 pt-5' style={{ paddingTop: "4vh", paddingBottom: "2.5vh" }}>
+    <Container className='col-lg-6 px-4 px-sm-5 pt-5' style={{ paddingTop: "4vh", paddingBottom: "2.5vh", minHeight: '500px' }}>
       <h2>ลงทะเบียนเข้าใช้งาน</h2>
       <p className='mt-3 mb-2'>KU-ROUTE คือ ​เว็บสำหรับแลกเปลี่ยนข่าวสารต่าง ๆ ภายในมหาวิทยาลัยเกษตรศาสตร์</p>
-      <Form>
+      
+      <Form style={{marginTop:'12vh'}}>
         <div className='mt-3 mb-2 gg-shadow'>
           <button
             type="submit"
@@ -28,12 +29,12 @@ const Signup = ({ setName, setEmail, setPassword, setSearch, onSubmit, onGoogleL
           >
             <div className=''>
               <img src={google} className='rounded d-flex float-left p-1' width='32px' height='auto' alt='googleicon' style={{ backgroundColor: 'white' }} />
-              <div className='p-1'>Sign up with Google</div>
+              <div style={{paddingTop:'5px'}}>Sign up with Google</div>
             </div>
           </button>
         </div>
 
-        <div className='d-flex align-middle'>
+        {/* <div className='d-flex align-middle'>
           <hr />
           <p className='mb-0 mt-2 px-3' style={{ color: 'grey' }}>or</p>
           <hr />
@@ -70,7 +71,7 @@ const Signup = ({ setName, setEmail, setPassword, setSearch, onSubmit, onGoogleL
           >
             Sign up with email
           </button>
-        </div>
+        </div> */}
         <div className="mb-4">
           <p id='caption'>
             Already signed up? {""}
@@ -79,6 +80,7 @@ const Signup = ({ setName, setEmail, setPassword, setSearch, onSubmit, onGoogleL
           </p>
         </div>
       </Form>
+      
     </Container>
   )
 }
