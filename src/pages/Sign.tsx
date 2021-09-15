@@ -1,64 +1,99 @@
-import React from "react";
-import Signup from "components/Signup";
-import Signin from "components/Signin";
-import { useState } from "react";
-import { Jumbotron, Container, Form } from "react-bootstrap";
+import React from 'react'
+import Signup from 'components/Signup'
+import Signin from 'components/Signin'
+import { useState } from 'react'
+import { Jumbotron, Container, Form } from 'react-bootstrap'
 import logo_short_light from '../assets/icons/logo-short-light.png'
 import KU_ROUTE_light from '../assets/icons/KU-ROUTE-light.png'
 
 const SignPage = () => {
-  const [Name, setName] = useState<string>('');
-  const [Email, setEmail] = useState<string>('');
-  const [Password, setPassword] = useState<string>('');
-  const [Search, setSearch] = useState<string>('');
+  const [Name, setName] = useState<string>('')
+  const [Email, setEmail] = useState<string>('')
+  const [Password, setPassword] = useState<string>('')
+  const [Search, setSearch] = useState<string>('')
 
-  const page = window.location.href.split('/').slice(-1)[0];
+  const page = window.location.href.split('/').slice(-1)[0]
 
-  const onChangeName = (e: any) => { setName(e.target.value) }
-  const onChangeEmail = (e: any) => { setEmail(e.target.value) }
-  const onChangePassword = (e: any) => { setPassword(e.target.value) }
-  const onChangeSearch = (e: any) => { setSearch(e.target.value) }
+  const onChangeName = (e: any) => {
+    setName(e.target.value)
+  }
+  const onChangeEmail = (e: any) => {
+    setEmail(e.target.value)
+  }
+  const onChangePassword = (e: any) => {
+    setPassword(e.target.value)
+  }
+  const onChangeSearch = (e: any) => {
+    setSearch(e.target.value)
+  }
   const onSubmit = () => {
-    console.log(Name, Email, Password);
+    console.log(Name, Email, Password)
   }
   return (
-    <Jumbotron className='blue-bg jumbotron jumbotron-fluid mb-0'>
-      <Container className='text-center header-block'>
+    <Jumbotron className="blue-bg jumbotron jumbotron-fluid mb-0">
+      <Container className="text-center header-block">
         {console.log(page)}
         {page === 'signin' ? (
           <>
-            <h3 className='header' style={{ fontSize: '40px' }}>SIGN IN</h3>
-            <h5 style={{ color: '#02353C' }}>เข้าสู่ระบบเพื่อเข้าใช้งานเว็บไซต์</h5>
+            <h3 className="header" style={{ fontSize: '40px' }}>
+              SIGN IN
+            </h3>
+            <h5 style={{ color: '#02353C' }}>
+              เข้าสู่ระบบเพื่อเข้าใช้งานเว็บไซต์
+            </h5>
           </>
         ) : (
           <>
-            <h3 className='header' style={{ fontSize: '40px' }}>SIGN UP</h3>
-            <h5 style={{ color: '#02353C' }}>ลงทะเบียนเข้าใช้งานเพื่อเริ่มต้นใช้งานเว็บไซต์</h5>
+            <h3 className="header" style={{ fontSize: '40px' }}>
+              SIGN UP
+            </h3>
+            <h5 style={{ color: '#02353C' }}>
+              ลงทะเบียนเข้าใช้งานเพื่อเริ่มต้นใช้งานเว็บไซต์
+            </h5>
           </>
         )}
       </Container>
 
-      <Container className='shadow rounded mx-auto' style={{ maxWidth: '60vw', minWidth: '300px', backgroundColor: '' }}>
-        <div className='row myform'>
-          {page === 'signin' ? (<Signin
-            setEmail={onChangeEmail}
-            setPassword={onChangePassword}
-            setSearch={onChangeSearch}
-            onSubmit={onSubmit}
-          />) : (<Signup
-            setName={onChangeName}
-            setEmail={onChangeEmail}
-            setPassword={onChangePassword}
-            setSearch={onChangeSearch}
-            onSubmit={onSubmit}
-          />)}
-          <Container className='col-lg-6 px-0' style={{ minHeight: '500px' }}>
-            <div className='rightCard text-center pt-5 justify-content-center'>
-              <div className='d-block pt-5'>
-                <img src={logo_short_light} className='mx-auto pt-4 pb-3' width='170px' height='auto' alt='logolong' />
+      <Container
+        className="shadow rounded mx-auto"
+        style={{ maxWidth: '60vw', minWidth: '300px', backgroundColor: '' }}
+      >
+        <div className="row myform">
+          {page === 'signin' ? (
+            <Signin
+              setEmail={onChangeEmail}
+              setPassword={onChangePassword}
+              setSearch={onChangeSearch}
+              onSubmit={onSubmit}
+            />
+          ) : (
+            <Signup
+              setName={onChangeName}
+              setEmail={onChangeEmail}
+              setPassword={onChangePassword}
+              setSearch={onChangeSearch}
+              onSubmit={onSubmit}
+            />
+          )}
+          <Container className="col-lg-6 px-0" style={{ minHeight: '500px' }}>
+            <div className="rightCard text-center pt-5 justify-content-center">
+              <div className="d-block pt-5">
+                <img
+                  src={logo_short_light}
+                  className="mx-auto pt-4 pb-3"
+                  width="170px"
+                  height="auto"
+                  alt="logolong"
+                />
               </div>
-              <div className='d-block'>
-                <img src={KU_ROUTE_light} className='mx-auto ' width='170px' height='auto' alt='logolong'/>
+              <div className="d-block">
+                <img
+                  src={KU_ROUTE_light}
+                  className="mx-auto "
+                  width="170px"
+                  height="auto"
+                  alt="logolong"
+                />
               </div>
             </div>
             {/*
@@ -96,4 +131,4 @@ const SignPage = () => {
   )
 }
 
-export default SignPage;
+export default SignPage
