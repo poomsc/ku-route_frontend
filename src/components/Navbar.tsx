@@ -3,11 +3,14 @@ import { useState } from 'react'
 import logo from '../assets/icons/logo.png'
 import user_icon from '../assets/icons/user-icon.png'
 import { Link } from 'react-router-dom'
+import { observer } from 'mobx-react'
+import applicationStore from 'stores/applicationStore'
 
-const NavBar = () => {
+const NavBar = observer ( () => {
   let isLoggedin = 'loggedin'
-  let userName = 'userName'
-
+  let userName = applicationStore.user ? applicationStore.user.displayName : 'userName'
+  //console.log('ที่นี่คือ NavBar')
+  //console.log(applicationStore.user)
   return (
     <Navbar
       sticky="top"
@@ -137,5 +140,5 @@ const NavBar = () => {
       )}
     </Navbar>
   )
-}
+})
 export default NavBar

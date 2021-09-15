@@ -5,8 +5,18 @@ import { useState } from 'react'
 import { Jumbotron, Container, Form } from 'react-bootstrap'
 import logo_short_light from '../assets/icons/logo-short-light.png'
 import KU_ROUTE_light from '../assets/icons/KU-ROUTE-light.png'
+import { signIn_Google } from "service/auth";
+import { Redirect, useHistory } from "react-router";
+import { observer } from 'mobx-react-lite'
+import applicationStore from 'stores/applicationStore'
 
-const SignPage = () => {
+
+const SignPage = observer( () => {
+  const history = useHistory()
+  if(applicationStore.user) {
+    history.push('/')
+  }
+
   const [Name, setName] = useState<string>('')
   const [Email, setEmail] = useState<string>('')
   const [Password, setPassword] = useState<string>('')
@@ -28,6 +38,9 @@ const SignPage = () => {
   }
   const onSubmit = () => {
     console.log(Name, Email, Password)
+  }
+  const onGoogleLogIn = () => {
+    signIn_Google()
   }
   return (
     <Jumbotron className="blue-bg jumbotron jumbotron-fluid mb-0">
@@ -65,6 +78,7 @@ const SignPage = () => {
               setPassword={onChangePassword}
               setSearch={onChangeSearch}
               onSubmit={onSubmit}
+              onGoogleLogIn={onGoogleLogIn}
             />
           ) : (
             <Signup
@@ -73,6 +87,7 @@ const SignPage = () => {
               setPassword={onChangePassword}
               setSearch={onChangeSearch}
               onSubmit={onSubmit}
+              onGoogleLogIn={onGoogleLogIn}
             />
           )}
           <Container className="col-lg-6 px-0" style={{ minHeight: '500px' }}>
@@ -129,6 +144,6 @@ const SignPage = () => {
       </Container>
     </Jumbotron>
   )
-}
+})
 
 export default SignPage
