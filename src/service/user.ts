@@ -109,12 +109,17 @@ async function like(AccountID:string, PostID:string) {
 
 
 async function edit(props: any, UID, col) { //edit_post, edit_comment, edit_info
-  const docRef = await setDoc(doc(firestore, col, UID), 
-  {
-      ...props,
-      DateEdited: serverTimestamp()
+  try{
+    const docRef = await setDoc(doc(firestore, col, UID), 
+    {
+        ...props,
+        DateEdited: serverTimestamp()
+    }
+    )
+    return "Successful"
+  } catch(error) {
+    alert(error)
   }
-  )
 }
 
 async function disable(props: any, col) { //unlike, disable_post, disable_comment
