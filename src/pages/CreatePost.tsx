@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Button, Dropdown, FormControl, InputGroup } from 'react-bootstrap'
+import { useHistory } from 'react-router'
 import { generateRandomColor, removeElementFromArray } from 'utils'
 import { BsFillCaretDownFill } from 'react-icons/bs'
 import facebook from 'assets/icons/facebook.png'
@@ -12,6 +13,7 @@ import { get_one_post } from 'service/system'
 import { DocumentData } from '@firebase/firestore'
 import { get_post, get_info, get_file } from 'service/system'
 import { info } from 'console'
+import applicationStore from 'stores/applicationStore'
 
 const subjects = [
   {
@@ -38,6 +40,11 @@ const contractChannels = [
   { Icon: instagram, Placeholder: 'https://www.instagram.com/kuroute' },
 ]
 const CreatePostPage = () => {
+  const history = useHistory()
+  if (applicationStore.user == null) {
+    history.push('/')
+  }
+
   const [infoData, setInfoData] = useState<DocumentData>()
 
   useEffect(() => {

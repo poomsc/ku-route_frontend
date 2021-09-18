@@ -35,6 +35,8 @@ async function register({ UID, Name, Surname, Email }: registerProps) {
     Name,
     Surname,
     Email,
+    Faculty: '',
+    Displayname: Name + ' ' + Surname,
     DateCreate: serverTimestamp(),
     DateEdited: serverTimestamp(),
     DateLastlogin: serverTimestamp(),
@@ -132,7 +134,7 @@ async function edit(props: any, ID, col) {
       ...props,
       DateEdited: serverTimestamp(),
     })
-    return 'Successfull'
+    return 'Successful'
   } catch (error) {
     alert(error)
   }

@@ -6,9 +6,11 @@ import { Link } from 'react-router-dom'
 import { observer } from 'mobx-react'
 import applicationStore from 'stores/applicationStore'
 
-const NavBar = observer ( () => {
+const NavBar = observer(() => {
   let isLoggedin = 'loggedin'
-  let userName = applicationStore.user ? applicationStore.user.displayName : 'userName'
+  let userName = applicationStore.user
+    ? applicationStore.user.displayName
+    : 'userName'
   //console.log('ที่นี่คือ NavBar')
   //console.log(applicationStore.user)
   return (
@@ -84,7 +86,9 @@ const NavBar = observer ( () => {
                   {userName}
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                  <Dropdown.Item href="#">EDIT PROFILE</Dropdown.Item>
+                  <Dropdown.Item href="/edit-profile">
+                    EDIT PROFILE
+                  </Dropdown.Item>
                   <div className="dropdown-divider"></div>
                   <Dropdown.Item href="#">LOG OUT</Dropdown.Item>
                 </Dropdown.Menu>

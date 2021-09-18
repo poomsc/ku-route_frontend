@@ -5,6 +5,7 @@ import NotFound from 'pages/NotFound'
 import HomePage from 'pages/Home'
 import SignPage from 'pages/Sign'
 import PostPage from 'pages/Post'
+import EditProfilePage from 'pages/EditProfile'
 import CreatePostPage from 'pages/CreatePost'
 import PublicRoute from './PublicRoute'
 import PrivateRoute from './PrivateRoute'
@@ -26,6 +27,11 @@ const Routes: React.FC = (): JSX.Element => {
         <PrivateRoute exact path="/post" component={PostPage} />
         <PublicRoute restricted={false} path="/signin" component={SignPage} />
         <PublicRoute restricted={false} path="/signup" component={SignPage} />
+        <PublicRoute
+          restricted={false}
+          path="/edit-profile"
+          component={EditProfilePage}
+        />
         <PublicRoute
           restricted={false}
           path="/create-post"
