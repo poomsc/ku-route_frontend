@@ -9,7 +9,7 @@ import EditProfilePage from 'pages/EditProfile'
 import CreatePostPage from 'pages/CreatePost'
 import PublicRoute from './PublicRoute'
 import PrivateRoute from './PrivateRoute'
-import NavBar from 'components/Navbar'
+import NavBar from 'components/Navbar2'
 
 const NAVBAR = withRouter(NavBar)
 
