@@ -140,11 +140,15 @@ async function edit(props: any, ID, col) {
 
 async function disable(props: any, ID, col) {
   //unlike, disable_post, disable_comment
-  const docRef = await updateDoc(doc(firestore, col, ID), {
-    ...props,
-    DateEdited: serverTimestamp(),
-    Status: false,
-  })
+  try {
+    const docRef = await updateDoc(doc(firestore, col, ID), {
+      ...props,
+      DateEdited: serverTimestamp(),
+      Status: false,
+    })
+  } catch (error) {
+    alert(error)
+  }
 }
 
 export { register, create_post, create_comment, like, edit, disable }
