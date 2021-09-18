@@ -4,17 +4,17 @@ import logo from '../assets/icons/logo.png'
 import user_icon from '../assets/icons/user-icon.png'
 import { observer } from 'mobx-react-lite'
 import applicationStore from 'stores/applicationStore'
-import { useRouteMatch } from 'react-router'
+import { useLocation, useRouteMatch } from 'react-router'
 
-const NavBar = (props) => {
+const NavBar = observer(() => {
   let isLoggedin = 'loggedin'
   let userName = 'userName'
   // const route = useRouter()
   // const { path } = route
-  const { location } = props
+  const { pathname } = useLocation()
   //console.log('ที่นี่คือ NavBar2')
   //const currentPage = 'Hello W' as any
-  const currentPage = location.pathname
+  const currentPage = pathname
   const navDropdownTitle = (
     <div style={{ color: '#02353C' }}>
       <img
@@ -45,10 +45,10 @@ const NavBar = (props) => {
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="me-auto">
                 <Nav.Link
-                  href="/browse"
+                  href="/"
                   style={{
-                    fontWeight: currentPage === '/browse' ? 'bold' : 'normal',
-                    color: currentPage === '/browse' ? '#2EAF7D' : '#02353C',
+                    fontWeight: currentPage === '/' ? 'bold' : 'normal',
+                    color: currentPage === '/' ? '#2EAF7D' : '#02353C',
                   }}
                 >
                   BROWSE
@@ -86,7 +86,7 @@ const NavBar = (props) => {
           <div>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
-              <Nav activeKey={location.pathname}>
+              <Nav activeKey={pathname}>
                 <Nav.Link href="/signin">SIGN IN</Nav.Link>
                 <Nav.Link
                   style={{ border: '0.1px solid', borderRadius: '5px' }}
@@ -101,5 +101,5 @@ const NavBar = (props) => {
       </Container>
     </Navbar>
   )
-}
+})
 export default NavBar
