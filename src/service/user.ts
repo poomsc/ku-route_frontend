@@ -2,7 +2,8 @@ import { firestore } from "config/firebase"
 import {  collection,
       doc, 
       setDoc, serverTimestamp, 
-      addDoc } from 'firebase/firestore/';
+      addDoc, 
+      updateDoc} from 'firebase/firestore/';
 
 interface registerProps {
   UID:string
@@ -110,7 +111,7 @@ async function like(AccountID:string, PostID:string) {
 
 async function edit(props: any, UID, col) { //edit_post, edit_comment, edit_info
   try{
-    const docRef = await setDoc(doc(firestore, col, UID), 
+    const docRef = await updateDoc(doc(firestore, col, UID), 
     {
         ...props,
         DateEdited: serverTimestamp()
@@ -123,7 +124,7 @@ async function edit(props: any, UID, col) { //edit_post, edit_comment, edit_info
 }
 
 async function disable(props: any, col) { //unlike, disable_post, disable_comment
-  const docRef = await setDoc(doc(firestore, col), 
+  const docRef = await updateDoc(doc(firestore, col), 
   {
       ...props,
       DateEdited: serverTimestamp(),

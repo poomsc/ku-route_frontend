@@ -49,23 +49,53 @@ function findFacultyKey(faculty, keyword: string) {
 const EditProfilePage = () => {
   const [saveButtonClickable, setSaveButtonClickable] = useState(false)
   const [faculty, setFaculty] = useState<string>()
+  
   const [userInfo, setUserInfo] = useState<DocumentData>();
   const [title, setTitle] = useState<string>()
   const [userFaculty, setUserFaculty] = useState<string>()
   const [about, setAbout] = useState<string>()
+
   const [successAlertHidden, setSuccessAlertHidden] = useState(true);
   const [failAlertHidden, setFailAlertHidden] = useState(true);
-  const [animationSuccess, setAnimationSuccess] = useState(false);
+  const [animationAlert, setAnimationAlert] = useState(false);
+
+  async function fetchInfo () {
+    const rawInfo = await get_info(UUID)
+    setUserInfo(rawInfo)
+  }
+
+  async function fetchFaculty () {
+    const rawFaculty = await get_faculty()
+    setFaculty(rawFaculty)
+  }
 
   useEffect(() => {
-    async function fetch () {
-      const rawInfo = await get_info(UUID)
-      const rawFaculty = await get_faculty()
-      setUserInfo(rawInfo)
-      setFaculty(rawFaculty)
-    }
-    fetch()
+    fetchInfo()
+    fetchFaculty()
   }, [])
+
+  async function uploadInfo (changedInfo) {
+    let result = await edit(changedInfo, UUID, updateDatabaseTarget)
+    if (result === "Successful") {
+      setTimeout(() => {
+        fetchInfo()
+        setSuccessAlertHidden(false)
+        setAnimationAlert(true)
+        setTimeout(() => {
+          setAnimationAlert(false)
+        }, 5000);
+      }, 0);
+
+    } else {
+      setTimeout(() => {
+        setFailAlertHidden(false)
+        setAnimationAlert(true)
+        setTimeout(() => {
+          setAnimationAlert(false)
+        }, 5000);
+      }, 0);
+    }
+  }
 
   // Check whether it's undefined
   if (faculty && facultyLoader == 0) {
@@ -75,37 +105,27 @@ const EditProfilePage = () => {
 
   const saveCurrentState = (title, about, newFaculty) => {
     setSaveButtonClickable(false)
-    if (!title) {
-      title = userInfo?.DisplayName
+    let changedInfo = {}
+    if (changeCount[0]) {
+      changedInfo["DisplayName"] = title
     }
-    if (!about) {
-      about = userInfo?.About
+    if (changeCount[1]) {
+      changedInfo["Faculty"] = newFaculty
     }
-    if (!newFaculty) {
-      newFaculty = userInfo?.Faculty 
+    if (changeCount[2]) {
+      changedInfo["About"] = about
     }
-    let changedInfo = {
-      ...userInfo,
-      About: about,
-      DisplayName: title,
-      Faculty: newFaculty,
-    }
-
     // sent new changes to database
-    let result = edit(changedInfo, UUID, updateDatabaseTarget)
+    uploadInfo(changedInfo)
 
-    // using promise when success
-    setTimeout(() => {
-      setSuccessAlertHidden(false)
-      setAnimationSuccess(true)
-      setTimeout(() => {
-        setAnimationSuccess(false)
-      }, 5000);
-    }, 0);
-    
     // setTimeout(() => {
     //   window.location.reload();
     // }, 1000);
+  }
+  
+  const handleOnDisplayNameChange = (event: any) => {
+    setTitle(event.target.value)
+    checkChangeData(userInfo?.DisplayName, event, 0)
   }
 
   const handleOnSelectFaculty = (event: any) => {
@@ -114,15 +134,9 @@ const EditProfilePage = () => {
     checkChangeData(userInfo?.Faculty, event, 1)
   }
 
-  const handleOnDisplayNameChange = (event: any) => {
-    setTitle(event.target.value)
-    checkChangeData(userInfo?.DisplayName, event, 0)
-  }
-
   const handleOnAboutChange = (event: any) => {
     setAbout(event.target.value)
     checkChangeData(userInfo?.About, event, 2)
-      
   }
 
   const checkChangeData = (attr, event, index: number) => {
@@ -297,7 +311,7 @@ const EditProfilePage = () => {
         </div>
       </div>
 
-      <Slide direction="up" in={animationSuccess} mountOnEnter unmountOnExit>
+      <Slide direction="up" in={animationAlert} mountOnEnter unmountOnExit>
         <Alert 
           hidden={successAlertHidden}
           className="fixed-bottom my-0 rounded-0" 
@@ -309,17 +323,19 @@ const EditProfilePage = () => {
           <h5>Your change has been saved!</h5>
         </Alert>
       </Slide>
-      
-      <Alert 
-        hidden={failAlertHidden}
-        className="fixed-bottom my-0 rounded-0" 
-        style={{
-          backgroundColor: "#660000", 
-          color: "#FFA6A6"}}
-        >
-        <Alert.Heading></Alert.Heading>
-        <h5>Your Change saving Failed... Please try again later!</h5>
-      </Alert>
+
+      <Slide direction="up" in={animationAlert} mountOnEnter unmountOnExit>
+          <Alert 
+            hidden={failAlertHidden}
+            className="fixed-bottom my-0 rounded-0" 
+            style={{
+              backgroundColor: "#660000", 
+              color: "#FFA6A6"}}
+            >
+            <Alert.Heading></Alert.Heading>
+            <h5>Your Change saving Failed... Please try again later!</h5>
+          </Alert>
+      </Slide>
     </div>
   ) 
 }
