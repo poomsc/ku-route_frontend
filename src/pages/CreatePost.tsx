@@ -38,18 +38,17 @@ const contractChannels = [
   { Icon: instagram, Placeholder: 'https://www.instagram.com/kuroute' },
 ]
 const CreatePostPage = () => {
-  // const [infoData, setInfoData] = useState<DocumentData>();
+  const [infoData, setInfoData] = useState<DocumentData>()
 
-  // useEffect(() => {
-  //   async function fetch () {
-  //     const info = await get_file('NBkkT1UeCLn6nVE6bhxN/') as DocumentData
-  //     setInfoData(info)
-  //   }
-  //   fetch()
-  // }, [])
+  useEffect(() => {
+    async function fetch() {
+      const info = (await get_file('NBkkT1UeCLn6nVE6bhxN/')) as DocumentData
+      setInfoData(info)
+    }
+    fetch()
+  }, [])
 
-  // if (infoData != undefined)
-  //   console.log(infoData[0])
+  if (infoData != undefined) console.log(infoData[0])
 
   const preprocessTags = generateRandomColor(
     mockTags.map((t) => {

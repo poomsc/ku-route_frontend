@@ -32,6 +32,7 @@ const App = () => {
   //console.log(test)
   //console.log(res.to)
   //TagSearch(['คลังความรู้'])
+  //edit({Faculty:'คณะหมูกรอบ'}, 'QgeVAV0fQHgqv99ttcdB', 'Account')
 
   return <Routes />
 }

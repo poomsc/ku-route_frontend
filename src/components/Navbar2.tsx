@@ -4,10 +4,13 @@ import logo from '../assets/icons/logo.png'
 import user_icon from '../assets/icons/user-icon.png'
 import { observer } from 'mobx-react-lite'
 import applicationStore from 'stores/applicationStore'
+import { useRouteMatch } from 'react-router'
 
 const NavBar = (props) => {
   let isLoggedin = 'loggedin'
   let userName = 'userName'
+  // const route = useRouter()
+  // const { path } = route
   const { location } = props
   //console.log('ที่นี่คือ NavBar2')
   //const currentPage = 'Hello W' as any
