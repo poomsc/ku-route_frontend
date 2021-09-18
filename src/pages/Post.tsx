@@ -6,6 +6,11 @@ import user_icon from './../assets/icons/user-icon.png'
 import { url } from 'inspector'
 import pdf from './../assets/icons/PDF.png'
 import jpg from './../assets/icons/JPG.png'
+import { topicReference } from '@babel/types'
+import userIcon from './../assets/icons/user-icon.png'
+import sendArrow from './../assets/icons/sendArrow.png'
+import Comment from './../assets/icons/Comment.png'
+import Like from './../assets/icons/Like.png'
 
 const PostPage = () => {
   const mockTags = ['คลังหนังสือ', 'ชีทสรุป']
@@ -38,6 +43,14 @@ const PostPage = () => {
     '#E4BE7F',
     '#74C493',
   ]
+
+  const mockComment = [
+    ['ขอบคุณที่แชร์ครับ ^_^', 'MAMMOTH123', '1'],
+    ['พอจะมีของวิชา Digital Design มั้ยครับ', 'XanXiah', '2'],
+    ['ขอด้วยคนคร้าบบ', 'Max', '2'], 
+  ]
+  const [allComment, setAllComment] = useState<(string|number)[][]>(mockComment)
+
   const maxColor = colors.length
   return (
     <div className="white-bg py-5">
@@ -214,9 +227,207 @@ const PostPage = () => {
         </div>
       </Container>
 
-      <Container className="rounded box-shadow bg-white mx-auto px-0">
-        <h5 style={{ fontWeight: 'bold' }}>การตอบกลับ</h5>
-        <div>ตอบกลับโพสต์นี้</div>
+      <Container className="box-shadow bg-white mx-auto mb-4 px-0 pt-4"
+        style={{
+          width: '1200px',
+          height: '310px',
+          left: '157px',
+          top: '1017px',
+          borderRadius: '5px 5px 5px 5px',
+        }}
+      >
+          <div
+            style={{
+              paddingLeft:'3vw',
+              paddingRight:'3vw',
+              marginBottom: '30px',
+              lineHeight: '38px',
+              height: '35px',
+            }}
+          >
+            <div
+              className="d-flex pl-3 pb-2 d-inline-flex"
+              style={{
+                fontFamily: 'Roboto',
+                fontStyle: 'normal',
+                fontSize: '25px',
+                fontWeight: 'bold',
+                color: '#525252',
+              }}
+            >
+              การตอบกลับ
+            </div>
+            <div
+              className="float-right mt-0 "
+              style={{
+                fontFamily: 'Roboto',
+                fontStyle: 'normal',
+                fontSize: '15px',
+                fontWeight: 'bold',
+                color: '#2EAF7D',
+                paddingRight:'0vw',
+              }}
+            >
+              &nbsp;&nbsp;7&nbsp;&nbsp;
+            </div>
+            <img
+              className="float-right mt-2"
+              style={{
+                width: '20px',
+                height: '20px',
+              }}
+              src={Like}
+            />
+            <div
+              className="float-right mt-0 "
+              style={{
+                fontFamily: 'Roboto',
+                fontStyle: 'normal',
+                fontSize: '15px',
+                fontWeight: 'bold',
+                color: '#3FD0C9',
+                paddingRight:'0vw',
+              }}
+            >
+              &nbsp;&nbsp;6&nbsp;&nbsp;
+            </div>
+            <img
+              className="float-right mt-2"
+              style={{
+                width: '20px',
+                height: '20px',
+              }}
+              src={Comment}
+            />
+          </div>
+        
+        {allComment.map((comment) => (
+        <div 
+          className="d-block mx-auto px-5"
+        >
+
+          <div
+            className="d-block d-inline-flex"
+            style={{
+              marginBottom: '15px',
+              boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+              borderRadius: '5px 5px 5px 5px',
+              height: '50px',
+              width: '1060px',
+            }}
+          >
+              <div
+                style={{
+                  fontSize: '18px',
+                  color: '#525252',
+                  width: '860px',
+                  height: '50px',
+                  paddingLeft: '3vw',
+                  lineHeight: '50px',
+                  border: 'none',
+                }}
+              >
+                {comment[0]}
+              </div>
+              <div className="py-2">
+              <img
+                  src={userIcon}
+                  style={{
+                    border: 'none',
+                    background: '#E4E6E7',
+                    width: '35px',
+                    height: '35px',
+                    borderRadius: '50px',
+                  }}
+              />
+              </div>
+              <div
+                className="d-inline-flex"
+                style={{
+                  width: '165px',
+                  height: '15px',
+                }}
+              >
+                <div
+                  className="py-2"
+                  style={{
+                    color: '#525252',
+                    fontSize: "12px",
+                    fontWeight: 'lighter',
+                    border: 'none',
+                    width: '23px',
+                  }}
+                >
+                &nbsp;&nbsp;by&nbsp;&nbsp;
+                <br/>&nbsp;&nbsp;{comment[2]}&nbsp;&nbsp;days&nbsp;&nbsp;ago
+                </div>
+                <div
+                  className="d-inline-flex py-2"
+                  style={{
+                    color: '#525252',
+                    fontSize: "15px",
+                    fontWeight: 'bolder',
+                    border: 'none',
+                  }}
+                >
+                  {comment[1]}
+                </div>
+                
+              </div>
+                
+            </div> 
+
+        </div>    
+        ))}
+
+        <div
+            className="d-block mx-auto px-5 py-3"
+            style={{
+              width: '1140px',
+              height: '60px',
+              top: '1017px',
+              borderRadius: '0rem 0rem 5px 5px',
+              background: '#D9D9D9',
+              margin: '0px',
+              boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+            }}
+        >
+          <div className="form-group shadow d-flex">
+            <input
+                style={{
+                  borderRadius: '4px 0px 0px 4px',
+                  background: '#FFFFFF',
+                  border:'none',
+                  width: '1160px',
+                }}
+                type="text"
+                className="form-control"
+                placeholder="ตอบกลับโพสต์นี้..."
+            />
+            <button
+              type="submit"
+              className="btn btn-primary btn-sm"
+              style={{ 
+                borderRadius: '0px 4px 4px 0px', 
+                backgroundColor: '#FFFFFF', 
+                border:'none',
+                height: '33px',
+              }}
+            >
+              <img 
+                style={{
+                  width: '15px',
+                  height: '15px',
+                  background: '#FFFFFF',
+                  borderRadius: '0px 4px 4px 0px',
+                  border:'none',
+                }}
+                src={sendArrow}
+              />
+            </button>
+          </div>
+        </div>
+
       </Container>
     </div>
   )
