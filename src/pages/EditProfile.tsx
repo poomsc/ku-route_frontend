@@ -3,7 +3,7 @@ import { Alert, Button, FormControl, InputGroup } from 'react-bootstrap'
 import defaultUserProfile from 'assets/icons/user-icon.png'
 import { Dropdown as SMTDropdown } from 'semantic-ui-react'
 import { BsFillCaretDownFill } from 'react-icons/bs'
-import { DocumentData } from '@firebase/firestore'
+import { DocumentData, serverTimestamp } from '@firebase/firestore'
 import { get_faculty, get_info } from 'service/system'
 import { edit } from 'service/user'
 import Slide from '@mui/material/Slide'
@@ -18,7 +18,6 @@ let currentFaculty, newSelected
 let changeCount = [false, false, false]
 
 let updateDatabaseTarget = 'Account'
-let UUID = 'accout01'
 
 function loadFaculty(components) {
   for (const e of components) {
@@ -49,6 +48,9 @@ const EditProfilePage = observer(() => {
   if (!applicationStore.user) {
     history.push('/signin')
   }
+
+  let UUID = 'accout01'
+  if (applicationStore.user) UUID = applicationStore.user.uid
 
   const [saveButtonClickable, setSaveButtonClickable] = useState(false)
   const [faculty, setFaculty] = useState<string>()
@@ -112,6 +114,7 @@ const EditProfilePage = observer(() => {
     if (changeCount[2]) {
       changedInfo['About'] = about
     }
+    changedInfo['DateEdited'] = serverTimestamp()
     // sent new changes to database
     uploadInfo(changedInfo)
 

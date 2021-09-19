@@ -1,5 +1,5 @@
 import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import logo from '../assets/icons/logo.png'
 import user_icon from '../assets/icons/user-icon.png'
 import { observer } from 'mobx-react-lite'
@@ -7,12 +7,28 @@ import applicationStore from 'stores/applicationStore'
 import { useLocation, useRouteMatch } from 'react-router'
 import { signOut } from 'service/auth'
 import { Link } from 'react-router-dom'
+import { doc, DocumentData, getDoc } from '@firebase/firestore'
+import { get_info } from 'service/system'
+import { firestore } from 'config/firebase'
 
 const NavBar = observer(() => {
+  const [infoData, setInfoData] = useState<DocumentData>()
+
+  const info_doc = applicationStore.user
+    ? doc(firestore, 'Account', applicationStore.user.uid)
+    : null
+
+  useEffect(() => {
+    if (!applicationStore.user) return
+    async function fetch() {
+      const info = (await get_info(applicationStore.user.uid)) as DocumentData
+      setInfoData(info)
+    }
+    fetch()
+  }, [applicationStore, info_doc])
+
   let isLoggedin = 'loggedin'
-  let userName = applicationStore.user
-    ? applicationStore.user.displayName
-    : 'userName'
+  let userName = infoData?.DisplayName ? infoData?.DisplayName : 'userName'
   const { pathname } = useLocation()
   const currentPage = pathname
   const navDropdownTitle = (

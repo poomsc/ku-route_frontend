@@ -35,8 +35,8 @@ async function register({ UID, Name, Surname, Email }: registerProps) {
     Name,
     Surname,
     Email,
-    Faculty: '',
-    Displayname: Name + ' ' + Surname,
+    Faculty: null,
+    DisplayName: Name + ' ' + Surname,
     DateCreate: serverTimestamp(),
     DateEdited: serverTimestamp(),
     DateLastlogin: serverTimestamp(),
@@ -132,7 +132,6 @@ async function edit(props: any, ID, col) {
   try {
     const docRef = await updateDoc(doc(firestore, col, ID), {
       ...props,
-      DateEdited: serverTimestamp(),
     })
     return 'Successful'
   } catch (error) {
