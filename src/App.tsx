@@ -31,7 +31,7 @@ const App = () => {
   //const test = get_info('accout01')
   //console.log(test)
   //console.log(res.to)
-  //TagSearch(['คลังความรู้'])
+  //console.log(TagSearch(['คลังความรู้', 'คลังข้อสอบ']))
   //edit({Faculty:'คณะหมูกรอบ'}, 'QgeVAV0fQHgqv99ttcdB', 'Account')
 
   return <Routes />

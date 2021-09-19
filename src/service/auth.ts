@@ -25,15 +25,15 @@ interface signupProps {
 
 firebaseAuth.languageCode = 'th'
 
-async function checkAuthState() {
-  await onAuthStateChanged(firebaseAuth, (user) => {
+function checkAuthState() {
+  onAuthStateChanged(firebaseAuth, (user) => {
     applicationStore.setUser(user)
     if (user) {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/firebase.User
       const UID = user.uid
-      console.log(UID)
-      console.log(user)
+      // console.log(UID)
+      // console.log(user)
       return true
     } else console.log('Auth State Changed')
     return false
@@ -99,14 +99,16 @@ async function signIn_Google() {
   provider.addScope('https://www.googleapis.com/auth/contacts.readonly')
   provider.addScope('https://www.googleapis.com/auth/userinfo.email')
   provider.addScope('https://www.googleapis.com/auth/userinfo.profile')
+  //provider.setCustomParameters(hd: 'ku.th')
   try {
+    console.log(provider)
     const userCredential = await signInWithPopup(firebaseAuth, provider)
     const credential = GoogleAuthProvider.credentialFromResult(userCredential)
     const token = credential?.accessToken
     if (token) localStorage.setItem('providerToken', token)
     // The signed-in user info.
     const user = userCredential.user
-    // console.log(userCredential)
+    console.log(userCredential)
     // console.log(user)
     // console.log(token)
     applicationStore.setUser(user)
@@ -116,7 +118,6 @@ async function signIn_Google() {
     return false
   }
 }
-
 export {
   checkAuthState,
   signIn_EmailPassword,

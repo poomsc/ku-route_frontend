@@ -45,9 +45,11 @@ export async function get_info(accountid: string) {
     } else {
       // doc.data() will be undefined in this case
       console.log('No such document!')
+      return null
     }
   } catch (error) {
     alert(error)
+    return null
   }
 }
 
@@ -78,9 +80,11 @@ export async function get_one_post(PostID: string) {
     } else {
       // doc.data() will be undefined in this case
       console.log('No such document!')
+      return null
     }
   } catch (error) {
     alert(error)
+    return null
   }
 }
 
@@ -95,6 +99,21 @@ export async function get_comment(PostID: string) {
       all_comment.push(doc.data())
     })
     return all_comment
+  } catch (error) {
+    alert(error)
+  }
+}
+
+export async function get_info_comment(PostID: string) {
+  try {
+    const comment = await get_comment(PostID)
+    const comment_info = [] as any
+    comment.forEach(async (cm) => {
+      // console.log(i.AccountID)
+      const info = await get_info(cm.AccountID)
+      comment_info.push(info)
+    })
+    return comment_info
   } catch (error) {
     alert(error)
   }

@@ -14,6 +14,8 @@ import { DocumentData } from '@firebase/firestore'
 import { get_post, get_info, get_file } from 'service/system'
 import { info } from 'console'
 import applicationStore from 'stores/applicationStore'
+import { checkAuthState } from 'service/auth'
+import { observer } from 'mobx-react-lite'
 
 const subjects = [
   {
@@ -39,23 +41,13 @@ const contractChannels = [
   { Icon: facebook, Placeholder: 'https://www.facebook.com/kuroute' },
   { Icon: instagram, Placeholder: 'https://www.instagram.com/kuroute' },
 ]
-const CreatePostPage = () => {
+
+const CreatePostPage = observer(() => {
+  //check signin
   const history = useHistory()
-  if (applicationStore.user == null) {
-    history.push('/')
+  if (!applicationStore.user) {
+    history.push('/signin')
   }
-
-  const [infoData, setInfoData] = useState<DocumentData>()
-
-  useEffect(() => {
-    async function fetch() {
-      const info = (await get_file('NBkkT1UeCLn6nVE6bhxN/')) as DocumentData
-      setInfoData(info)
-    }
-    fetch()
-  }, [])
-
-  if (infoData != undefined) console.log(infoData[0])
 
   const preprocessTags = generateRandomColor(
     mockTags.map((t) => {
@@ -240,6 +232,6 @@ const CreatePostPage = () => {
       </div>
     </div>
   )
-}
+})
 
 export default CreatePostPage

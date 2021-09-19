@@ -6,6 +6,7 @@ import { observer } from 'mobx-react-lite'
 import applicationStore from 'stores/applicationStore'
 import { useLocation, useRouteMatch } from 'react-router'
 import { signOut } from 'service/auth'
+import { Link } from 'react-router-dom'
 
 const NavBar = observer(() => {
   let isLoggedin = 'loggedin'
@@ -56,7 +57,7 @@ const NavBar = observer(() => {
                   BROWSE
                 </Nav.Link>
                 <Nav.Link
-                  href="/create-post"
+                  // href="/create-post"
                   style={{
                     fontWeight:
                       currentPage === '/create-post' ? 'bold' : 'normal',
@@ -64,11 +65,11 @@ const NavBar = observer(() => {
                       currentPage === '/create-post' ? '#2EAF7D' : '#02353C',
                   }}
                 >
-                  CREATE POST
+                  <Link to="/create-post"> CREATE POST </Link>
                 </Nav.Link>
                 <NavDropdown title={navDropdownTitle} id="basic-nav-dropdown">
                   <NavDropdown.Item
-                    href="edit-profile"
+                    // href="edit-profile"
                     style={{
                       fontWeight:
                         currentPage === '/edit-profile' ? 'bold' : 'normal',
@@ -76,7 +77,7 @@ const NavBar = observer(() => {
                         currentPage === '/edit-profile' ? '#2EAF7D' : '#02353C',
                     }}
                   >
-                    EDIT PROFILE
+                    <Link to="/edit-profile"> EDIT PROFILE </Link>
                   </NavDropdown.Item>
                   <NavDropdown.Divider />
                   <NavDropdown.Item href="/" onClick={logOut}>

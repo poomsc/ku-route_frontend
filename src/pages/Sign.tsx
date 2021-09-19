@@ -11,9 +11,9 @@ import { observer } from 'mobx-react-lite'
 import applicationStore from 'stores/applicationStore'
 
 const SignPage = observer(() => {
+  //check signin
   const history = useHistory()
   if (applicationStore.user) {
-    //console.log('laaaa')
     history.push('/')
   }
 

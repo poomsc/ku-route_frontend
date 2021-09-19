@@ -10,6 +10,7 @@ import Slide from '@mui/material/Slide'
 import LockLabel from '@material-ui/icons/Lock'
 import applicationStore from 'stores/applicationStore'
 import { useHistory } from 'react-router'
+import { observer } from 'mobx-react'
 
 const facultyList = [] as any
 let facultyLoader = 0
@@ -42,11 +43,12 @@ function findFacultyKey(faculty, keyword: string) {
   }
 }
 
-const EditProfilePage = () => {
+const EditProfilePage = observer(() => {
+  //check signin
   const history = useHistory()
-  // if (applicationStore.user) {
-  //   history.push('/')
-  // }
+  if (!applicationStore.user) {
+    history.push('/signin')
+  }
 
   const [saveButtonClickable, setSaveButtonClickable] = useState(false)
   const [faculty, setFaculty] = useState<string>()
@@ -60,26 +62,21 @@ const EditProfilePage = () => {
   const [failAlertHidden, setFailAlertHidden] = useState(true)
   const [animationAlert, setAnimationAlert] = useState(false)
 
-  async function fetchInfo() {
-    const rawInfo = await get_info(UUID)
-    setUserInfo(rawInfo)
-  }
-
-  async function fetchFaculty() {
-    const rawFaculty = await get_faculty()
-    setFaculty(rawFaculty)
-  }
-
   useEffect(() => {
-    fetchInfo()
-    fetchFaculty()
+    async function fetch() {
+      const rawInfo = (await get_info(UUID)) as DocumentData
+      const rawFaculty = await get_faculty()
+      setUserInfo(rawInfo)
+      setFaculty(rawFaculty)
+    }
+    fetch()
   }, [])
 
   async function uploadInfo(changedInfo) {
     let result = await edit(changedInfo, UUID, updateDatabaseTarget)
     if (result === 'Successful') {
       setTimeout(() => {
-        fetchInfo()
+        //fetchInfo()
         setSuccessAlertHidden(false)
         setAnimationAlert(true)
         setTimeout(() => {
@@ -359,6 +356,6 @@ const EditProfilePage = () => {
       </Slide>
     </div>
   )
-}
+})
 
 export default EditProfilePage
