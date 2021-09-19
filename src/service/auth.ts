@@ -26,7 +26,7 @@ interface signupProps {
 firebaseAuth.languageCode = 'th'
 
 async function checkAuthState() {
-  onAuthStateChanged(firebaseAuth, (user) => {
+  await onAuthStateChanged(firebaseAuth, (user) => {
     applicationStore.setUser(user)
     if (user) {
       // User is signed in, see docs for a list of available properties
@@ -38,6 +38,7 @@ async function checkAuthState() {
     } else console.log('Auth State Changed')
     return false
   })
+  return false
 }
 
 async function signUp_EmailPassword({
@@ -85,6 +86,7 @@ async function signOut() {
     await firebaseAuth.signOut()
     localStorage.removeItem('providerToken')
     applicationStore.setUser(null)
+    console.log('successful logout')
     return true
   } catch (error) {
     alert(error)

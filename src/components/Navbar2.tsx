@@ -5,15 +5,14 @@ import user_icon from '../assets/icons/user-icon.png'
 import { observer } from 'mobx-react-lite'
 import applicationStore from 'stores/applicationStore'
 import { useLocation, useRouteMatch } from 'react-router'
+import { signOut } from 'service/auth'
 
 const NavBar = observer(() => {
   let isLoggedin = 'loggedin'
-  let userName = 'userName'
-  // const route = useRouter()
-  // const { path } = route
+  let userName = applicationStore.user
+    ? applicationStore.user.displayName
+    : 'userName'
   const { pathname } = useLocation()
-  //console.log('ที่นี่คือ NavBar2')
-  //const currentPage = 'Hello W' as any
   const currentPage = pathname
   const navDropdownTitle = (
     <div style={{ color: '#02353C' }}>
@@ -27,6 +26,9 @@ const NavBar = observer(() => {
       {userName}
     </div>
   )
+  const logOut = () => {
+    signOut()
+  }
   return (
     <Navbar sticky="top" bg="light" expand="lg">
       <Container className="py-2 d-flex">
@@ -77,7 +79,9 @@ const NavBar = observer(() => {
                     EDIT PROFILE
                   </NavDropdown.Item>
                   <NavDropdown.Divider />
-                  <NavDropdown.Item href="#">LOG OUT</NavDropdown.Item>
+                  <NavDropdown.Item href="/" onClick={logOut}>
+                    LOG OUT
+                  </NavDropdown.Item>
                 </NavDropdown>
               </Nav>
             </Navbar.Collapse>
