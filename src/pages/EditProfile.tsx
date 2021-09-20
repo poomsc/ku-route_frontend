@@ -18,6 +18,7 @@ let currentFaculty, newSelected
 let changeCount = [false, false, false]
 
 let updateDatabaseTarget = 'Account'
+let UUID = 'accout01'
 
 function loadFaculty(components) {
   for (const e of components) {
@@ -49,7 +50,6 @@ const EditProfilePage = observer(() => {
     history.push('/signin')
   }
 
-  let UUID = 'accout01'
   if (applicationStore.user) UUID = applicationStore.user.uid
 
   const [saveButtonClickable, setSaveButtonClickable] = useState(false)
@@ -65,20 +65,15 @@ const EditProfilePage = observer(() => {
   const [animationAlert, setAnimationAlert] = useState(false)
 
   useEffect(() => {
-    async function fetch() {
-      const rawInfo = (await get_info(UUID)) as DocumentData
-      const rawFaculty = await get_faculty()
-      setUserInfo(rawInfo)
-      setFaculty(rawFaculty)
-    }
-    fetch()
+    fetchInfo()
+    fetchFaculty()
   }, [])
 
   async function uploadInfo(changedInfo) {
     let result = await edit(changedInfo, UUID, updateDatabaseTarget)
     if (result === 'Successful') {
       setTimeout(() => {
-        //fetchInfo()
+        fetchInfo()
         setSuccessAlertHidden(false)
         setAnimationAlert(true)
         setTimeout(() => {
@@ -94,6 +89,16 @@ const EditProfilePage = observer(() => {
         }, 5000)
       }, 0)
     }
+  }
+
+  async function fetchInfo() {
+    const rawInfo = (await get_info(UUID)) as DocumentData
+    setUserInfo(rawInfo)
+  }
+
+  async function fetchFaculty() {
+    const rawFaculty = await get_faculty()
+    setFaculty(rawFaculty)
   }
 
   // Check whether it's undefined
@@ -251,9 +256,9 @@ const EditProfilePage = observer(() => {
           >
             {title
               ? title?.length
-              : userInfo?.DisplayName
-              ? userInfo?.DisplayName.length
-              : 0}
+              : changeCount[0]
+              ? 0
+              : userInfo?.DisplayName.length}
             /50
           </div>
         </InputGroup>
@@ -308,9 +313,9 @@ const EditProfilePage = observer(() => {
           >
             {about
               ? about?.length
-              : userInfo?.About
-              ? userInfo?.About.length
-              : 0}
+              : changeCount[2]
+              ? 0
+              : userInfo?.About.length}
             /1000
           </div>
         </InputGroup>
