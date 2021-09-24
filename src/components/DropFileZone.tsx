@@ -3,7 +3,11 @@ import Dropzone, { IFileWithMeta, StatusValue } from 'react-dropzone-uploader'
 import { upload_file } from 'service/file'
 import { copyFile } from 'fs'
 
-const DropFileZone = () => {
+interface Props {
+  onChange: (status: StatusValue, allFiles: IFileWithMeta[]) => void
+}
+
+const DropFileZone = ({ onChange }: Props) => {
   // called every time a file's `status` changes
   const handleChangeStatus = (
     file: IFileWithMeta,
@@ -11,6 +15,7 @@ const DropFileZone = () => {
     allFiles: IFileWithMeta[]
   ) => {
     console.log(status, file, allFiles)
+    onChange(status, allFiles)
   }
 
   return (
