@@ -6,7 +6,7 @@ import HomePage from 'pages/Home'
 import SignPage from 'pages/Sign'
 import PostPage from 'pages/Post'
 import EditProfilePage from 'pages/EditProfile'
-import CreatePostPage from 'pages/CreatePost'
+import VersatilePostPage from 'pages/VersatilePost'
 import PublicRoute from './PublicRoute'
 import PrivateRoute from './PrivateRoute'
 import NavBar from 'components/Navbar2'
@@ -25,17 +25,22 @@ const Routes: React.FC = (): JSX.Element => {
           component={HomePage}
         />
         <PrivateRoute exact path="/post" component={PostPage} />
-        <PublicRoute restricted={false} path="/signin" component={SignPage} />
+        <PublicRoute restricted={true} path="/signin" component={SignPage} />
         <PublicRoute restricted={false} path="/signup" component={SignPage} />
-        <PublicRoute
+        <PrivateRoute
           restricted={false}
           path="/edit-profile"
           component={EditProfilePage}
         />
-        <PublicRoute
+        <PrivateRoute
           restricted={false}
           path="/create-post"
-          component={CreatePostPage}
+          component={VersatilePostPage}
+        />
+        <PrivateRoute
+          restricted={false}
+          path="/edit-post"
+          component={VersatilePostPage}
         />
         <PublicRoute restricted={false} component={NotFound} />
       </Switch>
