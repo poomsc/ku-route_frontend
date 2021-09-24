@@ -67,9 +67,9 @@ const EditProfilePage = observer(() => {
   useEffect(() => {
     async function fetch() {
       const rawInfo = (await get_info(UUID)) as DocumentData
-      const rawFaculty = await get_faculty()
+      //const rawFaculty = await get_faculty()
       setUserInfo(rawInfo)
-      setFaculty(rawFaculty)
+      //setFaculty(rawFaculty)
     }
     fetch()
   }, [])
