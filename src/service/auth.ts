@@ -121,7 +121,7 @@ async function signIn_Google() {
     } else {
       register({ UID: user.uid, Name: Name[0], Surname: Name[1], Email: email })
     }
-    //console.log(userCredential)
+    // console.log(userCredential)
     // console.log(user)
     // console.log(token)
     applicationStore.setUser(user)

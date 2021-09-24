@@ -19,8 +19,10 @@ import { TagSearch } from 'service/search'
 import { title } from 'process'
 import { edit } from 'service/user'
 import { serverTimestamp } from '@firebase/firestore'
+import applicationStore from 'stores/applicationStore'
 
 const App = () => {
+  const {} = applicationStore
   useEffect(() => {
     checkAuthState()
   }, [])
