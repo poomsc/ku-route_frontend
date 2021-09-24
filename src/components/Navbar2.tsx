@@ -18,14 +18,23 @@ const NavBar = observer(() => {
     ? doc(firestore, 'Account', applicationStore.user.uid)
     : null
 
+  // useEffect(() => {
+  //   if (!applicationStore.user) return
+  //   async function fetch() {
+  //     const info = (await get_info(applicationStore.user.uid)) as DocumentData
+  //     setInfoData(info)
+  //   }
+  //   fetch()
+  // }, [applicationStore, info_doc])
   useEffect(() => {
     if (!applicationStore.user) return
     async function fetch() {
       const info = (await get_info(applicationStore.user.uid)) as DocumentData
+
       setInfoData(info)
     }
     fetch()
-  }, [applicationStore, info_doc])
+  }, [])
 
   let isLoggedin = 'loggedin'
   let userName = infoData?.DisplayName ? infoData?.DisplayName : 'userName'

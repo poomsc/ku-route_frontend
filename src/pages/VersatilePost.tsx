@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Button, Dropdown, FormControl, InputGroup } from 'react-bootstrap'
-import { useHistory } from 'react-router'
+import { useHistory, useLocation } from 'react-router'
 import { generateRandomColor, removeElementFromArray } from 'utils'
 import { BsFillCaretDownFill } from 'react-icons/bs'
 import facebook from 'assets/icons/facebook.png'
@@ -16,6 +16,7 @@ import { info } from 'console'
 import applicationStore from 'stores/applicationStore'
 import { checkAuthState } from 'service/auth'
 import { observer } from 'mobx-react-lite'
+import { IFileWithMeta, StatusValue } from 'react-dropzone-uploader'
 
 const subjects = [
   {
@@ -42,12 +43,12 @@ const contractChannels = [
   { Icon: instagram, Placeholder: 'https://www.instagram.com/kuroute' },
 ]
 
-const CreatePostPage = observer(() => {
+const pathType = { '/create-post': 0 }
+
+const VersatilePost = observer(() => {
   //check signin
-  const history = useHistory()
-  if (!applicationStore.user) {
-    history.push('/signin')
-  }
+  const { pathname } = useLocation()
+  console.log({ pathname })
 
   const preprocessTags = generateRandomColor(
     mockTags.map((t) => {
@@ -60,6 +61,10 @@ const CreatePostPage = observer(() => {
   const [description, setDescription] = useState<string>()
   const [tags, setTags] = useState<{ [name: string]: string }[]>(preprocessTags)
   const [tagsSelected, setTagSelected] = useState<string[]>([])
+  const [filesUpload, setFilesUpload] = useState<{
+    status: StatusValue
+    allFiles: IFileWithMeta[]
+  }>({ status: 'done', allFiles: [] })
 
   const handleOnTagChange = (value: string, event: 'add' | 'remove') => {
     if (event === 'add') {
@@ -71,6 +76,10 @@ const CreatePostPage = observer(() => {
 
   const handleOnSelectSubject = (event: any) => {
     setTopicSelected(event.target.innerText)
+  }
+
+  const handelOnCreatePost = () => {
+    console.log('hello worlld')
   }
 
   return (
@@ -226,12 +235,14 @@ const CreatePostPage = observer(() => {
           <Button variant="danger" style={{ width: '7rem' }}>
             DELETE
           </Button>
-          <div className="mx-2"></div>
-          <Button style={{ width: '7rem' }}>PUBLISH</Button>
+          <div className="mx-2" />
+          <Button style={{ width: '7rem' }} onClick={handelOnCreatePost}>
+            PUBLISH
+          </Button>
         </div>
       </div>
     </div>
   )
 })
 
-export default CreatePostPage
+export default VersatilePost

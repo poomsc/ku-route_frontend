@@ -11,12 +11,6 @@ import { observer } from 'mobx-react-lite'
 import applicationStore from 'stores/applicationStore'
 
 const SignPage = observer(() => {
-  //check signin
-  const history = useHistory()
-  if (applicationStore.user) {
-    history.push('/')
-  }
-
   const [Name, setName] = useState<string>('')
   const [Email, setEmail] = useState<string>('')
   const [Password, setPassword] = useState<string>('')
@@ -45,7 +39,6 @@ const SignPage = observer(() => {
   return (
     <Jumbotron className="blue-bg jumbotron jumbotron-fluid mb-0">
       <Container className="text-center header-block">
-        {console.log(page)}
         {page === 'signin' ? (
           <>
             <h3 className="header" style={{ fontSize: '40px' }}>
