@@ -17,8 +17,8 @@ let facultyLoader = 0
 let currentFaculty, newFacultySelected
 let sectionChangeStatus = [false, false, false]
 
-let databaseTarget = 'Account'
-let UUID = 'accout01'
+let updateDatabaseTarget = 'Account'
+let UUID = 'Account01'
 
 function loadFaculty(components) {
   for (const e of components) {
@@ -59,12 +59,18 @@ const EditProfilePage = observer(() => {
   const [animationAlert, setAnimationAlert] = useState(false)
 
   useEffect(() => {
-    fetchInfo()
-    fetchFaculty()
+    if (!applicationStore.user) return
+    async function fetch() {
+      const rawInfo = (await get_info(UUID)) as DocumentData
+      const rawFaculty = await get_faculty()
+      setUserInfo(rawInfo)
+      setFaculty(rawFaculty)
+    }
+    fetch()
   }, [])
 
   async function uploadInfo(changedInfo) {
-    let result = await edit(changedInfo, UUID, databaseTarget)
+    let result = await edit(changedInfo, UUID, updateDatabaseTarget)
     if (result === 'Successful') {
       setTimeout(() => {
         fetchInfo()
@@ -116,6 +122,7 @@ const EditProfilePage = observer(() => {
     changedInfo['DateEdited'] = serverTimestamp()
     // sent new changes to database
     uploadInfo(changedInfo)
+    applicationStore.setUserDisplayName(title)
 
     // setTimeout(() => {
     //   window.location.reload();
@@ -155,7 +162,11 @@ const EditProfilePage = observer(() => {
         sectionChangeStatus[index] = true
       }
     }
-    if (!sectionChangeStatus[0] && !sectionChangeStatus[1] && !sectionChangeStatus[2]) {
+    if (
+      !sectionChangeStatus[0] &&
+      !sectionChangeStatus[1] &&
+      !sectionChangeStatus[2]
+    ) {
       setSaveButtonClickable(false)
     } else {
       setSaveButtonClickable(true)

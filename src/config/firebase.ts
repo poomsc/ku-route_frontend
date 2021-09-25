@@ -14,7 +14,7 @@ const firebaseConfig = {
   apiKey: 'AIzaSyD_5FCWlDGMwYkic7viABgkT5I4CYQGRYk',
   authDomain: 'ku-route-33f37.firebaseapp.com',
   databaseURL:
-    'https://ku-route-33f37-default-rtdb.asia-southeast1.firebasedatabase.app/',
+    'https://ku-route-33f37-default-rtdb.asia-southeast1.firebasedatabase.app',
   projectId: 'ku-route-33f37',
   storageBucket: 'ku-route-33f37.appspot.com',
   messagingSenderId: '1042258147680',

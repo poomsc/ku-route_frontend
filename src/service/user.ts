@@ -36,6 +36,7 @@ async function register({ UID, Name, Surname, Email }: registerProps) {
     Surname,
     Email,
     Faculty: null,
+    About: ' ',
     DisplayName: Name + ' ' + Surname,
     DateCreate: serverTimestamp(),
     DateEdited: serverTimestamp(),
