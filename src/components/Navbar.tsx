@@ -22,7 +22,7 @@ const NavBar = observer(() => {
       applicationStore.setUserDisplayName(info?.DisplayName)
     }
     fetch()
-  }, [applicationStore.user?.uid])
+  }, [applicationStore.user?.uid, applicationStore.userDisplayName])
 
   let isLoggedin = 'loggedin'
   let userName = applicationStore.userDisplayName
