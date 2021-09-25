@@ -14,21 +14,21 @@ import { firestore } from 'config/firebase'
 const NavBar = observer(() => {
   const [infoData, setInfoData] = useState<DocumentData>()
 
-  const info_doc = applicationStore.user
-    ? doc(firestore, 'Account', applicationStore.user.uid)
-    : null
-
   useEffect(() => {
     if (!applicationStore.user) return
     async function fetch() {
       const info = (await get_info(applicationStore.user.uid)) as DocumentData
       setInfoData(info)
+      //console.log(info)
+      applicationStore.setUserDisplayName(info?.DisplayName)
     }
     fetch()
-  }, [applicationStore, info_doc])
+  }, [applicationStore.user])
 
   let isLoggedin = 'loggedin'
-  let userName = infoData?.DisplayName ? infoData?.DisplayName : 'userName'
+  let userName = applicationStore?.userDisplayName
+    ? applicationStore?.userDisplayName
+    : 'userName'
   const { pathname } = useLocation()
   const currentPage = pathname
   const navDropdownTitle = (

@@ -29,7 +29,8 @@ export async function get_faculty() {
     })
     return faculty
   } catch (error) {
-    alert(error)
+    console.log('get_faculty', error)
+    // alert(error)
     return null
   }
 }
@@ -48,7 +49,8 @@ export async function get_info(accountid: string) {
       return null
     }
   } catch (error) {
-    alert(error)
+    console.log('get_info', error)
+    // alert(error)
     return null
   }
 }
@@ -65,7 +67,8 @@ export async function get_post() {
     console.log(all_post)
     return all_post
   } catch (error) {
-    alert(error)
+    console.log('get_post', error)
+    // alert(error)
   }
 }
 
@@ -83,7 +86,8 @@ export async function get_one_post(PostID: string) {
       return null
     }
   } catch (error) {
-    alert(error)
+    console.log('get_one_post', error)
+    // alert(error)
     return null
   }
 }
@@ -100,7 +104,8 @@ export async function get_comment(PostID: string) {
     })
     return all_comment
   } catch (error) {
-    alert(error)
+    console.log('get_comment', error)
+    // alert(error)
   }
 }
 
@@ -115,7 +120,8 @@ export async function get_info_comment(PostID: string) {
     })
     return comment_info
   } catch (error) {
-    alert(error)
+    console.log('get_info_comment', error)
+    // alert(error)
   }
 }
 
@@ -130,7 +136,8 @@ export async function get_file(PostID: string) {
     })
     return all_filename
   } catch (error) {
-    alert(error)
+    console.log('get_file', error)
+    // alert(error)
   }
 }
 
@@ -147,7 +154,7 @@ export async function get_pathfile(PostID: string) {
     })
     return all_path
   } catch (error) {
-    console.log(error)
+    console.log('get_pathfile', error)
   }
 }
 
@@ -156,7 +163,7 @@ export async function delete_post(PostID: string) {
     await deleteDoc(doc(db, 'Post', PostID))
     console.log('Delete successfully')
   } catch (error) {
-    console.log(error)
+    console.log('delete_post', error)
   }
 }
 
@@ -169,7 +176,7 @@ export async function delete_file(filepath: string) {
     await deleteObject(fileRef)
     console.log('Delete successfully')
   } catch (error) {
-    console.log(error)
+    console.log('delete_file', error)
   }
 }
 
@@ -178,7 +185,7 @@ export async function delete_comment(CommentID: string) {
     await deleteDoc(doc(db, 'Comment', CommentID))
     console.log('Delete successfully')
   } catch (error) {
-    console.log(error)
+    console.log('delete_comment', error)
   }
 }
 
