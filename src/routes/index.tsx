@@ -10,6 +10,7 @@ import VersatilePostPage from 'pages/VersatilePost'
 import PublicRoute from './PublicRoute'
 import PrivateRoute from './PrivateRoute'
 import NavBar from 'components/Navbar2'
+import Allpost from 'pages/allPost'
 
 const NAVBAR = withRouter(NavBar)
 
@@ -27,6 +28,7 @@ const Routes: React.FC = (): JSX.Element => {
         <PrivateRoute exact path="/post" component={PostPage} />
         <PublicRoute restricted={true} path="/signin" component={SignPage} />
         <PublicRoute restricted={false} path="/signup" component={SignPage} />
+        <PrivateRoute path="/all-post" component={Allpost} />
         <PrivateRoute
           restricted={false}
           path="/edit-profile"

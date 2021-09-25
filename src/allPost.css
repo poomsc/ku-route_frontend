@@ -1,0 +1,192 @@
+.Component {
+  background-image: url(./assets/images/BG.png);
+  background-repeat: repeat;
+  background-position: center;
+  background-size: 1440px 1960px;
+  top: auto;
+}
+
+.Subject {
+  /* position: absolute; */
+  text-align: left;
+  position: relative;
+  width: 431px;
+  height: 36px;
+  left: 21px;
+  top: auto;
+  margin-top: 20px;
+  /* margin-left: auto; */
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 42px;
+  /* display: flex; */
+  /* align-items: center; */
+  color: #ffffff;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.post-picture {
+  text-align: right;
+  position: relative;
+  left: 120px;
+  font-size: 12px;
+}
+
+.pic {
+  height: 11px;
+  border: 1px;
+  margin-left: 2px;
+}
+.count {
+  margin-left: 5px;
+}
+
+.all {
+  text-align: right;
+  position: relative;
+  top: 10px;
+  left: 140px;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 10px;
+}
+
+.Subjectnum {
+  text-align: right;
+  position: relative;
+  left: 300px;
+  bottom: 40px;
+}
+.textpost {
+  margin-left: 3px;
+}
+.textcode {
+  margin-top: 4px;
+}
+.form {
+  top: auto;
+}
+
+.line-white {
+  position: relative;
+  bottom: 30px;
+  left: 20px;
+  width: 750px;
+}
+
+.form {
+  width: 350px;
+  height: 350px;
+  margin-left: 20px;
+  top: auto;
+  background: #ffffff;
+  border: 5px solid #3fd0c9;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
+}
+.category {
+  position: relative;
+  top: -20px;
+  left: 20px;
+  background: #3fd0c9;
+  border-radius: 2px;
+  box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.25);
+  font-size: 20px;
+  color: white;
+}
+.title {
+  position: relative;
+  left: 20px;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 28px;
+  color: #525252;
+}
+
+.line-black {
+  position: relative;
+  top: 20px;
+  left: 20px;
+  width: 300px;
+  border: 1px solid #000000;
+}
+
+.headtext {
+  position: relative;
+  top: 40px;
+  left: 20px;
+  font-family: Roboto;
+  font-weight: lighter;
+  color: #525252;
+}
+
+.pdf {
+  width: 55px;
+  height: 55px;
+}
+.pdfcount {
+  text-align: left;
+  position: relative;
+  left: 20px;
+  top: 70px;
+  font-family: Roboto;
+  font-size: 9px;
+}
+.pdfrow {
+  display: flex;
+  flex-direction: row;
+}
+
+.creatby {
+  text-align: right;
+  position: relative;
+  left: 20px;
+  top: 90px;
+  font-family: Roboto;
+  font-size: 13px;
+}
+
+.Profile {
+  width: 35px;
+  height: 35px;
+}
+.Name {
+  position: relative;
+  left: 8px;
+  /* bottom: 5px; */
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  line-height: 11px;
+}
+
+.Time {
+  position: relative;
+  left: 120px;
+  top: 90px;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  line-height: 11px;
+}
+
+.moreItem {
+  position: relative;
+  top: 4px;
+  left: 5px;
+  width: 55px;
+  height: 53px;
+}
+.textmore {
+  position: relative;
+  left: 7px;
+
+  font-size: 10px;
+}
