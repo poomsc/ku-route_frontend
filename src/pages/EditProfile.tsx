@@ -58,16 +58,16 @@ const EditProfilePage = observer(() => {
   const [failAlertHidden, setFailAlertHidden] = useState(true)
   const [animationAlert, setAnimationAlert] = useState(false)
 
-  useEffect(() => {
-    if (!applicationStore.user) return
-    async function fetch() {
-      const rawInfo = (await get_info(UUID)) as DocumentData
-      const rawFaculty = await get_faculty()
-      setUserInfo(rawInfo)
-      setFaculty(rawFaculty)
-    }
-    fetch()
-  }, [])
+  // useEffect(() => {
+  //   async function fetch() {
+  //     if (!applicationStore.user) return
+  //     const rawInfo = (await get_info(UUID)) as DocumentData
+  //     const rawFaculty = await get_faculty()
+  //     setUserInfo(rawInfo)
+  //     setFaculty(rawFaculty)
+  //   }
+  //   fetch()
+  // }, [])
 
   async function uploadInfo(changedInfo) {
     let result = await edit(changedInfo, UUID, updateDatabaseTarget)
