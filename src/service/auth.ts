@@ -28,22 +28,16 @@ interface signupProps {
 firebaseAuth.languageCode = 'th'
 
 async function checkAuthState() {
-  let res = false
   onAuthStateChanged(firebaseAuth, (user) => {
     applicationStore.setUser(user)
     if (user) {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/firebase.User
       const UID = user.uid
-      // console.log(UID)
-      // console.log(user)
-      res = true
       return true
     } else console.log('Auth State Changed')
     return false
   })
-
-  return res
 }
 
 async function signUp_EmailPassword({

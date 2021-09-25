@@ -59,8 +59,14 @@ const EditProfilePage = observer(() => {
   const [animationAlert, setAnimationAlert] = useState(false)
 
   useEffect(() => {
-    fetchInfo()
-    fetchFaculty()
+    if (!applicationStore.user) return
+    async function fetch() {
+      const rawInfo = (await get_info(UUID)) as DocumentData
+      const rawFaculty = await get_faculty()
+      setUserInfo(rawInfo)
+      setFaculty(rawFaculty)
+    }
+    fetch()
   }, [])
 
   async function uploadInfo(changedInfo) {
@@ -116,6 +122,7 @@ const EditProfilePage = observer(() => {
     changedInfo['DateEdited'] = serverTimestamp()
     // sent new changes to database
     uploadInfo(changedInfo)
+    applicationStore.setUserDisplayName(title)
 
     // setTimeout(() => {
     //   window.location.reload();
