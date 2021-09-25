@@ -19,30 +19,13 @@ const Routes: React.FC = (): JSX.Element => {
     <Router>
       <NAVBAR />
       <Switch>
-        <Route exact path={['/', '/home']} component={HomePage} />
-        <Route exact path="/post" component={PostPage} />
-        <Route path="/signin" component={SignPage} />
-        <Route path="/signup" component={SignPage} />
-        <Route
-          path="/edit-profile"
-          render={() => protectedRoute(EditProfilePage)}
-        />
-        <Route
-          path="/create-post"
-          render={() => protectedRoute(VersatilePostPage)}
-        />
-        <Route
-          path="/edit-post"
-          render={() => protectedRoute(VersatilePostPage)}
-        />
-        <Route component={NotFound} />
-        {/* <PublicRoute
+        <PublicRoute
           restricted={false}
           exact
           path={['/', '/home']}
           component={HomePage}
         />
-        <PrivateRoute exact path="/post" component={PostPage} />
+        <PublicRoute exact path="/post" component={PostPage} />
         <PublicRoute restricted={true} path="/signin" component={SignPage} />
         <PublicRoute restricted={false} path="/signup" component={SignPage} />
         <PrivateRoute
@@ -60,7 +43,7 @@ const Routes: React.FC = (): JSX.Element => {
           path="/edit-post"
           component={VersatilePostPage}
         />
-        <PublicRoute restricted={false} component={NotFound} /> */}
+        <PublicRoute restricted={false} component={NotFound} />
       </Switch>
     </Router>
   )
