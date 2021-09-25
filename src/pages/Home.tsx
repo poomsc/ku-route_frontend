@@ -7,6 +7,10 @@ import dropdown_arrow from '../assets/icons/Vector.png'
 import 'semantic-ui-css/semantic.min.css'
 
 const HomePage = () => {
+  const mockFilter = [['คลังหนังสือ'], ['ชีทสรุป'], ['แบบฝึกหัด']]
+
+  const [allFilter, setAllFilter] = useState<string[][]>(mockFilter)
+
   return (
     <div>
       <Jumbotron className="blue-bg jumbotron jumbotron-fluid mb-0">
@@ -26,7 +30,7 @@ const HomePage = () => {
             ค้นหาชื่อวิชา / รหัสวิชาที่อยากรู้
           </p>
           <Form style={{ paddingLeft: '22vw', paddingRight: '22vw' }}>
-            <div className="form-group shadow d-flex">
+            {/* <div className="form-group shadow d-flex">
               <input
                 type="text"
                 className="form-control"
@@ -61,16 +65,6 @@ const HomePage = () => {
                   >
                     FILTER BY
                   </Dropdown.Item>
-                  {/* <Dropdown.Item style={{ color: '#02353C', fontSize: '11px'}}>สาระวิชา</Dropdown.Item>
-              <Dropdown.Item href="#/action-3" >
-			  	<Checkbox label="สาระอยู่ดีมีสุข" style={{ color: '#02353C', fontSize: '11px'}} />
-			  </Dropdown.Item>
-              <Dropdown.Item href="#/action-3" style={{ color: '#02353C', fontSize: '11px'}}>
-			  	<Checkbox label="สาระพลเมืองโลก" style={{ color: '#02353C', fontSize: '11px'}} />
-			  </Dropdown.Item>
-			  <Dropdown.Item href="#/action-3" style={{ color: '#02353C', fontSize: '11px'}}>
-			  	<Checkbox label="สาระสุนทรียาสตร์" style={{ color: '#02353C', fontSize: '11px'}} />
-			  </Dropdown.Item> */}
                   <Dropdown.Divider />
                   <Dropdown.Item style={{ color: '#02353C', fontSize: '11px' }}>
                     ประเภท
@@ -101,6 +95,35 @@ const HomePage = () => {
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
+            </div> */}
+            <div className="d-inline-flex">
+              <input
+                type="text"
+                className="form-control"
+                style={{ borderRadius: '5px 0rem 0rem 5px', border: 'none' }}
+                placeholder="เรื่องที่อยากรู้..."
+              />
+              {allFilter.map((filter) => (
+                <Dropdown>
+                  <Dropdown.Toggle
+                    variant="success"
+                    id="dropdown-basic"
+                    style={{
+                      backgroundColor: '#FFFFFF',
+                      height: '34px',
+                      border: 'none',
+                      borderRadius: '0rem 5px 5px 0rem',
+                    }}
+                  >
+                    <img
+                      src={dropdown_arrow}
+                      className="p-1"
+                      width="17px"
+                      height="15px"
+                    />
+                  </Dropdown.Toggle>
+                </Dropdown>
+              ))}
             </div>
             <button
               type="submit"
