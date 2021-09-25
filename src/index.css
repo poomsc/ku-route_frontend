@@ -7,3 +7,9 @@ body {
 * {
   font-family: 'Kanit', 'Roboto', sans-serif !important;
 }
+
+.link,
+a {
+  text-decoration: none;
+  background-color: none;
+}
