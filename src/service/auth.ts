@@ -1,17 +1,10 @@
-import { firebaseAuth, firestore } from 'config/firebase'
+import { firebaseAuth } from 'config/firebase'
 import {
-  getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   sendEmailVerification,
-  UserCredential,
   signInWithPopup,
   GoogleAuthProvider,
-  AuthProvider,
-  EmailAuthProvider,
-  onAuthStateChanged,
-  signInWithRedirect,
-  AdditionalUserInfo,
 } from 'firebase/auth'
 import { edit, register } from 'service/user'
 import applicationStore from 'stores/applicationStore'

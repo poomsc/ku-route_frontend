@@ -1,22 +1,20 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import { makeAutoObservable, observable } from 'mobx'
-import { observer } from 'mobx-react-lite'
-import {
-  getAuth,
-  onAuthStateChanged,
-  User,
-  UserCredential,
-} from '@firebase/auth'
-import { initializeApp } from 'firebase/app'
-import { getFirestore } from 'firebase/firestore'
-import { getStorage } from 'firebase/storage'
+import { makeAutoObservable } from 'mobx'
+import { User } from '@firebase/auth'
 
 class applicationStore {
   user: User | null = null
+  userDisplayName: string = ''
+
+  constructor() {
+    makeAutoObservable(this)
+  }
 
   setUser(user: User | null) {
     this.user = user as User
+  }
+
+  setUserDisplayName(Name: string | null) {
+    this.userDisplayName = Name as string
   }
 }
 

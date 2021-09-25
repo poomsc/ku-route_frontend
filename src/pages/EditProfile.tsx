@@ -11,6 +11,7 @@ import LockLabel from '@material-ui/icons/Lock'
 import applicationStore from 'stores/applicationStore'
 import { useHistory } from 'react-router'
 import { observer } from 'mobx-react'
+import { TagSearch } from 'service/search'
 
 const facultyList = [] as any
 let facultyLoader = 0
@@ -18,7 +19,7 @@ let currentFaculty, newFacultySelected
 let sectionChangeStatus = [false, false, false]
 
 let databaseTarget = 'Account'
-let UUID = 'accout01'
+let UUID = 'Account01'
 
 function loadFaculty(components) {
   for (const e of components) {
@@ -59,8 +60,16 @@ const EditProfilePage = observer(() => {
   const [animationAlert, setAnimationAlert] = useState(false)
 
   useEffect(() => {
-    fetchInfo()
-    fetchFaculty()
+    async function fetch() {
+      if (!applicationStore.user) return
+      const rawInfo = (await get_info(UUID)) as DocumentData
+      const rawFaculty = await get_faculty()
+      setUserInfo(rawInfo)
+      setFaculty(rawFaculty)
+      const res = await TagSearch(['คลังความรู้'])
+      console.log(res)
+    }
+    fetch()
   }, [])
 
   async function uploadInfo(changedInfo) {
@@ -116,6 +125,7 @@ const EditProfilePage = observer(() => {
     changedInfo['DateEdited'] = serverTimestamp()
     // sent new changes to database
     uploadInfo(changedInfo)
+    applicationStore.setUserDisplayName(title)
 
     // setTimeout(() => {
     //   window.location.reload();
