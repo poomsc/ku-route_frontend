@@ -66,8 +66,6 @@ const EditProfilePage = observer(() => {
       const rawFaculty = await get_faculty()
       setUserInfo(rawInfo)
       setFaculty(rawFaculty)
-      const res = await TagSearch(['คลังความรู้'])
-      console.log(res)
     }
     fetch()
   }, [])

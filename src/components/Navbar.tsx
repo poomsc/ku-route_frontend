@@ -12,32 +12,22 @@ import { get_info } from 'service/system'
 import { firestore } from 'config/firebase'
 
 const NavBar = observer(() => {
-  const [infoData, setInfoData] = useState<DocumentData>()
+  // const [infoData, setInfoData] = useState<DocumentData>()
 
-  const info_doc = applicationStore.user
-    ? doc(firestore, 'Account', applicationStore.user.uid)
-    : null
-
-  // useEffect(() => {
-  //   async function fetch() {
-  //     if (!applicationStore.user) return
-  //     const info = (await get_info(applicationStore.user.uid)) as DocumentData
-  //     setInfoData(info)
-  //   }
-  //   fetch()
-  // }, [applicationStore, info_doc])
-  // useEffect(() => {
-  //   if (!applicationStore.user) return
-  //   async function fetch() {
-  //     const info = (await get_info(applicationStore.user.uid)) as DocumentData
-
-  //     setInfoData(info)
-  //   }
-  //   fetch()
-  // }, [])
+  useEffect(() => {
+    async function fetch() {
+      if (!applicationStore.user) return
+      const info = (await get_info(applicationStore.user.uid)) as DocumentData
+      // setInfoData(info)
+      applicationStore.setUserDisplayName(info?.DisplayName)
+    }
+    fetch()
+  }, [applicationStore.user?.uid, applicationStore.userDisplayName])
 
   let isLoggedin = 'loggedin'
-  let userName = infoData?.DisplayName ? infoData?.DisplayName : 'userName'
+  let userName = applicationStore.userDisplayName
+    ? applicationStore.userDisplayName
+    : 'userName'
   const { pathname } = useLocation()
   const currentPage = pathname
   const navDropdownTitle = (

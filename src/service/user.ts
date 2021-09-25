@@ -7,6 +7,8 @@ import {
   addDoc,
   updateDoc,
 } from 'firebase/firestore'
+import { IFileWithMeta } from 'react-dropzone-uploader'
+import { upload_file } from './file'
 
 interface registerProps {
   UID: string
@@ -17,7 +19,6 @@ interface registerProps {
 
 interface postProps {
   AccountID: string
-  FileID: string[]
   TagID: string[]
   SubjectID: string
   Title: string
@@ -54,17 +55,12 @@ async function register({ UID, Name, Surname, Email }: registerProps) {
   }
 }
 
-async function create_post({
-  AccountID,
-  FileID,
-  TagID,
-  SubjectID,
-  Title,
-  Description,
-}: postProps) {
+async function create_post(
+  { AccountID, TagID, SubjectID, Title, Description }: postProps,
+  allFiles: IFileWithMeta[]
+) {
   const data = {
     AccountID,
-    FileID,
     TagID,
     SubjectID,
     Title,
@@ -76,11 +72,14 @@ async function create_post({
   try {
     console.log('Post is being added...')
     const docRef = await addDoc(collection(firestore, 'Post'), data)
+    const uploadFile = allFiles.forEach((file) =>
+      upload_file(file.file, docRef.id)
+    )
     console.log('Post written with ID: ', docRef.id)
-    return true
+    return docRef.id
   } catch (e) {
     console.error('Error adding post: ', e)
-    return false
+    return null
   }
 }
 
