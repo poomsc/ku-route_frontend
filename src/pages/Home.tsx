@@ -14,6 +14,9 @@ const HomePage = () => {
       <br />
       <Link to="/create-post">create-post</Link>
       <br />
+      <Link to="/edit-post-page">edit-post</Link>
+      <br />
+      <Link to="/favourite-page">favourite</Link>
     </div>
   )
 }
