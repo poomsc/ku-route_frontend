@@ -14,10 +14,6 @@ import { firestore } from 'config/firebase'
 const NavBar = observer(() => {
   const [infoData, setInfoData] = useState<DocumentData>()
 
-  const info_doc = applicationStore.user
-    ? doc(firestore, 'Account', applicationStore.user.uid)
-    : null
-
   useEffect(() => {
     async function fetch() {
       if (!applicationStore.user) return
@@ -25,7 +21,7 @@ const NavBar = observer(() => {
       setInfoData(info)
     }
     fetch()
-  }, [applicationStore, info_doc])
+  }, [applicationStore])
   // useEffect(() => {
   //   if (!applicationStore.user) return
   //   async function fetch() {
