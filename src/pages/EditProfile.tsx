@@ -14,10 +14,10 @@ import { observer } from 'mobx-react'
 
 const facultyList = [] as any
 let facultyLoader = 0
-let currentFaculty, newSelected
-let changeCount = [false, false, false]
+let currentFaculty, newFacultySelected
+let sectionChangeStatus = [false, false, false]
 
-let updateDatabaseTarget = 'Account'
+let databaseTarget = 'Account'
 let UUID = 'accout01'
 
 function loadFaculty(components) {
@@ -64,7 +64,7 @@ const EditProfilePage = observer(() => {
   }, [])
 
   async function uploadInfo(changedInfo) {
-    let result = await edit(changedInfo, UUID, updateDatabaseTarget)
+    let result = await edit(changedInfo, UUID, databaseTarget)
     if (result === 'Successful') {
       setTimeout(() => {
         fetchInfo()
@@ -104,13 +104,13 @@ const EditProfilePage = observer(() => {
   const saveCurrentState = (title, about, newFaculty) => {
     setSaveButtonClickable(false)
     let changedInfo = {}
-    if (changeCount[0]) {
+    if (sectionChangeStatus[0]) {
       changedInfo['DisplayName'] = title
     }
-    if (changeCount[1]) {
+    if (sectionChangeStatus[1]) {
       changedInfo['Faculty'] = newFaculty
     }
-    if (changeCount[2]) {
+    if (sectionChangeStatus[2]) {
       changedInfo['About'] = about
     }
     changedInfo['DateEdited'] = serverTimestamp()
@@ -129,7 +129,7 @@ const EditProfilePage = observer(() => {
 
   const handleOnSelectFaculty = (event: any) => {
     setUserFaculty(event.target.innerText)
-    newSelected = findFacultyKey(faculty, event.target.innerText)
+    newFacultySelected = findFacultyKey(faculty, event.target.innerText)
     checkChangeData(userInfo?.Faculty, event, 1)
   }
 
@@ -142,20 +142,24 @@ const EditProfilePage = observer(() => {
     // Check equal of two string
     if (index != 1) {
       if (attr && !(event.target.value === attr)) {
-        changeCount[index] = true
+        sectionChangeStatus[index] = true
       } else if (!attr) {
-        changeCount[index] = true
+        sectionChangeStatus[index] = true
       } else {
-        changeCount[index] = false
+        sectionChangeStatus[index] = false
       }
     } else {
-      if (currentFaculty == newSelected) {
-        changeCount[index] = false
+      if (currentFaculty == newFacultySelected) {
+        sectionChangeStatus[index] = false
       } else {
-        changeCount[index] = true
+        sectionChangeStatus[index] = true
       }
     }
-    if (!changeCount[0] && !changeCount[1] && !changeCount[2]) {
+    if (
+      !sectionChangeStatus[0] &&
+      !sectionChangeStatus[1] &&
+      !sectionChangeStatus[2]
+    ) {
       setSaveButtonClickable(false)
     } else {
       setSaveButtonClickable(true)
@@ -250,7 +254,7 @@ const EditProfilePage = observer(() => {
           >
             {title
               ? title?.length
-              : changeCount[0]
+              : sectionChangeStatus[0]
               ? 0
               : userInfo?.DisplayName.length}
             /50
@@ -271,7 +275,7 @@ const EditProfilePage = observer(() => {
             onChange={handleOnSelectFaculty}
             value={
               userFaculty
-                ? facultyList[newSelected]?.value
+                ? facultyList[newFacultySelected]?.value
                 : facultyList[currentFaculty]?.value
             }
             className="rounded-10 bg-primary-dark text-white font-weight-bold d-flex"
@@ -307,7 +311,7 @@ const EditProfilePage = observer(() => {
           >
             {about
               ? about?.length
-              : changeCount[2]
+              : sectionChangeStatus[2]
               ? 0
               : userInfo?.About.length}
             /1000

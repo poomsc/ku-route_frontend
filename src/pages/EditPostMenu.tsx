@@ -1,0 +1,159 @@
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { Container, Card } from 'react-bootstrap'
+import { useState } from 'react'
+import { useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import '../EditPostMenu.css'
+import logo_pdf from '../assets/icons/PDF.png'
+import logo_sort from '../assets/icons/Vector (2).png'
+import logo_image from '../assets/icons/Image.png'
+import logo_delete from '../assets/icons/Vector.png'
+import logo_fix from '../assets/icons/fix.png'
+
+const EditPostMenu = () => {
+  var InitialSorted = 0
+  const InitialmockDatas = [
+    {
+      PostID: 'AX01749',
+      Title: 'แจกสรุป Math',
+      Description: 'ไฟล์แนบมีทั้งหมดสามส่วน',
+      NumFile: ['2', '1'],
+      Time: '1',
+    },
+    {
+      PostID: 'AB01864',
+      Title: 'แจกสรุป Physics',
+      Description: 'ไฟล์แนบมีสามส่วน',
+      NumFile: ['1', '2'],
+      Time: '2',
+    },
+  ]
+  /*   const handleOnClick = () => {
+           if (SortedInfo === 0) {
+               console.log('sort 1', SortedInfo)
+               var Test = mockDatas.sort((a, b) => (a.Time > b.Time) ? -1 : ((b.Time > a.Time) ? 1 : 0))
+               SortedInfo += 1;
+           } else {
+               console.log('sort 2', SortedInfo)
+               var Test = mockDatas.sort((b, a) => (a.Time < b.Time) ? -1 : ((b.Time < a.Time) ? 1 : 0))
+               SortedInfo += 1;
+           }
+           console.log(Test)
+       }*/
+  const [setSortStated, setClick] = useState(InitialSorted)
+  const [mockDatas, setData] = useState(InitialmockDatas)
+  const handleOnClick = () => {
+    if (setSortStated === 1) {
+      setClick(0)
+      setData(
+        mockDatas.sort((a, b) =>
+          a.Time > b.Time ? -1 : b.Time > a.Time ? 1 : 0
+        )
+      )
+    } else {
+      setClick(1)
+      setData(
+        mockDatas.sort((a, b) =>
+          a.Time < b.Time ? -1 : b.Time < a.Time ? 1 : 0
+        )
+      )
+    }
+  }
+  return (
+    <div className="blue-bg">
+      <Container className="rounded-10 bg-primary-dark text-white font-weight-bold d-flex">
+        <div className="Menutab">
+          <Link to="/" style={{ color: 'white' }}>
+            Edit Profile
+          </Link>{' '}
+          <br />
+          <Link to="/" style={{ color: 'white' }}>
+            My Posts
+          </Link>{' '}
+          <br />
+          <Link to="/" style={{ color: 'white' }}>
+            Favourite
+          </Link>
+          <div className="Menu2">
+            <Link to="/" style={{ color: 'white' }}>
+              About us
+            </Link>{' '}
+            <br />
+            <Link to="/" style={{ color: 'white' }}>
+              Contact
+            </Link>{' '}
+            <br />
+            <Link to="/" style={{ color: 'white' }}>
+              Help
+            </Link>{' '}
+            <br />
+            <Link to="/" style={{ color: 'white' }}>
+              FAQs
+            </Link>
+          </div>
+        </div>
+        <Container className="white-bg">
+          <div className="Info">
+            <h1 style={{ color: 'black' }}>ประวัติการอัพโหลด </h1>
+            <div className="table">
+              <thead>
+                <tr>
+                  <th scope="col">ไอดี</th>
+                  <th scope="col">หัวเรื่อง</th>
+                  <th scope="col">ข้อความ</th>
+                  <th scope="col">ไฟล์แนบ</th>
+                  <th scope="col">เวลา</th>
+                  <th>
+                    <img
+                      src={logo_sort}
+                      width="10.5px"
+                      height="7px"
+                      onClick={() => handleOnClick()}
+                    />
+                    <> sort by date</>
+                  </th>
+                </tr>
+              </thead>
+
+              {mockDatas.map((object, idx) => (
+                <tr>
+                  <td>{object.PostID}</td>
+                  <td>{object.Title}</td>
+                  <td>{object.Description}</td>
+                  <td>
+                    <img
+                      src={logo_pdf}
+                      style={{ padding: '2px' }}
+                      width="24px"
+                      height="24px"
+                    />
+                    {object.NumFile[0]}
+                    <img
+                      src={logo_image}
+                      style={{ padding: '2px' }}
+                      width="24px"
+                      height="24px"
+                    />
+                    {object.NumFile[1]}
+                  </td>
+                  <td>{object.Time}</td>
+                  <td>
+                    <Link to="/" className="fixbutton">
+                      แก้ไข
+                    </Link>
+                    <Link to="/" className="deletebutton">
+                      <img src={logo_delete} width="8px" height="10px" />
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </div>
+          </div>
+        </Container>
+      </Container>
+    </div>
+  )
+}
+
+export default EditPostMenu
