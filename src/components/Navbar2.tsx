@@ -26,6 +26,15 @@ const NavBar = observer(() => {
     }
     fetch()
   }, [applicationStore, info_doc])
+  // useEffect(() => {
+  //   if (!applicationStore.user) return
+  //   async function fetch() {
+  //     const info = (await get_info(applicationStore.user.uid)) as DocumentData
+
+  //     setInfoData(info)
+  //   }
+  //   fetch()
+  // }, [])
 
   let isLoggedin = 'loggedin'
   let userName = infoData?.DisplayName ? infoData?.DisplayName : 'userName'

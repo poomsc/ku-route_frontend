@@ -135,7 +135,7 @@ async function edit(props: any, ID, col) {
     })
     return 'Successful'
   } catch (error) {
-    alert(error)
+    // alert(error)
   }
 }
 
@@ -148,7 +148,7 @@ async function disable(props: any, ID, col) {
       Status: false,
     })
   } catch (error) {
-    alert(error)
+    // alert(error)
   }
 }
 

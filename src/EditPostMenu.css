@@ -1,0 +1,71 @@
+.blue-bg{
+      padding-top:100px;
+      padding-right:150px;
+      padding-bottom:100px;
+}
+
+.white-bg{
+      border-top-right-radius: 20px;
+      border-bottom-right-radius: 20px;
+}
+.rounded-10 bg-primary-dark text-white font-weight-bold d-flex{
+  height: 643px;
+  width: 243px;
+}
+.table td, .table th {
+  min-width: 150px;
+}
+
+.table{
+  text-align: center;
+  vertical-align: center;
+  background-color:white;
+  height: 500px;
+  font-size: smaller;
+  border-radius: 10px;
+}
+
+.fixbutton{
+  border-radius: 5px;
+  text-align: center;
+  padding-left:10px;
+  padding-right:10px;
+  height:20px;
+  background-color: blue;
+  color:white;
+}
+
+.deletebutton{
+  background-color: red;
+  border-radius: 3px;
+
+  padding-left: 4.6px;
+  padding-right: 4.5px;
+  margin:2px;
+}
+.Menutab{
+  width: 300px;
+  text-align: left;
+  margin-top:auto;
+  margin-bottom: auto;
+  margin-left: 30px;
+  margin-right: 100px;
+  border-left: 20px;
+  white-space: nowrap;
+}
+
+.Menu2{
+  vertical-align: bottom;
+  margin-top:300px;
+
+}
+
+.Info{
+  padding:100px;
+
+}
+
+.rounded-10{
+  border-radius: 20px;
+
+}

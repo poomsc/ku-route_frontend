@@ -40,7 +40,6 @@ function checkAuthState() {
     } else console.log('Auth State Changed')
     return false
   })
-  return false
 }
 
 async function signUp_EmailPassword({
@@ -60,7 +59,8 @@ async function signUp_EmailPassword({
     const UID = user.uid
     register({ UID, Name, Surname, Email })
   } catch (error) {
-    alert(error)
+    console.log('signUp_EmailPassword', error)
+    // alert(error)
   }
 }
 
@@ -79,7 +79,8 @@ async function signIn_EmailPassword(email: string, password: string) {
     } else console.log('Login successfully.')
     return userCredential
   } catch (error) {
-    alert(error)
+    console.log('signIn_EmailPassword', error)
+    // alert(error)
   }
 }
 
@@ -91,7 +92,8 @@ async function signOut() {
     console.log('successful logout')
     return true
   } catch (error) {
-    alert(error)
+    console.log('signOut', error)
+    // alert(error)
     return false
   }
 }
@@ -119,13 +121,14 @@ async function signIn_Google() {
     } else {
       register({ UID: user.uid, Name: Name[0], Surname: Name[1], Email: email })
     }
-    //console.log(userCredential)
+    // console.log(userCredential)
     // console.log(user)
     // console.log(token)
     applicationStore.setUser(user)
     return userCredential
   } catch (error) {
-    alert(error)
+    console.log('signIn_Google', error)
+    // alert(error)
     return false
   }
 }

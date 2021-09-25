@@ -1,0 +1,16 @@
+.viewbutton{
+    background-color:#2EAF7D;
+    color:white;
+    border-radius: 5px;
+    padding-left:5px;
+    padding-right:5px;
+}
+
+.removebutton{
+    background-color: #E01E5A;
+    color:white;
+    border-radius:5px;
+    padding-left:5px;
+    padding-right:5px;
+    margin:2px;
+}

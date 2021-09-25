@@ -1,5 +1,5 @@
 import './App.css'
-import React from 'react'
+import React, { useEffect } from 'react'
 import Routes from 'routes/index'
 import { checkAuthState, signOut, signIn_Google } from 'service/auth'
 import {
@@ -19,9 +19,13 @@ import { TagSearch } from 'service/search'
 import { title } from 'process'
 import { edit } from 'service/user'
 import { serverTimestamp } from '@firebase/firestore'
+import applicationStore from 'stores/applicationStore'
 
 const App = () => {
-  checkAuthState()
+  const {} = applicationStore
+  useEffect(() => {
+    checkAuthState()
+  }, [])
   //signOut()
   //get_one_post('TPkRmWLZdLRIUWIa8ptS')
   //like('KVcKU4KWX8UJIc6yiwwesWrU2Ef1', "TPkRmWLZdLRIUWIa8ptS")

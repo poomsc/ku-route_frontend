@@ -44,12 +44,6 @@ function findFacultyKey(faculty, keyword: string) {
 }
 
 const EditProfilePage = observer(() => {
-  //check signin
-  const history = useHistory()
-  if (!applicationStore.user) {
-    history.push('/signin')
-  }
-
   if (applicationStore.user) UUID = applicationStore.user.uid
 
   const [saveButtonClickable, setSaveButtonClickable] = useState(false)
