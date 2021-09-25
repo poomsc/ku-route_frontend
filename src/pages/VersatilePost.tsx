@@ -13,6 +13,7 @@ import applicationStore from 'stores/applicationStore'
 import { observer } from 'mobx-react-lite'
 import { IFileWithMeta, StatusValue } from 'react-dropzone-uploader'
 import { create_post } from 'service/user'
+import { delete_post } from 'service/system'
 
 const subjects = [
   {
@@ -255,7 +256,7 @@ const VersatilePost = observer(() => {
       </div>
       <div className="mx-auto my-5" style={{ maxWidth: '70rem' }}>
         <div className="d-flex justify-content-end">
-          {isNewPost && (
+          {!isNewPost && (
             <Button
               variant="danger"
               style={{ width: '7rem' }}

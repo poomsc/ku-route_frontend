@@ -6,8 +6,6 @@ import applicationStore from 'stores/applicationStore'
 
 const PrivateRoute = observer(({ component: Component, ...rest }: any) => {
   const { user } = applicationStore
-  console.log('user', user)
-
   const isLogin = !!user
 
   return (
