@@ -303,15 +303,16 @@ const EditProfilePage = observer(() => {
             maxLength={1000}
             style={{ minHeight: '10rem' }}
           />
-          <div
-            style={{
+          <div>
+            style=
+            {{
               position: 'absolute',
               top: -25,
               right: 0,
               fontSize: 14,
               opacity: 0.5,
             }}
-          >
+            <div></div>
             {about
               ? about?.length
               : changeCount[2]
