@@ -18,14 +18,14 @@ const NavBar = observer(() => {
     ? doc(firestore, 'Account', applicationStore.user.uid)
     : null
 
-  useEffect(() => {
-    async function fetch() {
-      if (!applicationStore.user) return
-      const info = (await get_info(applicationStore.user.uid)) as DocumentData
-      setInfoData(info)
-    }
-    fetch()
-  }, [applicationStore, info_doc])
+  // useEffect(() => {
+  //   async function fetch() {
+  //     if (!applicationStore.user) return
+  //     const info = (await get_info(applicationStore.user.uid)) as DocumentData
+  //     setInfoData(info)
+  //   }
+  //   fetch()
+  // }, [applicationStore, info_doc])
   // useEffect(() => {
   //   if (!applicationStore.user) return
   //   async function fetch() {
