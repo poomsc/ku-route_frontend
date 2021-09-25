@@ -1,147 +1,138 @@
-import { Navbar, Dropdown } from 'react-bootstrap'
-import { useState } from 'react'
+import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap'
+import { useState, useEffect } from 'react'
 import logo from '../assets/icons/logo.png'
 import user_icon from '../assets/icons/user-icon.png'
-import { Link } from 'react-router-dom'
-import { observer } from 'mobx-react'
+import { observer } from 'mobx-react-lite'
 import applicationStore from 'stores/applicationStore'
+import { useLocation, useRouteMatch } from 'react-router'
+import { signOut } from 'service/auth'
+import { Link } from 'react-router-dom'
+import { doc, DocumentData, getDoc } from '@firebase/firestore'
+import { get_info } from 'service/system'
+import { firestore } from 'config/firebase'
 
 const NavBar = observer(() => {
-  let isLoggedin = 'loggedin'
-  let userName = applicationStore.user
-    ? applicationStore.user.displayName
-    : 'userName'
-  //console.log('ที่นี่คือ NavBar')
-  //console.log(applicationStore.user)
-  return (
-    <Navbar
-      sticky="top"
-      className="navbar navbar-expand-lg navbar-light bg-light py-3"
-    >
-      <Link className="navbar-brand mr-0" to="/">
-        <img
-          src={logo}
-          className="pl-md-5 ml-lg-3"
-          width="auto"
-          height="40px"
-          alt="logo"
-        />
-      </Link>
-      {isLoggedin === 'loggedin' ? (
-        <>
-          <Dropdown>
-            <Dropdown.Toggle
-              className="navbar-toggler"
-              variant="success"
-              id="dropdown-basic"
-              type="button"
-              data-toggle="collapse"
-              data-target="#navbarSupportedContent"
-              aria-controls="navbarSupportedContent"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
-              <span className="navbar-toggler-icon"></span>
-            </Dropdown.Toggle>
-            {/* In this part for menu in toggler button version */}
-            <Dropdown.Menu>
-              <Dropdown.Item href="/">BROWSE</Dropdown.Item>
-              <Dropdown.Item href="/create-post">CREATE POST</Dropdown.Item>
-              <Dropdown.Item href="#">EDIT PROFILE</Dropdown.Item>
-              <div className="dropdown-divider"></div>
-              <Dropdown.Item href="#">LOG OUT</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
+  const [infoData, setInfoData] = useState<DocumentData>()
 
-          {/* This part for large screen menu navbar */}
-          <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul className="navbar-nav ml-auto pr-md-5 mr-lg-3">
-              <li className="nav-item active">
+  const info_doc = applicationStore.user
+    ? doc(firestore, 'Account', applicationStore.user.uid)
+    : null
+
+  useEffect(() => {
+    async function fetch() {
+      if (!applicationStore.user) return
+      const info = (await get_info(applicationStore.user.uid)) as DocumentData
+      setInfoData(info)
+    }
+    fetch()
+  }, [applicationStore, info_doc])
+  // useEffect(() => {
+  //   if (!applicationStore.user) return
+  //   async function fetch() {
+  //     const info = (await get_info(applicationStore.user.uid)) as DocumentData
+
+  //     setInfoData(info)
+  //   }
+  //   fetch()
+  // }, [])
+
+  let isLoggedin = 'loggedin'
+  let userName = infoData?.DisplayName ? infoData?.DisplayName : 'userName'
+  const { pathname } = useLocation()
+  const currentPage = pathname
+  const navDropdownTitle = (
+    <div style={{ color: '#02353C' }}>
+      <img
+        src={user_icon}
+        className="mr-1"
+        width="auto"
+        height="20px"
+        alt="userIcon"
+      />
+      {userName}
+    </div>
+  )
+  const logOut = () => {
+    signOut()
+  }
+  return (
+    <Navbar sticky="top" bg="light" expand="lg">
+      <Container className="py-2 d-flex">
+        <Navbar.Brand href="/">
+          <img
+            src={logo}
+            className="pl-md-5 ml-lg-3"
+            width="auto"
+            height="40px"
+            alt="logo"
+          />
+        </Navbar.Brand>
+        {isLoggedin === 'loggedin' ? (
+          <div>
+            <Navbar.Toggle aria-controls="basic-navbar-nav align-middle" />
+            <Navbar.Collapse id="basic-navbar-nav ">
+              <Nav className="me-auto">
                 <Link
-                  className="nav-link p-1 px-3"
                   to="/"
-                  style={{ fontWeight: 'bold', color: '#2EAF7D' }}
+                  className="my-auto mx-2"
+                  style={{
+                    fontWeight: currentPage === '/' ? 'bold' : 'normal',
+                    color: currentPage === '/' ? '#2EAF7D' : '#02353C',
+                    height: '22px',
+                  }}
                 >
                   BROWSE
                 </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link p-1 px-3" to="/create-post">
+                <Link
+                  to="/create-post"
+                  className="my-auto mx-2"
+                  style={{
+                    fontWeight:
+                      currentPage === '/create-post' ? 'bold' : 'normal',
+                    color:
+                      currentPage === '/create-post' ? '#2EAF7D' : '#02353C',
+                    height: '22px',
+                  }}
+                >
                   CREATE POST
                 </Link>
-              </li>
-              <Dropdown>
-                <Dropdown.Toggle
-                  variant="success"
-                  className="bg-light"
-                  style={{ borderWidth: '0px', color: 'grey' }}
-                >
-                  <img
-                    src={user_icon}
-                    className="mb-1 mr-1"
-                    width="25px"
-                    height="25px"
-                    alt="user-icon"
-                  />{' '}
-                  {userName}
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  <Dropdown.Item href="/edit-profile">
-                    EDIT PROFILE
-                  </Dropdown.Item>
-                  <div className="dropdown-divider"></div>
-                  <Dropdown.Item href="#">LOG OUT</Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            </ul>
+                <NavDropdown title={navDropdownTitle} id="basic-nav-dropdown">
+                  <NavDropdown.Item
+                    // href="edit-profile"
+                    style={{
+                      fontWeight:
+                        currentPage === '/edit-profile' ? 'bold' : 'normal',
+                      color:
+                        currentPage === '/edit-profile' ? '#2EAF7D' : '#02353C',
+                    }}
+                  >
+                    <Link to="/edit-profile"> EDIT PROFILE </Link>
+                  </NavDropdown.Item>
+                  <NavDropdown.Divider />
+                  <NavDropdown.Item href="/" onClick={logOut}>
+                    LOG OUT
+                  </NavDropdown.Item>
+                </NavDropdown>
+              </Nav>
+            </Navbar.Collapse>
           </div>
-        </>
-      ) : (
-        <>
-          <Dropdown>
-            <Dropdown.Toggle
-              className="navbar-toggler"
-              variant="success"
-              id="dropdown-basic"
-              type="button"
-              data-toggle="collapse"
-              data-target="#navbarSupportedContent"
-              aria-controls="navbarSupportedContent"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
-              <span className="navbar-toggler-icon"></span>
-            </Dropdown.Toggle>
-            {/* In this part for menu in toggler button version */}
-            <Dropdown.Menu>
-              <Dropdown.Item href="/signin" className="p-1 px-3">
-                SIGN IN
-              </Dropdown.Item>
-              <Dropdown.Item href="/signup" className="p-1 px-3">
-                SIGN UP
-              </Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-          <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul className="navbar-nav ml-auto pr-md-5 mr-lg-3">
-              <li className="nav-item">
-                <Link className="nav-link p-1 px-3" to="/signin">
-                  SIGN IN
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link
-                  className="nav-link p-1 px-3"
+        ) : (
+          <div>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse id="basic-navbar-nav">
+              <Nav activeKey={pathname}>
+                <Nav.Link href="/signin">SIGN IN</Nav.Link>
+                <Nav.Link
                   style={{ border: '0.1px solid', borderRadius: '5px' }}
-                  to="/signup"
+                  href="/signup"
                 >
                   SIGN UP
-                </Link>
-              </li>
-            </ul>
+                </Nav.Link>
+              </Nav>
+            </Navbar.Collapse>
           </div>
-        </>
-      )}
+        )}
+      </Container>
     </Navbar>
   )
 })

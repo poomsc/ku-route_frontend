@@ -90,7 +90,7 @@ const VersatilePost = observer(() => {
   }
 
   const handelOnCreatePost = () => {
-    if (filesUpload.status !== 'done') return
+    if (filesUpload.status !== 'done' || !applicationStore.user) return
     // create_post
     create_post({
       AccountID: applicationStore.user.uid,

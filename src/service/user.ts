@@ -6,7 +6,7 @@ import {
   serverTimestamp,
   addDoc,
   updateDoc,
-} from 'firebase/firestore/'
+} from 'firebase/firestore'
 
 interface registerProps {
   UID: string

@@ -6,9 +6,11 @@ import { checkAuthState } from 'service/auth'
 // import { useStores } from 'hooks/useStore';
 
 const PrivateRoute = observer(({ component: Component, ...rest }: any) => {
+  // checkAuthState()
   const { user } = applicationStore
-  const isLogin = !!user || checkAuthState()
-  console.log({ isLogin, che: checkAuthState() })
+  console.log('user', user)
+
+  const isLogin = !!user
 
   return (
     // Show the component only when the user is logged in
