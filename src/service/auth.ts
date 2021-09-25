@@ -27,20 +27,20 @@ interface signupProps {
 
 firebaseAuth.languageCode = 'th'
 
-function checkAuthState() {
-  onAuthStateChanged(firebaseAuth, (user) => {
-    applicationStore.setUser(user)
-    if (user) {
-      // User is signed in, see docs for a list of available properties
-      // https://firebase.google.com/docs/reference/js/firebase.User
-      const UID = user.uid
-      // console.log(UID)
-      // console.log(user)
-      return true
-    } else console.log('Auth State Changed')
-    return false
-  })
-}
+// function checkAuthState() {
+//   onAuthStateChanged(firebaseAuth, (user) => {
+//     applicationStore.setUser(user)
+//     if (user) {
+//       // User is signed in, see docs for a list of available properties
+//       // https://firebase.google.com/docs/reference/js/firebase.User
+//       const UID = user.uid
+//       // console.log(UID)
+//       // console.log(user)
+//       return true
+//     } else console.log('Auth State Changed')
+//     return false
+//   })
+// }
 
 async function signUp_EmailPassword({
   Name,
@@ -133,7 +133,7 @@ async function signIn_Google() {
   }
 }
 export {
-  checkAuthState,
+  // checkAuthState,
   signIn_EmailPassword,
   signUp_EmailPassword,
   signIn_Google,

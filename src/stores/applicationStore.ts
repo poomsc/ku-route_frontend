@@ -8,7 +8,6 @@ import {
   User,
   UserCredential,
 } from '@firebase/auth'
-import { checkAuthState } from 'service/auth'
 import { initializeApp } from 'firebase/app'
 import { getFirestore } from 'firebase/firestore'
 import { getStorage } from 'firebase/storage'
