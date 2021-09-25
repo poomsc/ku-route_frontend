@@ -70,28 +70,32 @@ const NavBar = observer(() => {
         {isLoggedin === 'loggedin' ? (
           <div>
             <Navbar.Toggle aria-controls="basic-navbar-nav align-middle" />
-            <Navbar.Collapse id="basic-navbar-nav">
+            <Navbar.Collapse id="basic-navbar-nav ">
               <Nav className="me-auto">
-                <Nav.Link
-                  href="/"
+                <Link
+                  to="/"
+                  className="my-auto mx-2"
                   style={{
                     fontWeight: currentPage === '/' ? 'bold' : 'normal',
                     color: currentPage === '/' ? '#2EAF7D' : '#02353C',
+                    height: '22px',
                   }}
                 >
                   BROWSE
-                </Nav.Link>
-                <Nav.Link
-                  // href="/create-post"
+                </Link>
+                <Link
+                  to="/create-post"
+                  className="my-auto mx-2"
                   style={{
                     fontWeight:
                       currentPage === '/create-post' ? 'bold' : 'normal',
                     color:
                       currentPage === '/create-post' ? '#2EAF7D' : '#02353C',
+                    height: '22px',
                   }}
                 >
-                  <Link to="/create-post"> CREATE POST </Link>
-                </Nav.Link>
+                  CREATE POST
+                </Link>
                 <NavDropdown title={navDropdownTitle} id="basic-nav-dropdown">
                   <NavDropdown.Item
                     // href="edit-profile"
