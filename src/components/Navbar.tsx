@@ -19,12 +19,15 @@ const NavBar = observer(() => {
       if (!applicationStore.user) return
       const info = (await get_info(applicationStore.user.uid)) as DocumentData
       setInfoData(info)
+      applicationStore.setUserDisplayName(info?.DisplayName)
     }
     fetch()
-  }, [applicationStore])
+  }, [applicationStore.user?.uid])
 
   let isLoggedin = 'loggedin'
-  let userName = infoData?.DisplayName ? infoData?.DisplayName : 'userName'
+  let userName = applicationStore.userDisplayName
+    ? applicationStore.userDisplayName
+    : 'userName'
   const { pathname } = useLocation()
   const currentPage = pathname
   const navDropdownTitle = (
