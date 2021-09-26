@@ -1,9 +1,9 @@
 .Component {
-  background-image: url(./assets/images/BG.png);
-  background-repeat: repeat;
+  background-image: url(./assets/images/blue-bg.png);
+  height: 100%;
+  background-repeat: no-repeat;
   background-position: center;
-  background-size: 1440px 1960px;
-  top: auto;
+  background-size: cover;
 }
 
 .Subject {
@@ -64,7 +64,22 @@
   margin-left: 3px;
 }
 .textcode {
-  margin-top: 4px;
+  position: relative;
+  text-align: center;
+  width: 100px;
+  left: 350px;
+  background: #02353c;
+  margin-top: 0px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 0px 0px 5px 5px;
+  color: #ffffff;
+
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 28px;
+  align-items: center;
 }
 .form {
   top: auto;
@@ -98,19 +113,23 @@
   color: white;
 }
 .title {
-  position: relative;
-  left: 20px;
+  position: absolute;
+  top: 75px;
+  left: 70px;
   font-family: Roboto;
   font-style: normal;
   font-weight: bold;
-  font-size: 16px;
+  font-size: 24px;
   line-height: 28px;
+  display: flex;
+  align-items: center;
+
   color: #525252;
 }
 
 .line-black {
   position: relative;
-  top: 20px;
+  top: 55px;
   left: 20px;
   width: 300px;
   border: 1px solid #000000;
@@ -118,10 +137,14 @@
 
 .headtext {
   position: relative;
-  top: 40px;
-  left: 20px;
+  top: 70px;
+  left: 35px;
   font-family: Roboto;
-  font-weight: lighter;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 21px;
+
   color: #525252;
 }
 
@@ -132,8 +155,8 @@
 .pdfcount {
   text-align: left;
   position: relative;
-  left: 20px;
-  top: 70px;
+  left: 35px;
+  top: 95px;
   font-family: Roboto;
   font-size: 9px;
 }
@@ -145,8 +168,8 @@
 .creatby {
   text-align: right;
   position: relative;
-  left: 20px;
-  top: 90px;
+  left: 35px;
+  top: 110px;
   font-family: Roboto;
   font-size: 13px;
 }
@@ -168,8 +191,8 @@
 
 .Time {
   position: relative;
-  left: 120px;
-  top: 90px;
+  left: 170px;
+  top: 110px;
   font-family: Roboto;
   font-style: normal;
   font-weight: normal;
@@ -189,4 +212,20 @@
   left: 7px;
 
   font-size: 10px;
+}
+
+.textnum {
+  position: relative;
+  text-align: center;
+  width: 100px;
+  left: 350px;
+  background: #5cccab;
+  border-radius: 5px 5px 0px 0px;
+}
+.TAG {
+  position: relative;
+  bottom: 20px;
+  left: 10px;
+  margin-bottom: -;
+  display: inline-flex;
 }
