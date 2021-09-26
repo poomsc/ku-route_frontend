@@ -17,6 +17,7 @@ import { useEffect, useState } from 'react'
 import { DocumentData, serverTimestamp } from '@firebase/firestore'
 import { BasicSearch } from 'service/search'
 import { stringify } from 'querystring'
+import applicationStore from 'stores/applicationStore'
 
 function convertTStoDate(timestamp) {
   const timeCurrent = new Date().getTime() / 1000
@@ -43,53 +44,85 @@ const AllPostPage = () => {
 
   useEffect(() => {
     async function fetch() {
-      const result = await BasicSearch('02743552-60 นิติการบัญชีและการเงิน', [])
+      const result = await BasicSearch(applicationStore.subjectID, [])
       setResultPost(result)
     }
     fetch()
-  }, [])
+  }, [applicationStore.subjectID])
+
+  const colors = [
+    '#5697C4',
+    '#E0598B',
+    '#E278A3',
+    '#9163B6',
+    '#993767',
+    '#A34974',
+    '#BE5168',
+    '#C84A52',
+    '#E16452',
+    '#F19670',
+    '#E9D78E',
+    '#E4BE7F',
+    '#74C493',
+  ]
+  const maxColor = colors.length
 
   return (
-    <div className="Component">
+    <div
+      className="blue-bg jumbotron jumbotron-fluid mb-0"
+      style={{ paddingLeft: '15vw' }}
+    >
+      <thead>
+        <div className="Subject">
+          <div>{applicationStore.subjectENG}</div>
+          <div>{applicationStore.subjectTH}</div>
+        </div>
+        <tr className="post-picture">
+          <th>
+            <img className="pic" src={write_pic} />
+            <span className="count">{resultPost?.length}</span>
+          </th>
+        </tr>
+        <div className="Subjectnum">
+          <div className="textnum">รหัสวิชา</div>
+          <div className="textcode">{applicationStore.subjectID}</div>
+        </div>
+      </thead>
+      <img className="line-white" src={linewhite} />
       {resultPost?.map((menu, index) => {
         return (
           <div className="container" key={index}>
             <Container>
-              <thead>
-                <div className="Subject">
-                  <div>{menu.SubjectEng}</div>
-                  <div>{menu.SubjectID.split(' ')[1]}</div>
-                </div>
-                <tr className="post-picture">
-                  <th>
-                    <img className="pic" src={write_pic} />
-                    <span className="count">{resultPost.length}</span>
-                  </th>
-                </tr>
-                <div className="all">
-                  <>{menu.Allpost}</>
-                  <span className="textpost">POSTS</span>
-                </div>
-                <div className="Subjectnum">
-                  <div>หมวดวิชาแกน</div>
-                  <div className="textcode">{menu.SubjectID.split(' ')[0]}</div>
-                </div>
-              </thead>
-              <img className="line-white" src={linewhite} />
               <div className="row">
                 <div className="col-4">
                   <div className="form">
-                    <tr>
-                      <th className="category">{menu.Category}</th>
+                    <tr className="TAG">
+                      {menu.TagID.map((tag, idx) => (
+                        <div
+                          className=" max-w-content rounded cursor-pointer  px-2 py-1  ml-3 "
+                          key={tag}
+                          style={{
+                            backgroundColor:
+                              colors[maxColor - (idx % maxColor) - 1],
+                            color: '#FFFFFF',
+                          }}
+                        >
+                          {tag}
+                        </div>
+                      ))}
+                      {/* <th className="category">{menu.Category}</th> */}
                     </tr>
                     <div className="title">{menu.Title}</div>
                     <img className="line-black" src={lineblack} />
-                    <div className="headtext">{menu.Description}</div>
+                    <div className="headtext">
+                      ใครสนใจเข้ามาดาวน์โหลดได้ที่โพสนี้
+                    </div>
+
                     <tr className="pdfrow">
                       {filepdf1.map((pdftest, AAA) => {
                         return (
                           <Link to={pdftest.path} className="pdfcount">
-                            <img className="pdf" src={pdf} />
+                            <img className="pdf" src={PDF} />
                             <div>{pdftest.name}</div>
                           </Link>
                         )
@@ -110,41 +143,6 @@ const AllPostPage = () => {
                     </tr>
                   </div>
                 </div>
-                <div className="col-4">
-                  <div className="form">
-                    <tr>
-                      <th className="category">{menu.Category}</th>
-                    </tr>
-                    <div className="title">{menu.title}</div>
-                    <img className="line-black" src={lineblack} />
-                    <div className="headtext">{menu.headtext}</div>
-                    <tr className="pdfrow">
-                      {filepdf1.map((pdftest, AAA) => {
-                        return (
-                          <Link to={pdftest.path} className="pdfcount">
-                            <img className="pdf" src={pdf} />
-                            <div>{pdftest.name}</div>
-                          </Link>
-                        )
-                      })}
-                      <Link to="/pdf1" className="pdfcount">
-                        <img className="moreItem" src={moreitem} />
-                        <div className="textmore">MoreItem</div>
-                      </Link>
-                    </tr>
-                    <tr>
-                      <th className="creatby">
-                        <img className="Profile" src={profile} />
-                        <span className="Name">{menu.create}</span>
-                      </th>
-                      <th className="Time">
-                        <div>{menu.Time}</div>
-                      </th>
-                    </tr>
-                  </div>
-                </div>
-                <div className="col-4"> </div>
-                <div> </div>
               </div>
             </Container>
           </div>

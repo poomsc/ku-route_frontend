@@ -114,7 +114,7 @@ const PostPage = () => {
               marginBottom: '5px',
             }}
           >
-            {constTags.map((tag, idx) => (
+            {mockTags.map((tag, idx) => (
               <div
                 className="max-w-content cursor-pointer align-self-center px-3 pt-1 ml-3 "
                 key={tag}
