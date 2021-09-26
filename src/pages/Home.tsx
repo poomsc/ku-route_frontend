@@ -123,6 +123,9 @@ const HomePage = () => {
         <br />
         <Link to="/create-post">create-post</Link>
         <br />
+        <br />
+        <Link to="/all-post">all-post</Link>
+        <br />
       </div>
     </div>
   )

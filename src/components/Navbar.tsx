@@ -12,32 +12,22 @@ import { get_info } from 'service/system'
 import { firestore } from 'config/firebase'
 
 const NavBar = observer(() => {
-  const [infoData, setInfoData] = useState<DocumentData>()
-
-  const info_doc = applicationStore.user
-    ? doc(firestore, 'Account', applicationStore.user.uid)
-    : null
+  // const [infoData, setInfoData] = useState<DocumentData>()
 
   useEffect(() => {
     async function fetch() {
       if (!applicationStore.user) return
       const info = (await get_info(applicationStore.user.uid)) as DocumentData
-      setInfoData(info)
+      // setInfoData(info)
+      applicationStore.setUserDisplayName(info?.DisplayName)
     }
     fetch()
-  }, [applicationStore, info_doc])
-  // useEffect(() => {
-  //   if (!applicationStore.user) return
-  //   async function fetch() {
-  //     const info = (await get_info(applicationStore.user.uid)) as DocumentData
-
-  //     setInfoData(info)
-  //   }
-  //   fetch()
-  // }, [])
+  }, [applicationStore.user?.uid, applicationStore.userDisplayName])
 
   let isLoggedin = 'loggedin'
-  let userName = infoData?.DisplayName ? infoData?.DisplayName : 'userName'
+  let userName = applicationStore.userDisplayName
+    ? applicationStore.userDisplayName
+    : 'userName'
   const { pathname } = useLocation()
   const currentPage = pathname
   const navDropdownTitle = (
@@ -73,11 +63,11 @@ const NavBar = observer(() => {
             <Navbar.Collapse id="basic-navbar-nav ">
               <Nav className="me-auto">
                 <Link
-                  to="/"
+                  to="/all-post"
                   className="my-auto mx-2"
                   style={{
-                    fontWeight: currentPage === '/' ? 'bold' : 'normal',
-                    color: currentPage === '/' ? '#2EAF7D' : '#02353C',
+                    fontWeight: currentPage === '/all-post' ? 'bold' : 'normal',
+                    color: currentPage === '/all-post' ? '#2EAF7D' : '#02353C',
                     height: '22px',
                   }}
                 >
