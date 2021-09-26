@@ -21,3 +21,4 @@ const PrivateRoute = observer(({ component: Component, ...rest }: any) => {
 })
 
 export default PrivateRoute
+ 
