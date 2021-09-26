@@ -14,9 +14,9 @@ import { observer } from 'mobx-react-lite'
 import { IFileWithMeta, StatusValue } from 'react-dropzone-uploader'
 import { create_post } from 'service/user'
 import { delete_post } from 'service/system'
-import _subjects from 'constants/subjects.json'
 import { ISubject } from 'interface/subject.interface'
 import { constTags } from 'constants/index'
+import Subjects from 'constants/subjects.json'
 
 const contractChannels = [
   { Icon: mail, Placeholder: 'hello@kuroute.com' },
@@ -27,19 +27,25 @@ const contractChannels = [
 
 const pathType = { '/create-post': true, '/edit-post': false }
 
+interface dropdownType {
+  text: string
+  value: number
+}
+
 const VersatilePost = observer(() => {
-  const subjects = (_subjects as any).map((s, i) => {
+  const _subjects: dropdownType[] = (Subjects as ISubject[]).map((s, i) => {
     return {
-      key: i,
       text: `${s.subjectCode} ${s.subjectNameTh} (${s.subjectNameEn})`,
-      value: `${s.subjectCode}-${s.theoryHour}-${s.practiceHour}`,
+      value: i,
     }
   })
-
   const preprocessTags = generateRandomColor(
     constTags.map((text) => {
       return { text }
     })
+  )
+  const [subjects, setSubjects] = useState<dropdownType[]>(
+    _subjects.slice(0, 10)
   )
   const [topicSelected, setTopicSelected] = useState<ISubject>()
   const [title, setTitle] = useState<string>('')
@@ -68,6 +74,12 @@ const VersatilePost = observer(() => {
 
   const onFileChange = (status: StatusValue, allFiles: IFileWithMeta[]) => {
     setFilesUpload({ status, allFiles })
+  }
+
+  const onSearchChange = (event: any) => {
+    setSubjects(
+      _subjects.filter((s) => s.text.includes(event.target.value)).slice(0, 10)
+    )
   }
 
   const handelOnCreatePost = () => {
@@ -109,8 +121,10 @@ const VersatilePost = observer(() => {
           fluid
           search
           selection
-          options={subjects}
+          options={subjects.slice(0, 10)}
           onChange={handleOnSelectSubject}
+          onSearchChange={onSearchChange}
+          // searchQuery={searchQuery}
           className="rounded-10 bg-primary-dark text-white font-weight-bold d-flex"
           icon={
             <div className="ml-auto">
