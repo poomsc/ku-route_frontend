@@ -119,6 +119,74 @@ const AllPost = () => {
                 </div>
                 <div className="col-4"> </div>
                 <div> </div>
+                <div className="col-4">
+                  <div className="form">
+                    <tr>
+                      <th className="category">{menu.Category}</th>
+                    </tr>
+                    <div className="title">{menu.title}</div>
+                    <img className="line-black" src={lineblack} />
+                    <div className="headtext">{menu.headtext}</div>
+                    <tr className="pdfrow">
+                      {filepdf1.map((pdftest, AAA) => {
+                        return (
+                          <Link to={pdftest.path} className="pdfcount">
+                            <img className="pdf" src={pdf} />
+                            <div>{pdftest.name}</div>
+                          </Link>
+                        )
+                      })}
+                      <Link to="/pdf1" className="pdfcount">
+                        <img className="moreItem" src={moreitem} />
+                        <div className="textmore">MoreItem</div>
+                      </Link>
+                    </tr>
+                    <tr>
+                      <th className="creatby">
+                        <img className="Profile" src={profile} />
+                        <span className="Name">{menu.create}</span>
+                      </th>
+                      <th className="Time">
+                        <div>{menu.Time}</div>
+                      </th>
+                    </tr>
+                  </div>
+                </div>
+                <div className="col-4">
+                  <div className="form">
+                    <tr>
+                      <th className="category">{menu.Category}</th>
+                    </tr>
+                    <div className="title">{menu.title}</div>
+                    <img className="line-black" src={lineblack} />
+                    <div className="headtext">{menu.headtext}</div>
+                    <tr className="pdfrow">
+                      {filepdf1.map((pdftest, AAA) => {
+                        return (
+                          <Link to={pdftest.path} className="pdfcount">
+                            <img className="pdf" src={pdf} />
+                            <div>{pdftest.name}</div>
+                          </Link>
+                        )
+                      })}
+                      <Link to="/pdf1" className="pdfcount">
+                        <img className="moreItem" src={moreitem} />
+                        <div className="textmore">MoreItem</div>
+                      </Link>
+                    </tr>
+                    <tr>
+                      <th className="creatby">
+                        <img className="Profile" src={profile} />
+                        <span className="Name">{menu.create}</span>
+                      </th>
+                      <th className="Time">
+                        <div>{menu.Time}</div>
+                      </th>
+                    </tr>
+                  </div>
+                </div>
+                <div className="col-4"> </div>
+                <div> </div>
               </div>
             </Container>
           </div>
