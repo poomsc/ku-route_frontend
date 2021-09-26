@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Button, Dropdown, FormControl, InputGroup } from 'react-bootstrap'
-import { useHistory, useLocation } from 'react-router'
+import { useLocation } from 'react-router'
 import { generateRandomColor, removeElementFromArray } from 'utils'
 import { BsFillCaretDownFill } from 'react-icons/bs'
 import facebook from 'assets/icons/facebook.png'
@@ -9,33 +9,15 @@ import mail from 'assets/icons/mail.png'
 import phone from 'assets/icons/phone.png'
 import { Dropdown as SMTDropdown } from 'semantic-ui-react'
 import DropFileZone from 'components/DropFileZone'
-import { get_one_post } from 'service/system'
-import { DocumentData } from '@firebase/firestore'
-import { get_post, get_info, get_file } from 'service/system'
-import { info } from 'console'
 import applicationStore from 'stores/applicationStore'
-import { checkAuthState } from 'service/auth'
 import { observer } from 'mobx-react-lite'
 import { IFileWithMeta, StatusValue } from 'react-dropzone-uploader'
+import { create_post } from 'service/user'
+import { delete_post } from 'service/system'
+import _subjects from 'constants/subjects.json'
+import { ISubject } from 'interface/subject.interface'
+import { constTags } from 'constants/index'
 
-const subjects = [
-  {
-    key: '02212641-55',
-    value: '02212641-55',
-    text: '02212641-55 สเปกโทรสโกปีอินฟราเรดใกล้ขั้นสูง',
-  },
-  {
-    key: '02743552-60',
-    value: '02743552-60',
-    text: '02743552-60 นิติการบัญชีและการเงิน',
-  },
-  {
-    key: '01204111-55',
-    value: '01204111-55',
-    text: '01204111-55 คอมพิวเตอร์และการโปรแกรม',
-  },
-]
-const mockTags = ['ทั่วไป', 'รีวิวรายวิชา', 'คลังความรู้', 'อื่นๆ']
 const contractChannels = [
   { Icon: mail, Placeholder: 'hello@kuroute.com' },
   { Icon: phone, Placeholder: '09-234-5678' },
@@ -43,28 +25,34 @@ const contractChannels = [
   { Icon: instagram, Placeholder: 'https://www.instagram.com/kuroute' },
 ]
 
-const pathType = { '/create-post': 0 }
+const pathType = { '/create-post': true, '/edit-post': false }
 
 const VersatilePost = observer(() => {
-  //check signin
-  const { pathname } = useLocation()
-  console.log({ pathname })
+  const subjects = (_subjects as any).map((s, i) => {
+    return {
+      key: i,
+      text: `${s.subjectCode} ${s.subjectNameTh} (${s.subjectNameEn})`,
+      value: `${s.subjectCode}-${s.theoryHour}-${s.practiceHour}`,
+    }
+  })
 
   const preprocessTags = generateRandomColor(
-    mockTags.map((t) => {
-      return { text: t }
+    constTags.map((text) => {
+      return { text }
     })
   )
-
-  const [topicSelected, setTopicSelected] = useState(subjects[0].text)
-  const [title, setTitle] = useState<string>()
-  const [description, setDescription] = useState<string>()
+  const [topicSelected, setTopicSelected] = useState<ISubject>()
+  const [title, setTitle] = useState<string>('')
+  const [description, setDescription] = useState<string>('')
   const [tags, setTags] = useState<{ [name: string]: string }[]>(preprocessTags)
   const [tagsSelected, setTagSelected] = useState<string[]>([])
   const [filesUpload, setFilesUpload] = useState<{
     status: StatusValue
     allFiles: IFileWithMeta[]
   }>({ status: 'done', allFiles: [] })
+
+  const { pathname } = useLocation()
+  const isNewPost = pathType[pathname]
 
   const handleOnTagChange = (value: string, event: 'add' | 'remove') => {
     if (event === 'add') {
@@ -78,13 +66,39 @@ const VersatilePost = observer(() => {
     setTopicSelected(event.target.innerText)
   }
 
+  const onFileChange = (status: StatusValue, allFiles: IFileWithMeta[]) => {
+    setFilesUpload({ status, allFiles })
+  }
+
   const handelOnCreatePost = () => {
-    console.log('hello worlld')
+    if (
+      !topicSelected ||
+      filesUpload.status !== 'done' ||
+      !applicationStore.user
+    )
+      return
+    // create_post
+    create_post(
+      {
+        AccountID: applicationStore.user.uid,
+        TagID: tagsSelected,
+        SubjectID: topicSelected.subjectCode,
+        Title: title,
+        Description: description,
+      },
+      filesUpload.allFiles
+    )
+  }
+
+  const handleOnDeletePost = () => {
+    // delete_post()
   }
 
   return (
     <div className="white-bg py-5">
-      <h2 className="font-weight-bold text-center mb-5">สร้างโพสต์</h2>
+      <h2 className="font-weight-bold text-center mb-5">
+        {isNewPost ? 'สร้างโพสต์' : 'แก้ไขโพสต์'}
+      </h2>
 
       <div
         className="rounded-25 shadow mx-auto mb-4"
@@ -201,7 +215,7 @@ const VersatilePost = observer(() => {
         style={{ maxWidth: '70rem' }}
       >
         <h5 className="font-weight-bold mb-3">แนบไฟล์เพิ่มเติม</h5>
-        <DropFileZone />
+        <DropFileZone onChange={onFileChange} />
       </div>
       <div
         className="bg-secondary p-5 rounded-25 shadow mx-auto"
@@ -232,9 +246,15 @@ const VersatilePost = observer(() => {
       </div>
       <div className="mx-auto my-5" style={{ maxWidth: '70rem' }}>
         <div className="d-flex justify-content-end">
-          <Button variant="danger" style={{ width: '7rem' }}>
-            DELETE
-          </Button>
+          {!isNewPost && (
+            <Button
+              variant="danger"
+              style={{ width: '7rem' }}
+              onClick={handleOnDeletePost}
+            >
+              DELETE
+            </Button>
+          )}
           <div className="mx-2" />
           <Button style={{ width: '7rem' }} onClick={handelOnCreatePost}>
             PUBLISH

@@ -1,7 +1,7 @@
 import './App.css'
 import React, { useEffect } from 'react'
 import Routes from 'routes/index'
-import { checkAuthState, signOut, signIn_Google } from 'service/auth'
+import { signOut, signIn_Google } from 'service/auth'
 import {
   delete_post,
   get_comment,
@@ -25,11 +25,6 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import PDF1 from './assets/icons/PDF.png'
 
 const App = () => {
-  const {} = applicationStore
-  useEffect(() => {
-    checkAuthState()
-  }, [])
-
   //signOut()
   //get_one_post('TPkRmWLZdLRIUWIa8ptS')
   //like('KVcKU4KWX8UJIc6yiwwesWrU2Ef1', "TPkRmWLZdLRIUWIa8ptS")
