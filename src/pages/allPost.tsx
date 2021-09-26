@@ -18,41 +18,52 @@ import { DocumentData, serverTimestamp } from '@firebase/firestore'
 import { BasicSearch } from 'service/search'
 import { stringify } from 'querystring'
 import applicationStore from 'stores/applicationStore'
-import React from 'react'
-
-let countE = -1
-let countF = -1
+import React from 'react' 
 
 function convertTStoDate(timestamp) {
   const timeCurrent = new Date().getTime() / 1000
   const timeDiff = timeCurrent - timestamp.seconds
   console.log(timeCurrent)
-  console.log(timestamp)
 
-  if (timeDiff < 60)
+  if (timeDiff < 60) {
     //second
-    return timeDiff.toString() + 's'
+    const second = Math.floor(timeDiff)
+    if(second == 1) return second.toString() + ' second'
+    return timeDiff.toString() + ' seconds'
+  }
   else if (timeDiff < 3600) {
     //minute
     const minute = Math.floor(timeDiff / 60)
-    return minute.toString() + 'm'
+    if(minute == 1) return minute.toString() + ' minute'
+    return minute.toString() + ' minutes'
   } else if (timeDiff < 86400) {
     //hour
     const hour = Math.floor(timeDiff / 3600)
-    return hour.toString() + 'h'
-  } else return new Date(timestamp)
+    if(hour == 1) return hour.toString() + ' hour'
+    return hour.toString() + ' hours'
+  } else {
+    const date = new Date(timestamp.seconds*1000)
+    return date.toLocaleString().split(',')[0]
+  }
 }
 
 const AllPostPage = () => {
+  let countE = -1
+  let countF = -1
   const [resultPost, setResultPost] = useState<DocumentData>()
 
+  const currentSearch = localStorage.getItem('currentSearch')
+  const SubjectIDandTH = currentSearch ? currentSearch.split(' ') : [' ', 'ชื่อวิชา่']
+  const SubjectENG = currentSearch ? currentSearch.split('(')[1].replace(')','') : 'SubjectName'
+  
   useEffect(() => {
     async function fetch() {
-      const result = await BasicSearch(applicationStore.subjectID, [])
+      if(!currentSearch) return
+      const result = await BasicSearch(SubjectIDandTH[0], [])
       setResultPost(result)
     }
     fetch()
-  }, [applicationStore.subjectID])
+  }, [currentSearch])
 
   const colors = [
     '#5697C4',
@@ -78,18 +89,18 @@ const AllPostPage = () => {
     >
       <thead>
         <div className="Subject">
-          <div>{applicationStore.subjectENG}</div>
-          <div>{applicationStore.subjectTH}</div>
+          <div>{SubjectENG}</div>
+          <div>{SubjectIDandTH[1]}</div>
         </div>
         <tr className="post-picture">
-          <th>
+          {/* <th>
             <img className="pic" src={write_pic} />
             <span className="count">{resultPost?.length}</span>
-          </th>
+          </th> */}
         </tr>
         <div className="Subjectnum">
           <div className="textnum">รหัสวิชา</div>
-          <div className="textcode">{applicationStore.subjectID}</div>
+          <div className="textcode">{SubjectIDandTH[0]}</div>
         </div>
       </thead>
       <img className="line-white" src={linewhite} />
@@ -152,7 +163,7 @@ const AllPostPage = () => {
                           </tr>
                           <tr>
                             <th className="creatby">
-                              <img className="Profile" src={profile} />
+                              {/* <img className="Profile" src={profile} /> */}
                               <span className="Name">{menu.create}</span>
                             </th>
                             <th className="Time">
@@ -226,7 +237,7 @@ const AllPostPage = () => {
                           </tr>
                           <tr>
                             <th className="creatby">
-                              <img className="Profile" src={profile} />
+                              {/* <img className="Profile" src={profile} /> */}
                               <span className="Name">{menu.create}</span>
                             </th>
                             <th className="Time">
