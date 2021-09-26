@@ -18,6 +18,7 @@ import {
   get_info_comment,
   get_one_post,
 } from 'service/system'
+import { constTags } from './../constants'
 
 const PostPage = () => {
   const [postData, setPostData] = useState<DocumentData>()
@@ -113,7 +114,7 @@ const PostPage = () => {
               marginBottom: '5px',
             }}
           >
-            {Tags.map((tag, idx) => (
+            {constTags.map((tag, idx) => (
               <div
                 className="max-w-content cursor-pointer align-self-center px-3 pt-1 ml-3 "
                 key={tag}
