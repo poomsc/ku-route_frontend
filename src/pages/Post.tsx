@@ -91,59 +91,120 @@ const PostPage = () => {
 
   const maxColor = colors.length
   return (
-    <div className="white-bg py-5">
-      <Container className="rounded box-shadow bg-white mx-auto mb-4">
+    <div className="white-bg" style={{ paddingTop: '90px' }}>
+      <Container
+        className="box-shadow bg-white mx-auto mb-5"
+        style={{
+          height: '350px',
+          left: '157px',
+          top: '190px',
+          width: '1126px',
+          backgroundColor: 'rgba(255, 255, 255, 0.5)',
+          boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+          borderRadius: '20px',
+        }}
+      >
         <div className="">
-          <div className="d-inline-flex">
+          <div
+            className="d-inline-flex pl-3"
+            style={{
+              height: '32px',
+              top: '228px',
+              borderRadius: '5px',
+              marginBottom: '5px',
+            }}
+          >
             {Tags.map((tag, idx) => (
               <div
-                className="max-w-content rounded cursor-pointer align-self-center px-2 py-1  ml-3 my-2"
+                className="max-w-content cursor-pointer align-self-center px-3 pt-1 ml-3 "
                 key={tag}
                 style={{
                   backgroundColor: colors[maxColor - (idx % maxColor) - 1],
                   color: '#FFFFFF',
+                  top: '233px',
+                  fontSize: '18px',
+                  lineHeight: '21px',
+                  alignItems: 'center',
+                  textAlign: 'center',
+                  fontStyle: 'normal',
+                  fontWeight: 'bold',
+                  fontFamily: 'Roboto',
+                  borderRadius: '5px',
+                  marginTop: '75px',
                 }}
               >
-                {tag}
+                <div
+                  className=""
+                  style={{
+                    width: '91px',
+                    height: '25px',
+                    left: '222px',
+                    top: '233px',
+                    fontSize: '18px',
+                    lineHeight: '21px',
+                    alignItems: 'center',
+                    textAlign: 'center',
+                    fontStyle: 'normal',
+                    fontWeight: 'bold',
+                    fontFamily: 'Roboto',
+                    marginTop: '3px',
+                  }}
+                >
+                  {tag}
+                </div>
               </div>
             ))}
           </div>
           <div
-            className="float-right my-4"
+            className="float-right "
             style={{
+              height: '80px',
               color: '#02353C',
               fontStyle: 'normal',
               fontWeight: 'bold',
               fontFamily: 'Roboto',
               display: 'flex',
               alignItems: 'center',
+              fontSize: '18px',
+              lineHeight: '21px',
+              textAlign: 'right',
+              marginTop: '15px',
             }}
           >
             {mockSubjectName[0]} | {mockSubjectName[1]}
           </div>
         </div>
         <h2
-          className="d-flex px-3 pb-2"
+          className="d-flex pt-4"
           style={{
             fontWeight: 'bold',
             fontFamily: 'Roboto',
             display: 'flex',
             alignItems: 'center',
             fontSize: '48px',
+            lineHeight: '56px',
             color: '#525252',
+            left: '208px',
+            top: '273px',
+            paddingLeft: '25px',
           }}
         >
           {title}
         </h2>
         <div>
           <div
-            className="d-flex pl-3 pb-2 d-inline-flex"
+            className="d-flex d-inline-flex"
             style={{
               fontFamily: 'Roboto',
               fontStyle: 'normal',
+              lineHeight: '28px',
               fontWeight: 'bold',
-              fontSize: '18px',
+              fontSize: '24px',
               color: '#525252',
+              height: '70px',
+              alignItems: 'center',
+              paddingLeft: '25px',
+              paddingBottom: '15px',
             }}
           >
             โพสต์โดย &nbsp;{' '}
@@ -161,14 +222,17 @@ const PostPage = () => {
             &nbsp;{postOwner}
           </div>
           <div
-            className="float-right my-1"
+            className="float-right mt-4"
             style={{
               fontSize: '18px',
-              lineHeight: '21px',
+              lineHeight: '11px',
               fontFamily: 'Roboto',
               fontStyle: 'normal',
               fontWeight: 'normal',
               color: '#000000',
+              textAlign: 'right',
+              height: '37px',
+              top: '416px',
             }}
           >
             {datePosted}
@@ -181,34 +245,45 @@ const PostPage = () => {
             fontFamily: 'Roboto',
             fontStyle: 'normal',
             fontWeight: 'normal',
-            fontSize: '18px',
+            fontSize: '24px',
+            lineHeight: '28px',
           }}
         >
           {descript}
         </div>
       </Container>
 
-      <Container className="rounded box-shadow bg-white mx-auto mb-4 px-5 pt-4">
+      <Container
+        className="box-shadow bg-white mx-auto mb-4 px-5 pt-4"
+        style={{
+          borderRadius: '20px',
+          boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+          background: 'rgba(255, 255, 255, 0.5)',
+          width: '1126px',
+          height: '308px',
+        }}
+      >
         <h5
           className="py-4 px-2"
           style={{
             fontWeight: 'bold',
             fontFamily: 'Roboto',
             fontStyle: 'normal',
-            fontSize: '25px',
+            fontSize: '24px',
+            lineHeight: '28px',
             color: '#525252',
           }}
         >
           ไฟล์ที่แนบมาด้วย
         </h5>
-        <div className="d-flex pb-4 px-3">
+        <div className="d-flex pb-4 px-3 mb-5">
           {allFile.map((file) => (
             <div
-              className="rounded mr-2 ml-4 mb-4"
+              className="mr-2 ml-4 mb-4"
               style={{
                 border: '1px solid #BFBFBF ',
                 background: '#FAFAFA',
-                borderRadius: '15px',
+                borderRadius: '10px',
                 boxSizing: 'border-box',
               }}
               key={file[0]}
