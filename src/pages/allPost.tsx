@@ -24,18 +24,18 @@ function convertTStoDate(timestamp) {
   console.log(timeCurrent)
   console.log(timestamp)
 
-  if(timeDiff < 60) //second
+  if (timeDiff < 60)
+    //second
     return timeDiff.toString() + 's'
-  else if(timeDiff < 3600) { //minute
+  else if (timeDiff < 3600) {
+    //minute
     const minute = Math.floor(timeDiff / 60)
     return minute.toString() + 'm'
-  }
-  else if(timeDiff < 86400) { //hour
+  } else if (timeDiff < 86400) {
+    //hour
     const hour = Math.floor(timeDiff / 3600)
     return hour.toString() + 'h'
-  }
-  else
-    return new Date(timestamp)
+  } else return new Date(timestamp)
 }
 
 const AllPostPage = () => {
@@ -48,7 +48,6 @@ const AllPostPage = () => {
     }
     fetch()
   }, [])
-
 
   return (
     <div className="Component">
