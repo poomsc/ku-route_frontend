@@ -17,6 +17,7 @@ import { useEffect, useState } from 'react'
 import { DocumentData, serverTimestamp } from '@firebase/firestore'
 import { BasicSearch } from 'service/search'
 import { stringify } from 'querystring'
+import applicationStore from 'stores/applicationStore'
 
 function convertTStoDate(timestamp) {
   const timeCurrent = new Date().getTime() / 1000
@@ -43,11 +44,11 @@ const AllPostPage = () => {
 
   useEffect(() => {
     async function fetch() {
-      const result = await BasicSearch('02743552-60 นิติการบัญชีและการเงิน', [])
+      const result = await BasicSearch(applicationStore.subjectID, [])
       setResultPost(result)
     }
     fetch()
-  }, [])
+  }, [applicationStore.subjectID])
 
   const colors = [
     '#5697C4',
@@ -67,33 +68,28 @@ const AllPostPage = () => {
   const maxColor = colors.length
 
   return (
-    <div className="blue-bg jumbotron jumbotron-fluid mb-0">
+    <div className="blue-bg jumbotron jumbotron-fluid mb-0" style={{ paddingLeft: '15vw' }}>
+      <thead>
+        <div className="Subject">
+          <div>{applicationStore.subjectENG}</div>
+          <div>{applicationStore.subjectTH}</div>
+        </div>
+        <tr className="post-picture">
+          <th>
+            <img className="pic" src={write_pic} />
+            <span className="count">{resultPost?.length}</span>
+          </th>
+        </tr>
+        <div className="Subjectnum">
+          <div className="textnum">รหัสวิชา</div>
+          <div className="textcode">{applicationStore.subjectID}</div>
+        </div>
+      </thead>
+      <img className="line-white" src={linewhite} />     
       {resultPost?.map((menu, index) => {
         return (
-          <div className="container" key={index}>
-            <Container>
-              <thead>
-                <div className="Subject">
-                  <div>{menu.SubjectEng}</div>
-                  <div>{menu.SubjectID.split(' ')[1]}</div>
-                </div>
-                <tr className="post-picture">
-                  <th>
-                    <img className="pic" src={write_pic} />
-                    <span className="count">{resultPost.length}</span>
-                  </th>
-                </tr>
-
-                <div className="all">
-                  <>{menu.Allpost}</>
-                  <span className="textpost">POSTS</span>
-                </div>
-                <div className="Subjectnum">
-                  <div className="textnum">รหัสวิชา</div>
-                  <div className="textcode">{menu.SubjectID.split(' ')[0]}</div>
-                </div>
-              </thead>
-              <img className="line-white" src={linewhite} />
+          <div className="container" key={index}> 
+            <Container>             
               <div className="row">
                 <div className="col-4">
                   <div className="form">
