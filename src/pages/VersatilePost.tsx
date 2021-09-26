@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Button, Dropdown, FormControl, InputGroup } from 'react-bootstrap'
-import { useLocation } from 'react-router'
+import { useHistory, useLocation } from 'react-router'
 import { generateRandomColor, removeElementFromArray } from 'utils'
 import { BsFillCaretDownFill } from 'react-icons/bs'
 import facebook from 'assets/icons/facebook.png'
@@ -14,9 +14,9 @@ import { observer } from 'mobx-react-lite'
 import { IFileWithMeta, StatusValue } from 'react-dropzone-uploader'
 import { create_post } from 'service/user'
 import { delete_post } from 'service/system'
-import _subjects from 'constants/subjects.json'
 import { ISubject } from 'interface/subject.interface'
 import { constTags } from 'constants/index'
+import Subjects from 'constants/subjects.json'
 
 const contractChannels = [
   { Icon: mail, Placeholder: 'hello@kuroute.com' },
@@ -27,21 +27,28 @@ const contractChannels = [
 
 const pathType = { '/create-post': true, '/edit-post': false }
 
+interface dropdownType {
+  text: string
+  value: number
+}
+
 const VersatilePost = observer(() => {
-  const subjects = (_subjects as any).map((s, i) => {
+  const _subjects: dropdownType[] = (Subjects as ISubject[]).map((s, i) => {
     return {
-      key: i,
       text: `${s.subjectCode} ${s.subjectNameTh} (${s.subjectNameEn})`,
-      value: `${s.subjectCode}-${s.theoryHour}-${s.practiceHour}`,
+      value: i,
+      key: i,
     }
   })
-
   const preprocessTags = generateRandomColor(
     constTags.map((text) => {
       return { text }
     })
   )
-  const [topicSelected, setTopicSelected] = useState<ISubject>()
+  const [subjects, setSubjects] = useState<dropdownType[]>(
+    _subjects.slice(0, 10)
+  )
+  const [topicSelected, setTopicSelected] = useState<string>()
   const [title, setTitle] = useState<string>('')
   const [description, setDescription] = useState<string>('')
   const [tags, setTags] = useState<{ [name: string]: string }[]>(preprocessTags)
@@ -54,6 +61,11 @@ const VersatilePost = observer(() => {
   const { pathname } = useLocation()
   const isNewPost = pathType[pathname]
 
+  const history = useHistory()
+  const backToHome = () => {
+    history.push('/')
+  }
+
   const handleOnTagChange = (value: string, event: 'add' | 'remove') => {
     if (event === 'add') {
       setTagSelected([...tagsSelected, value])
@@ -63,11 +75,19 @@ const VersatilePost = observer(() => {
   }
 
   const handleOnSelectSubject = (event: any) => {
-    setTopicSelected(event.target.innerText)
+    console.log(event.target.innerText.split(' ')[0])
+
+    setTopicSelected(event.target.innerText.split(' ')[0])
   }
 
   const onFileChange = (status: StatusValue, allFiles: IFileWithMeta[]) => {
     setFilesUpload({ status, allFiles })
+  }
+
+  const onSearchChange = (event: any) => {
+    setSubjects(
+      _subjects.filter((s) => s.text.includes(event.target.value)).slice(0, 10)
+    )
   }
 
   const handelOnCreatePost = () => {
@@ -82,11 +102,12 @@ const VersatilePost = observer(() => {
       {
         AccountID: applicationStore.user.uid,
         TagID: tagsSelected,
-        SubjectID: topicSelected.subjectCode,
+        SubjectID: topicSelected,
         Title: title,
         Description: description,
       },
-      filesUpload.allFiles
+      filesUpload.allFiles,
+      backToHome
     )
   }
 
@@ -109,8 +130,10 @@ const VersatilePost = observer(() => {
           fluid
           search
           selection
-          options={subjects}
+          options={subjects.slice(0, 10)}
           onChange={handleOnSelectSubject}
+          onSearchChange={onSearchChange}
+          // searchQuery={searchQuery}
           className="rounded-10 bg-primary-dark text-white font-weight-bold d-flex"
           icon={
             <div className="ml-auto">

@@ -57,8 +57,11 @@ async function register({ UID, Name, Surname, Email }: registerProps) {
 
 async function create_post(
   { AccountID, TagID, SubjectID, Title, Description }: postProps,
-  allFiles: IFileWithMeta[]
+  allFiles: IFileWithMeta[],
+  callBack?: () => void
 ) {
+  console.log({ AccountID, TagID, SubjectID, Title, Description })
+
   const data = {
     AccountID,
     TagID,
@@ -76,6 +79,7 @@ async function create_post(
       upload_file(file.file, docRef.id)
     )
     console.log('Post written with ID: ', docRef.id)
+    callBack && callBack()
     return docRef.id
   } catch (e) {
     console.error('Error adding post: ', e)

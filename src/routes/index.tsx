@@ -11,7 +11,6 @@ import VersatilePostPage from 'pages/VersatilePost'
 import PublicRoute from './PublicRoute'
 import PrivateRoute from './PrivateRoute'
 import NavBar from 'components/Navbar'
-import protectedRoute from './protectedRoute'
 
 const NAVBAR = withRouter(NavBar)
 
