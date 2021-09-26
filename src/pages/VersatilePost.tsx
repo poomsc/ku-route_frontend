@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Button, Dropdown, FormControl, InputGroup } from 'react-bootstrap'
-import { useLocation } from 'react-router'
+import { useHistory, useLocation } from 'react-router'
 import { generateRandomColor, removeElementFromArray } from 'utils'
 import { BsFillCaretDownFill } from 'react-icons/bs'
 import facebook from 'assets/icons/facebook.png'
@@ -37,6 +37,7 @@ const VersatilePost = observer(() => {
     return {
       text: `${s.subjectCode} ${s.subjectNameTh} (${s.subjectNameEn})`,
       value: i,
+      key: i,
     }
   })
   const preprocessTags = generateRandomColor(
@@ -47,7 +48,7 @@ const VersatilePost = observer(() => {
   const [subjects, setSubjects] = useState<dropdownType[]>(
     _subjects.slice(0, 10)
   )
-  const [topicSelected, setTopicSelected] = useState<ISubject>()
+  const [topicSelected, setTopicSelected] = useState<string>()
   const [title, setTitle] = useState<string>('')
   const [description, setDescription] = useState<string>('')
   const [tags, setTags] = useState<{ [name: string]: string }[]>(preprocessTags)
@@ -60,6 +61,11 @@ const VersatilePost = observer(() => {
   const { pathname } = useLocation()
   const isNewPost = pathType[pathname]
 
+  const history = useHistory()
+  const backToHome = () => {
+    history.push('/')
+  }
+
   const handleOnTagChange = (value: string, event: 'add' | 'remove') => {
     if (event === 'add') {
       setTagSelected([...tagsSelected, value])
@@ -69,7 +75,9 @@ const VersatilePost = observer(() => {
   }
 
   const handleOnSelectSubject = (event: any) => {
-    setTopicSelected(event.target.innerText)
+    console.log(event.target.innerText.split(' ')[0])
+
+    setTopicSelected(event.target.innerText.split(' ')[0])
   }
 
   const onFileChange = (status: StatusValue, allFiles: IFileWithMeta[]) => {
@@ -94,11 +102,12 @@ const VersatilePost = observer(() => {
       {
         AccountID: applicationStore.user.uid,
         TagID: tagsSelected,
-        SubjectID: topicSelected.subjectCode,
+        SubjectID: topicSelected,
         Title: title,
         Description: description,
       },
-      filesUpload.allFiles
+      filesUpload.allFiles,
+      backToHome
     )
   }
 
