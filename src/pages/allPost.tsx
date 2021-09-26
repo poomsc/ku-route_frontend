@@ -18,6 +18,7 @@ import { DocumentData, serverTimestamp } from '@firebase/firestore'
 import { BasicSearch } from 'service/search'
 import { stringify } from 'querystring'
 import applicationStore from 'stores/applicationStore'
+import React from 'react'
 
 let countE = -1
 let countF = -1
@@ -99,8 +100,16 @@ const AllPostPage = () => {
           style={{ verticalAlign: 'top' }}
         >
           {resultPost?.map((menu, index) => {
+            let text = menu.Title
+            if (text.length > 28) {
+              text = text.substring(0, 29) + '...'
+            }
+            let descrip = menu.Description
+            if (descrip.length > 35) {
+              descrip = descrip.substring(0, 36) + '...'
+            }
             countE = countE + 1
-            if (countE % 2 == 1) {
+            if (countE % 2 == 0) {
               return (
                 <div className="w-content d-flex mb-5" key={index}>
                   <Container className="w-content d-inline-block">
@@ -123,11 +132,9 @@ const AllPostPage = () => {
                             ))}
                             {/* <th className="category">{menu.Category}</th> */}
                           </tr>
-                          <div className="title w-100 mr-3">{menu.Title}</div>
+                          <div className="title mr-3">{text}</div>
                           <img className="line-black" src={lineblack} />
-                          <div className="headtext">
-                            ใครสนใจเข้ามาดาวน์โหลดได้ที่โพสนี้
-                          </div>
+                          <div className="headtext">{descrip}</div>
 
                           <tr className="pdfrow">
                             {filepdf1.map((pdftest, AAA) => {
@@ -167,8 +174,16 @@ const AllPostPage = () => {
           style={{ verticalAlign: 'top' }}
         >
           {resultPost?.map((menu, index) => {
+            let text = menu.Title
+            if (text.length > 28) {
+              text = text.substring(0, 29) + '...'
+            }
+            let descrip = menu.Description
+            if (descrip.length > 35) {
+              descrip = descrip.substring(0, 36) + '...'
+            }
             countF = countF + 1
-            if (countF % 2 == 0) {
+            if (countF % 2 == 1) {
               return (
                 <div className="w-content d-flex mb-5" key={index}>
                   <Container className="w-content d-inline-block">
@@ -191,11 +206,9 @@ const AllPostPage = () => {
                             ))}
                             {/* <th className="category">{menu.Category}</th> */}
                           </tr>
-                          <div className="title w-100 mr-3">{menu.Title}</div>
+                          <div className="title mr-3">{text}</div>
                           <img className="line-black" src={lineblack} />
-                          <div className="headtext">
-                            ใครสนใจเข้ามาดาวน์โหลดได้ที่โพสนี้
-                          </div>
+                          <div className="headtext">{descrip}</div>
 
                           <tr className="pdfrow">
                             {filepdf1.map((pdftest, AAA) => {
