@@ -395,7 +395,7 @@ const PostPage = () => {
                 >
                   &nbsp;&nbsp;by&nbsp;&nbsp;
                   <br />
-                  &nbsp;&nbsp;{comment[2]}&nbsp;&nbsp;&nbsp;&nbsp;
+                  &nbsp;&nbsp;{comment[2]}&nbsp;&nbsp;days&nbsp;&nbsp;ago
                 </div>
                 <div
                   className="d-inline-flex py-2"
@@ -417,7 +417,7 @@ const PostPage = () => {
           className="d-block mx-auto px-5 py-3"
           style={{
             width: '1140px',
-            height: '60px',
+            height: '62px',
             top: '1017px',
             borderRadius: '0rem 0rem 5px 5px',
             background: '#D9D9D9',
@@ -432,6 +432,7 @@ const PostPage = () => {
                 background: '#FFFFFF',
                 border: 'none',
                 width: '1160px',
+                height: '37px',
               }}
               type="text"
               className="form-control"
@@ -444,7 +445,7 @@ const PostPage = () => {
                 borderRadius: '0px 4px 4px 0px',
                 backgroundColor: '#FFFFFF',
                 border: 'none',
-                height: '33px',
+                height: '37px',
               }}
             >
               <img
