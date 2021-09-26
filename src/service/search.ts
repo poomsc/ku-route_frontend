@@ -1,12 +1,24 @@
 import { collection, orderBy, query, where, getDocs } from '@firebase/firestore'
 import { firestore } from 'config/firebase'
 
-async function TagSearch(Tag: Array<string>) {
+async function BasicSearch(Subject: string, Tag: Array<string>) {
   try {
+    if (Tag.length == 0) {
+      Tag = [
+        'ทั่วไป',
+        'รีวิวรายวิชา',
+        'คลังความรู้',
+        'แบบฝึกหัด',
+        'Lecture',
+        'สรุป',
+        'อื่นๆ',
+      ]
+    }
     const all_post = [] as any
-    console.log(Tag)
+    //console.log(Tag)
     const q = await query(
       collection(firestore, 'Post'),
+      where('SubjectID', '==', Subject),
       where('Status', '==', true),
       where('TagID', 'array-contains-any', Tag),
       orderBy('DateEdited')
@@ -17,6 +29,7 @@ async function TagSearch(Tag: Array<string>) {
       all_post.push(doc.data())
       // console.log(doc.id, ' => ', doc.data())
     })
+    console.log(all_post)
     return all_post
   } catch (e) {
     console.error('Error searching: ', e)
@@ -24,4 +37,4 @@ async function TagSearch(Tag: Array<string>) {
   }
 }
 
-export { TagSearch }
+export { BasicSearch }

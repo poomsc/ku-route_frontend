@@ -63,11 +63,11 @@ const NavBar = observer(() => {
             <Navbar.Collapse id="basic-navbar-nav ">
               <Nav className="me-auto">
                 <Link
-                  to="/"
+                  to="/all-post"
                   className="my-auto mx-2"
                   style={{
-                    fontWeight: currentPage === '/' ? 'bold' : 'normal',
-                    color: currentPage === '/' ? '#2EAF7D' : '#02353C',
+                    fontWeight: currentPage === '/all-post' ? 'bold' : 'normal',
+                    color: currentPage === '/all-post' ? '#2EAF7D' : '#02353C',
                     height: '22px',
                   }}
                 >

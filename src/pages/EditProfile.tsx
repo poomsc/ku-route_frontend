@@ -11,7 +11,7 @@ import LockLabel from '@material-ui/icons/Lock'
 import applicationStore from 'stores/applicationStore'
 import { useHistory } from 'react-router'
 import { observer } from 'mobx-react'
-import { TagSearch } from 'service/search'
+import { BasicSearch } from 'service/search'
 
 const facultyList = [] as any
 let facultyLoader = 0

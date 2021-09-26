@@ -27,13 +27,13 @@ const PostPage = () => {
 
   useEffect(() => {
     async function fetch() {
-      const post = (await get_one_post('v9qZWXtsicOh2L6evzO9')) as DocumentData
+      const post = (await get_one_post('x6XyIHVqD9BVslonhypR')) as DocumentData
       const info = (await get_info(post?.AccountID)) as DocumentData
       const comment = (await get_comment(
-        'v9qZWXtsicOh2L6evzO9'
+        'x6XyIHVqD9BVslonhypR'
       )) as DocumentData
       const info_comment = (await get_info_comment(
-        'v9qZWXtsicOh2L6evzO9'
+        'x6XyIHVqD9BVslonhypR'
       )) as Array<string>
 
       setPostData(post)
@@ -55,7 +55,7 @@ const PostPage = () => {
   let datePosted = '05/06/2564'
   let title = postData?.Title ? postData?.Title : ''
   let descript = postData?.Description ? postData?.Description : ''
-  const Tags = postData?.TagID ? postData?.TagID : ['']
+  const mockTags = postData?.TagID ? postData?.TagID : ['']
   const mockSubjectName = ['01204241', 'Software Engineer']
   //const [allTag, setAllTag] = useState<string[]>(mockTags)
   //console.log(mockTags)
@@ -94,7 +94,7 @@ const PostPage = () => {
       <Container className="rounded box-shadow bg-white mx-auto mb-4">
         <div className="">
           <div className="d-inline-flex">
-            {Tags.map((tag, idx) => (
+            {mockTags.map((tag, idx) => (
               <div
                 className="max-w-content rounded cursor-pointer align-self-center px-2 py-1  ml-3 my-2"
                 key={tag}
