@@ -31,15 +31,15 @@ function convertTStoDate(timestamp) {
 
   if (timeDiff < 60)
     //second
-    return timeDiff.toString() + 's'
+    return 'Posted ' + timeDiff.toString() + ' second'
   else if (timeDiff < 3600) {
     //minute
     const minute = Math.floor(timeDiff / 60)
-    return minute.toString() + 'm'
+    return 'Posted ' + minute.toString() + ' minute'
   } else if (timeDiff < 86400) {
     //hour
     const hour = Math.floor(timeDiff / 3600)
-    return hour.toString() + 'h'
+    return 'Posted ' + hour.toString() + ' hour'
   } else return new Date(timestamp)
 }
 
@@ -81,12 +81,12 @@ const AllPostPage = () => {
           <div>{applicationStore.subjectENG}</div>
           <div>{applicationStore.subjectTH}</div>
         </div>
-        <tr className="post-picture">
+        {/* <tr className="post-picture">
           <th>
             <img className="pic" src={write_pic} />
             <span className="count">{resultPost?.length}</span>
           </th>
-        </tr>
+        </tr> */}
         <div className="Subjectnum">
           <div className="textnum">รหัสวิชา</div>
           <div className="textcode">{applicationStore.subjectID}</div>
@@ -151,10 +151,10 @@ const AllPostPage = () => {
                             </Link>
                           </tr>
                           <tr>
-                            <th className="creatby">
+                            {/* <th className="creatby">
                               <img className="Profile" src={profile} />
                               <span className="Name">{menu.create}</span>
-                            </th>
+                            </th> */}
                             <th className="Time">
                               <div>{convertTStoDate(menu.DateEdited)}</div>
                             </th>
@@ -225,10 +225,10 @@ const AllPostPage = () => {
                             </Link>
                           </tr>
                           <tr>
-                            <th className="creatby">
+                            {/* <th className="creatby">
                               <img className="Profile" src={profile} />
                               <span className="Name">{menu.create}</span>
-                            </th>
+                            </th> */}
                             <th className="Time">
                               <div>{convertTStoDate(menu.DateEdited)}</div>
                             </th>
