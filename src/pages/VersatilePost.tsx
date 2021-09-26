@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Button, Dropdown, FormControl, InputGroup } from 'react-bootstrap'
-import { useHistory, useLocation } from 'react-router'
+import { useLocation } from 'react-router'
 import { generateRandomColor, removeElementFromArray } from 'utils'
 import { BsFillCaretDownFill } from 'react-icons/bs'
 import facebook from 'assets/icons/facebook.png'
@@ -9,33 +9,14 @@ import mail from 'assets/icons/mail.png'
 import phone from 'assets/icons/phone.png'
 import { Dropdown as SMTDropdown } from 'semantic-ui-react'
 import DropFileZone from 'components/DropFileZone'
-import { delete_post, get_one_post } from 'service/system'
-import { DocumentData } from '@firebase/firestore'
-import { get_post, get_info, get_file } from 'service/system'
-import { info } from 'console'
 import applicationStore from 'stores/applicationStore'
-import { checkAuthState } from 'service/auth'
 import { observer } from 'mobx-react-lite'
 import { IFileWithMeta, StatusValue } from 'react-dropzone-uploader'
 import { create_post } from 'service/user'
-
-const subjects = [
-  {
-    key: '02212641-55',
-    value: '02212641-55',
-    text: '02212641-55 สเปกโทรสโกปีอินฟราเรดใกล้ขั้นสูง',
-  },
-  {
-    key: '02743552-60',
-    value: '02743552-60',
-    text: '02743552-60 นิติการบัญชีและการเงิน',
-  },
-  {
-    key: '01204111-55',
-    value: '01204111-55',
-    text: '01204111-55 คอมพิวเตอร์และการโปรแกรม',
-  },
-]
+import { delete_post } from 'service/system'
+import _subjects from 'constants/subjects.json'
+import { ISubject } from 'interface/subject.interface'
+import { constTags } from 'constants/index'
 
 const contractChannels = [
   { Icon: mail, Placeholder: 'hello@kuroute.com' },
@@ -47,20 +28,20 @@ const contractChannels = [
 const pathType = { '/create-post': true, '/edit-post': false }
 
 const VersatilePost = observer(() => {
+  const subjects = (_subjects as any).map((s, i) => {
+    return {
+      key: i,
+      text: `${s.subjectCode} ${s.subjectNameTh} (${s.subjectNameEn})`,
+      value: `${s.subjectCode}-${s.theoryHour}-${s.practiceHour}`,
+    }
+  })
+
   const preprocessTags = generateRandomColor(
-    [
-      'ทั่วไป',
-      'รีวิวรายวิชา',
-      'คลังความรู้',
-      'แบบฝึกหัด',
-      'Lecture',
-      'สรุป',
-      'อื่นๆ',
-    ].map((t) => {
-      return { text: t }
+    constTags.map((text) => {
+      return { text }
     })
   )
-  const [topicSelected, setTopicSelected] = useState(subjects[0].text)
+  const [topicSelected, setTopicSelected] = useState<ISubject>()
   const [title, setTitle] = useState<string>('')
   const [description, setDescription] = useState<string>('')
   const [tags, setTags] = useState<{ [name: string]: string }[]>(preprocessTags)
@@ -90,16 +71,23 @@ const VersatilePost = observer(() => {
   }
 
   const handelOnCreatePost = () => {
-    if (filesUpload.status !== 'done') return
+    if (
+      !topicSelected ||
+      filesUpload.status !== 'done' ||
+      !applicationStore.user
+    )
+      return
     // create_post
-    create_post({
-      AccountID: applicationStore.user.uid,
-      FileID: [],
-      TagID: tagsSelected,
-      SubjectID: topicSelected,
-      Title: title,
-      Description: description,
-    })
+    create_post(
+      {
+        AccountID: applicationStore.user.uid,
+        TagID: tagsSelected,
+        SubjectID: topicSelected.subjectCode,
+        Title: title,
+        Description: description,
+      },
+      filesUpload.allFiles
+    )
   }
 
   const handleOnDeletePost = () => {
@@ -258,7 +246,7 @@ const VersatilePost = observer(() => {
       </div>
       <div className="mx-auto my-5" style={{ maxWidth: '70rem' }}>
         <div className="d-flex justify-content-end">
-          {isNewPost && (
+          {!isNewPost && (
             <Button
               variant="danger"
               style={{ width: '7rem' }}

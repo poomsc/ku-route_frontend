@@ -1,17 +1,10 @@
-import { firebaseAuth, firestore } from 'config/firebase'
+import { firebaseAuth } from 'config/firebase'
 import {
-  getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   sendEmailVerification,
-  UserCredential,
   signInWithPopup,
   GoogleAuthProvider,
-  AuthProvider,
-  EmailAuthProvider,
-  onAuthStateChanged,
-  signInWithRedirect,
-  AdditionalUserInfo,
 } from 'firebase/auth'
 import { edit, register } from 'service/user'
 import applicationStore from 'stores/applicationStore'
@@ -27,18 +20,20 @@ interface signupProps {
 
 firebaseAuth.languageCode = 'th'
 
-async function checkAuthState() {
-  onAuthStateChanged(firebaseAuth, (user) => {
-    applicationStore.setUser(user)
-    if (user) {
-      // User is signed in, see docs for a list of available properties
-      // https://firebase.google.com/docs/reference/js/firebase.User
-      const UID = user.uid
-      return true
-    } else console.log('Auth State Changed')
-    return false
-  })
-}
+// function checkAuthState() {
+//   onAuthStateChanged(firebaseAuth, (user) => {
+//     applicationStore.setUser(user)
+//     if (user) {
+//       // User is signed in, see docs for a list of available properties
+//       // https://firebase.google.com/docs/reference/js/firebase.User
+//       const UID = user.uid
+//       // console.log(UID)
+//       // console.log(user)
+//       return true
+//     } else console.log('Auth State Changed')
+//     return false
+//   })
+// }
 
 async function signUp_EmailPassword({
   Name,
@@ -47,6 +42,7 @@ async function signUp_EmailPassword({
   password,
 }: signupProps) {
   try {
+    console.log('signUp_EmailPassword')
     const userCrendential = await createUserWithEmailAndPassword(
       firebaseAuth,
       Email,
@@ -64,6 +60,7 @@ async function signUp_EmailPassword({
 
 async function signIn_EmailPassword(email: string, password: string) {
   try {
+    console.log('signIn_EmailPassword')
     const userCredential = await signInWithEmailAndPassword(
       firebaseAuth,
       email,
@@ -84,6 +81,7 @@ async function signIn_EmailPassword(email: string, password: string) {
 
 async function signOut() {
   try {
+    console.log('signOut')
     await firebaseAuth.signOut()
     localStorage.removeItem('providerToken')
     applicationStore.setUser(null)
@@ -103,6 +101,7 @@ async function signIn_Google() {
   provider.addScope('https://www.googleapis.com/auth/userinfo.profile')
   provider.setCustomParameters({ hd: 'ku.th' })
   try {
+    console.log('signIn_Google')
     const userCredential = await signInWithPopup(firebaseAuth, provider)
     const credential = GoogleAuthProvider.credentialFromResult(userCredential)
     const token = credential?.accessToken
@@ -131,7 +130,7 @@ async function signIn_Google() {
   }
 }
 export {
-  checkAuthState,
+  // checkAuthState,
   signIn_EmailPassword,
   signUp_EmailPassword,
   signIn_Google,
