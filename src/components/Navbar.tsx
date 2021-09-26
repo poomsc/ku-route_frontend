@@ -12,13 +12,13 @@ import { get_info } from 'service/system'
 import { firestore } from 'config/firebase'
 
 const NavBar = observer(() => {
-  const [infoData, setInfoData] = useState<DocumentData>()
+  // const [infoData, setInfoData] = useState<DocumentData>()
 
   useEffect(() => {
     async function fetch() {
       if (!applicationStore.user) return
       const info = (await get_info(applicationStore.user.uid)) as DocumentData
-      setInfoData(info)
+      // setInfoData(info)
       applicationStore.setUserDisplayName(info?.DisplayName)
     }
     fetch()

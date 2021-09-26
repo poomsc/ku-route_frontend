@@ -22,6 +22,7 @@ const db = getFirestore(firebaseApp)
 
 export async function get_faculty() {
   try {
+    console.log('get_faculty')
     let faculty = [] as any
     const querySnapshot = await getDocs(collection(db, 'Faculty'))
     querySnapshot.forEach((doc) => {
@@ -37,6 +38,7 @@ export async function get_faculty() {
 
 export async function get_info(accountid: string) {
   try {
+    console.log('get_info')
     const docRef = doc(db, 'Account', accountid)
     const docSnap = await getDoc(docRef)
 
@@ -57,6 +59,7 @@ export async function get_info(accountid: string) {
 
 export async function get_post() {
   try {
+    console.log('get_post')
     const querySnapshot = await getDocs(collection(db, 'Post'))
     const all_post = [] as any
     querySnapshot.forEach((doc) => {
@@ -74,6 +77,7 @@ export async function get_post() {
 
 export async function get_one_post(PostID: string) {
   try {
+    console.log('get_one_post')
     const docRef = doc(db, 'Post', PostID)
     const docSnap = await getDoc(docRef)
 
@@ -94,6 +98,7 @@ export async function get_one_post(PostID: string) {
 
 export async function get_comment(PostID: string) {
   try {
+    console.log('get_comment')
     const q = query(collection(db, 'Comment'), where('PostID', '==', PostID))
     const querySnapshot = await getDocs(q)
     const all_comment = [] as any
@@ -111,6 +116,7 @@ export async function get_comment(PostID: string) {
 
 export async function get_info_comment(PostID: string) {
   try {
+    console.log('get_info_comment')
     const comment = await get_comment(PostID)
     const comment_info = [] as any
     comment.forEach(async (cm) => {
@@ -127,6 +133,7 @@ export async function get_info_comment(PostID: string) {
 
 export async function get_file(PostID: string) {
   try {
+    console.log('get_file')
     const listRef = ref(storage, PostID)
     // Find all the prefixes and items.
     const result = await listAll(listRef)
