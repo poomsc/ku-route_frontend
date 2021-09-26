@@ -1,28 +1,21 @@
 import 'react-dropzone-uploader/dist/styles.css'
-import Dropzone from 'react-dropzone-uploader'
+import Dropzone, { IFileWithMeta, StatusValue } from 'react-dropzone-uploader'
 import { upload_file } from 'service/file'
 import { copyFile } from 'fs'
 
-const DropFileZone = () => {
-  // specify upload params and url for your files
-  const getUploadParams = ({ meta }) => {
-    return { url: 'https://httpbin.org/post' }
-  }
+interface Props {
+  onChange: (status: StatusValue, allFiles: IFileWithMeta[]) => void
+}
 
+const DropFileZone = ({ onChange }: Props) => {
   // called every time a file's `status` changes
-  const handleChangeStatus = ({ meta, file }, status) => {
-    console.log(status, meta, file)
-  }
-
-  // receives array of files that are done uploading when submit button is clicked
-  const handleSubmit = (files, allFiles) => {
-    //console.log(files.map((f) => f.meta))
-    const array_file = files.map((f)=>f.file)
-    console.log(files)
-    console.log(array_file)
-    array_file.forEach(f => upload_file(f))
-    allFiles.forEach((f) => f.remove())
-
+  const handleChangeStatus = (
+    file: IFileWithMeta,
+    status: StatusValue,
+    allFiles: IFileWithMeta[]
+  ) => {
+    console.log(status, file, allFiles)
+    onChange(status, allFiles)
   }
 
   return (
@@ -35,9 +28,8 @@ const DropFileZone = () => {
           overflow: 'auto',
         },
       }}
-      getUploadParams={getUploadParams}
-      // onChangeStatus={handleChangeStatus}
-      onSubmit={handleSubmit}
+      onChangeStatus={handleChangeStatus}
+      // onSubmit={handleSubmit}
       // accept="image/*,audio/*,video/*"
     />
   )

@@ -1,17 +1,10 @@
-import { firebaseAuth, firestore } from 'config/firebase'
+import { firebaseAuth } from 'config/firebase'
 import {
-  getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   sendEmailVerification,
-  UserCredential,
   signInWithPopup,
   GoogleAuthProvider,
-  AuthProvider,
-  EmailAuthProvider,
-  onAuthStateChanged,
-  signInWithRedirect,
-  AdditionalUserInfo,
 } from 'firebase/auth'
 import { edit, register } from 'service/user'
 import applicationStore from 'stores/applicationStore'
@@ -27,21 +20,20 @@ interface signupProps {
 
 firebaseAuth.languageCode = 'th'
 
-function checkAuthState() {
-  onAuthStateChanged(firebaseAuth, (user) => {
-    applicationStore.setUser(user)
-    if (user) {
-      // User is signed in, see docs for a list of available properties
-      // https://firebase.google.com/docs/reference/js/firebase.User
-      const UID = user.uid
-      // console.log(UID)
-      // console.log(user)
-      return true
-    } else console.log('Auth State Changed')
-    return false
-  })
-  return false
-}
+// function checkAuthState() {
+//   onAuthStateChanged(firebaseAuth, (user) => {
+//     applicationStore.setUser(user)
+//     if (user) {
+//       // User is signed in, see docs for a list of available properties
+//       // https://firebase.google.com/docs/reference/js/firebase.User
+//       const UID = user.uid
+//       // console.log(UID)
+//       // console.log(user)
+//       return true
+//     } else console.log('Auth State Changed')
+//     return false
+//   })
+// }
 
 async function signUp_EmailPassword({
   Name,
@@ -50,6 +42,7 @@ async function signUp_EmailPassword({
   password,
 }: signupProps) {
   try {
+    console.log('signUp_EmailPassword')
     const userCrendential = await createUserWithEmailAndPassword(
       firebaseAuth,
       Email,
@@ -60,12 +53,14 @@ async function signUp_EmailPassword({
     const UID = user.uid
     register({ UID, Name, Surname, Email })
   } catch (error) {
-    alert(error)
+    console.log('signUp_EmailPassword', error)
+    // alert(error)
   }
 }
 
 async function signIn_EmailPassword(email: string, password: string) {
   try {
+    console.log('signIn_EmailPassword')
     const userCredential = await signInWithEmailAndPassword(
       firebaseAuth,
       email,
@@ -79,19 +74,22 @@ async function signIn_EmailPassword(email: string, password: string) {
     } else console.log('Login successfully.')
     return userCredential
   } catch (error) {
-    alert(error)
+    console.log('signIn_EmailPassword', error)
+    // alert(error)
   }
 }
 
 async function signOut() {
   try {
+    console.log('signOut')
     await firebaseAuth.signOut()
     localStorage.removeItem('providerToken')
     applicationStore.setUser(null)
     console.log('successful logout')
     return true
   } catch (error) {
-    alert(error)
+    console.log('signOut', error)
+    // alert(error)
     return false
   }
 }
@@ -103,6 +101,7 @@ async function signIn_Google() {
   provider.addScope('https://www.googleapis.com/auth/userinfo.profile')
   provider.setCustomParameters({ hd: 'ku.th' })
   try {
+    console.log('signIn_Google')
     const userCredential = await signInWithPopup(firebaseAuth, provider)
     const credential = GoogleAuthProvider.credentialFromResult(userCredential)
     const token = credential?.accessToken
@@ -119,18 +118,19 @@ async function signIn_Google() {
     } else {
       register({ UID: user.uid, Name: Name[0], Surname: Name[1], Email: email })
     }
-    //console.log(userCredential)
+    // console.log(userCredential)
     // console.log(user)
     // console.log(token)
     applicationStore.setUser(user)
     return userCredential
   } catch (error) {
-    alert(error)
+    console.log('signIn_Google', error)
+    // alert(error)
     return false
   }
 }
 export {
-  checkAuthState,
+  // checkAuthState,
   signIn_EmailPassword,
   signUp_EmailPassword,
   signIn_Google,

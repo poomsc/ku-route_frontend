@@ -6,7 +6,6 @@ import user_icon from './../assets/icons/user-icon.png'
 import { url } from 'inspector'
 import pdf from './../assets/icons/PDF.png'
 import jpg from './../assets/icons/JPG.png'
-import { topicReference } from '@babel/types'
 import userIcon from './../assets/icons/user-icon.png'
 import sendArrow from './../assets/icons/sendArrow.png'
 import Comment from './../assets/icons/Comment.png'
@@ -28,13 +27,13 @@ const PostPage = () => {
 
   useEffect(() => {
     async function fetch() {
-      const post = (await get_one_post('v9qZWXtsicOh2L6evzO9')) as DocumentData
+      const post = (await get_one_post('x6XyIHVqD9BVslonhypR')) as DocumentData
       const info = (await get_info(post?.AccountID)) as DocumentData
       const comment = (await get_comment(
-        'v9qZWXtsicOh2L6evzO9'
+        'x6XyIHVqD9BVslonhypR'
       )) as DocumentData
       const info_comment = (await get_info_comment(
-        'v9qZWXtsicOh2L6evzO9'
+        'x6XyIHVqD9BVslonhypR'
       )) as Array<string>
 
       setPostData(post)
@@ -56,7 +55,7 @@ const PostPage = () => {
   let datePosted = '05/06/2564'
   let title = postData?.Title ? postData?.Title : ''
   let descript = postData?.Description ? postData?.Description : ''
-  const Tags = postData?.TagID ? postData?.TagID : ['']
+  const mockTags = postData?.TagID ? postData?.TagID : ['']
   const mockSubjectName = ['01204241', 'Software Engineer']
   //const [allTag, setAllTag] = useState<string[]>(mockTags)
   //console.log(mockTags)

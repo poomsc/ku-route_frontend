@@ -22,6 +22,7 @@ const db = getFirestore(firebaseApp)
 
 export async function get_faculty() {
   try {
+    console.log('get_faculty')
     let faculty = [] as any
     const querySnapshot = await getDocs(collection(db, 'Faculty'))
     querySnapshot.forEach((doc) => {
@@ -29,13 +30,15 @@ export async function get_faculty() {
     })
     return faculty
   } catch (error) {
-    alert(error)
+    console.log('get_faculty', error)
+    // alert(error)
     return null
   }
 }
 
 export async function get_info(accountid: string) {
   try {
+    console.log('get_info')
     const docRef = doc(db, 'Account', accountid)
     const docSnap = await getDoc(docRef)
 
@@ -48,13 +51,15 @@ export async function get_info(accountid: string) {
       return null
     }
   } catch (error) {
-    alert(error)
+    console.log('get_info', error)
+    // alert(error)
     return null
   }
 }
 
 export async function get_post() {
   try {
+    console.log('get_post')
     const querySnapshot = await getDocs(collection(db, 'Post'))
     const all_post = [] as any
     querySnapshot.forEach((doc) => {
@@ -65,12 +70,14 @@ export async function get_post() {
     console.log(all_post)
     return all_post
   } catch (error) {
-    alert(error)
+    console.log('get_post', error)
+    // alert(error)
   }
 }
 
 export async function get_one_post(PostID: string) {
   try {
+    console.log('get_one_post')
     const docRef = doc(db, 'Post', PostID)
     const docSnap = await getDoc(docRef)
 
@@ -83,13 +90,15 @@ export async function get_one_post(PostID: string) {
       return null
     }
   } catch (error) {
-    alert(error)
+    console.log('get_one_post', error)
+    // alert(error)
     return null
   }
 }
 
 export async function get_comment(PostID: string) {
   try {
+    console.log('get_comment')
     const q = query(collection(db, 'Comment'), where('PostID', '==', PostID))
     const querySnapshot = await getDocs(q)
     const all_comment = [] as any
@@ -100,12 +109,14 @@ export async function get_comment(PostID: string) {
     })
     return all_comment
   } catch (error) {
-    alert(error)
+    console.log('get_comment', error)
+    // alert(error)
   }
 }
 
 export async function get_info_comment(PostID: string) {
   try {
+    console.log('get_info_comment')
     const comment = await get_comment(PostID)
     const comment_info = [] as any
     comment.forEach(async (cm) => {
@@ -115,12 +126,14 @@ export async function get_info_comment(PostID: string) {
     })
     return comment_info
   } catch (error) {
-    alert(error)
+    console.log('get_info_comment', error)
+    // alert(error)
   }
 }
 
 export async function get_file(PostID: string) {
   try {
+    console.log('get_file')
     const listRef = ref(storage, PostID)
     // Find all the prefixes and items.
     const result = await listAll(listRef)
@@ -130,7 +143,8 @@ export async function get_file(PostID: string) {
     })
     return all_filename
   } catch (error) {
-    alert(error)
+    console.log('get_file', error)
+    // alert(error)
   }
 }
 
@@ -147,7 +161,7 @@ export async function get_pathfile(PostID: string) {
     })
     return all_path
   } catch (error) {
-    console.log(error)
+    console.log('get_pathfile', error)
   }
 }
 
@@ -156,7 +170,7 @@ export async function delete_post(PostID: string) {
     await deleteDoc(doc(db, 'Post', PostID))
     console.log('Delete successfully')
   } catch (error) {
-    console.log(error)
+    console.log('delete_post', error)
   }
 }
 
@@ -169,7 +183,7 @@ export async function delete_file(filepath: string) {
     await deleteObject(fileRef)
     console.log('Delete successfully')
   } catch (error) {
-    console.log(error)
+    console.log('delete_file', error)
   }
 }
 
@@ -178,7 +192,7 @@ export async function delete_comment(CommentID: string) {
     await deleteDoc(doc(db, 'Comment', CommentID))
     console.log('Delete successfully')
   } catch (error) {
-    console.log(error)
+    console.log('delete_comment', error)
   }
 }
 

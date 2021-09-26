@@ -1,7 +1,7 @@
 import './App.css'
-import React from 'react'
+import React, { useEffect } from 'react'
 import Routes from 'routes/index'
-import { checkAuthState, signOut, signIn_Google } from 'service/auth'
+import { signOut, signIn_Google } from 'service/auth'
 import {
   delete_post,
   get_comment,
@@ -15,13 +15,16 @@ import {
   get_faculty,
 } from 'service/system'
 import { like } from 'service/user'
-import { TagSearch } from 'service/search'
+import { BasicSearch } from 'service/search'
 import { title } from 'process'
 import { edit } from 'service/user'
 import { serverTimestamp } from '@firebase/firestore'
+import applicationStore from 'stores/applicationStore'
+import AllPostPage from './pages/AllPost'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import PDF1 from './assets/icons/PDF.png'
 
 const App = () => {
-  checkAuthState()
   //signOut()
   //get_one_post('TPkRmWLZdLRIUWIa8ptS')
   //like('KVcKU4KWX8UJIc6yiwwesWrU2Ef1', "TPkRmWLZdLRIUWIa8ptS")

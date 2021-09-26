@@ -1,5 +1,5 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import ReactDOM, { render } from 'react-dom'
 import './index.css'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
@@ -7,10 +7,21 @@ import 'semantic-ui-css/semantic.min.css'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'scss/custom.scss'
+import { firebaseAuth } from 'config/firebase'
+import { onAuthStateChanged } from '@firebase/auth'
+import applicationStore from 'stores/applicationStore'
 
-ReactDOM.render(<App />, document.getElementById('root'))
+// ReactDOM.render(<App />, document.getElementById('root'))
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+// // If you want to start measuring performance in your app, pass a function
+// // to log results (for example: reportWebVitals(console.log))
+// // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+
+onAuthStateChanged(firebaseAuth, (user) => {
+  if (user) {
+    applicationStore.setUser(user)
+  }
+  render(<App />, document.getElementById('root'))
+})
+
 reportWebVitals()
