@@ -94,7 +94,7 @@ const AllPostPage = () => {
       </thead>
       <img className="line-white" src={linewhite} />
       <div className="my-5 d-block"></div>
-      <div className="w-75">
+      <div className="Boxcard w-100">
         <div
           className="left w-content d-inline-block  p-3"
           style={{ verticalAlign: 'top' }}
@@ -111,7 +111,7 @@ const AllPostPage = () => {
             countE = countE + 1
             if (countE % 2 == 0) {
               return (
-                <div className="w-content d-flex mb-5" key={index}>
+                <div className="w-content d-flex mb-5 " key={index}>
                   <Container className="w-content d-inline-block">
                     <div className="row m-0 p-0 d-inline w-25">
                       <div className="col-4 d-inline-block">
@@ -185,7 +185,7 @@ const AllPostPage = () => {
             countF = countF + 1
             if (countF % 2 == 1) {
               return (
-                <div className="w-content d-flex mb-5" key={index}>
+                <div className="w-content d-flex mb-5 " key={index}>
                   <Container className="w-content d-inline-block">
                     <div className="row m-0 p-0 d-inline w-25">
                       <div className="col-4 d-inline-block">
