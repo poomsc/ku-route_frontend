@@ -3,7 +3,7 @@ import { Jumbotron, Container, Form, Dropdown } from 'react-bootstrap'
 import { Checkbox } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import KU_ROUTE from '../assets/icons/KU-ROUTE.png'
-import dropdown_arrow from '../assets/icons/Vector.png'
+import dropdown_arrow from '../assets/icons/Vector (2).png'
 import 'semantic-ui-css/semantic.min.css'
 
 const HomePage = () => {
