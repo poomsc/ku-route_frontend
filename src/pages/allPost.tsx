@@ -19,6 +19,7 @@ import { BasicSearch } from 'service/search'
 import { stringify } from 'querystring'
 import applicationStore from 'stores/applicationStore'
 import React from 'react' 
+import { useHistory } from 'react-router'
 
 function convertTStoDate(timestamp) {
   const timeCurrent = new Date().getTime() / 1000
@@ -28,19 +29,19 @@ function convertTStoDate(timestamp) {
   if (timeDiff < 60) {
     //second
     const second = Math.floor(timeDiff)
-    if(second == 1) return second.toString() + ' second'
-    return timeDiff.toString() + ' seconds'
+    if(second == 1) return second.toString() + ' second ago'
+    return timeDiff.toString() + ' seconds ago'
   }
   else if (timeDiff < 3600) {
     //minute
     const minute = Math.floor(timeDiff / 60)
-    if(minute == 1) return minute.toString() + ' minute'
-    return minute.toString() + ' minutes'
+    if(minute == 1) return minute.toString() + ' minute ago'
+    return minute.toString() + ' minutes ago'
   } else if (timeDiff < 86400) {
     //hour
     const hour = Math.floor(timeDiff / 3600)
-    if(hour == 1) return hour.toString() + ' hour'
-    return hour.toString() + ' hours'
+    if(hour == 1) return hour.toString() + ' hour ago'
+    return hour.toString() + ' hours ago'
   } else {
     const date = new Date(timestamp.seconds*1000)
     return date.toLocaleString().split(',')[0]
@@ -50,12 +51,18 @@ function convertTStoDate(timestamp) {
 const AllPostPage = () => {
   let countE = -1
   let countF = -1
+  const history = useHistory()
   const [resultPost, setResultPost] = useState<DocumentData>()
 
   const currentSearch = localStorage.getItem('currentSearch')
   const SubjectIDandTH = currentSearch ? currentSearch.split(' ') : [' ', 'ชื่อวิชา่']
   const SubjectENG = currentSearch ? currentSearch.split('(')[1].replace(')','') : 'SubjectName'
   
+  const handleOnViewPage = (PostID: string) => {
+    localStorage.setItem('currentViewPost', PostID)
+    history.push('/post')
+  }
+
   useEffect(() => {
     async function fetch() {
       if(!currentSearch) return
@@ -85,19 +92,19 @@ const AllPostPage = () => {
   return (
     <div
       className="blue-bg jumbotron jumbotron-fluid mb-0"
-      style={{ paddingLeft: '15vw' }}
+      style={{ paddingLeft: '20vw' }}
     >
       <thead>
         <div className="Subject">
-          <div>{SubjectENG}</div>
-          <div>{SubjectIDandTH[1]}</div>
+          <div className="SubjectENG">{SubjectENG}</div>
+          <div className="SubjectTH">{SubjectIDandTH[1]}</div>
         </div>
-        <tr className="post-picture">
-          {/* <th>
+        {/* <tr className="post-picture">
+          <th>
             <img className="pic" src={write_pic} />
             <span className="count">{resultPost?.length}</span>
-          </th> */}
-        </tr>
+          </th>
+        </tr> */}
         <div className="Subjectnum">
           <div className="textnum">รหัสวิชา</div>
           <div className="textcode">{SubjectIDandTH[0]}</div>
@@ -105,18 +112,19 @@ const AllPostPage = () => {
       </thead>
       <img className="line-white" src={linewhite} />
       <div className="my-5 d-block"></div>
-      <div className="w-75">
+      <div className="w-75" style={{ paddingLeft: '3vw' }}>
         <div
           className="left w-content d-inline-block  p-3"
           style={{ verticalAlign: 'top' }}
         >
           {resultPost?.map((menu, index) => {
-            let text = menu.Title
+            const PostID = menu[0]
+            let text = menu[1].Title
             if (text.length > 28) {
               text = text.substring(0, 29) + '...'
             }
-            let descrip = menu.Description
-            if (descrip.length > 35) {
+            let descrip = menu[1].Description
+            if (descrip?.length > 35) {
               descrip = descrip.substring(0, 36) + '...'
             }
             countE = countE + 1
@@ -128,7 +136,7 @@ const AllPostPage = () => {
                       <div className="col-4 d-inline-block">
                         <div className="form">
                           <tr className="TAG">
-                            {menu.TagID.map((tag, idx) => (
+                            {menu[1].TagID.map((tag, idx) => (
                               <div
                                 className=" max-w-content rounded cursor-pointer  px-2 py-1  ml-3 "
                                 key={tag}
@@ -156,18 +164,22 @@ const AllPostPage = () => {
                                 </Link>
                               )
                             })}
-                            <Link to="/pdf1" className="pdfcount">
+                            <div 
+                              className="pdfcount cursor-pointer"
+                              onClick={() => handleOnViewPage(PostID)}>
                               <img className="moreItem" src={moreitem} />
-                              <div className="textmore">MoreItem</div>
-                            </Link>
+                              <div className="textmore">
+                                MoreItem
+                              </div>
+                            </div>
                           </tr>
                           <tr>
-                            <th className="creatby">
-                              {/* <img className="Profile" src={profile} /> */}
+                            {/* <th className="creatby">
+                              <img className="Profile" src={profile} />
                               <span className="Name">{menu.create}</span>
-                            </th>
+                            </th> */}
                             <th className="Time">
-                              <div>{convertTStoDate(menu.DateEdited)}</div>
+                              <div>{'Posted ' + convertTStoDate(menu[1].DateEdited)}</div>
                             </th>
                           </tr>
                         </div>
@@ -181,15 +193,16 @@ const AllPostPage = () => {
         </div>
 
         <div
-          className="right w-50 d-inline-block  p-3"
-          style={{ verticalAlign: 'top' }}
+          className="right w-50 d-inline-block p-3"
+          style={{verticalAlign: 'top'}}
         >
           {resultPost?.map((menu, index) => {
-            let text = menu.Title
-            if (text.length > 28) {
+            const PostID = menu[0]
+            let text = menu[1].Title
+            if (text?.length > 28) {
               text = text.substring(0, 29) + '...'
             }
-            let descrip = menu.Description
+            let descrip = menu[1].Description
             if (descrip.length > 35) {
               descrip = descrip.substring(0, 36) + '...'
             }
@@ -202,7 +215,7 @@ const AllPostPage = () => {
                       <div className="col-4 d-inline-block">
                         <div className="form">
                           <tr className="TAG">
-                            {menu.TagID.map((tag, idx) => (
+                            {menu[1].TagID.map((tag, idx) => (
                               <div
                                 className=" max-w-content rounded cursor-pointer  px-2 py-1  ml-3 "
                                 key={tag}
@@ -230,18 +243,23 @@ const AllPostPage = () => {
                                 </Link>
                               )
                             })}
-                            <Link to="/pdf1" className="pdfcount">
+                            <div 
+                              className="pdfcount cursor-pointer"
+                              onClick={() => handleOnViewPage(PostID)}>
                               <img className="moreItem" src={moreitem} />
-                              <div className="textmore">MoreItem</div>
-                            </Link>
+                              <div 
+                                className="textmore">
+                                MoreItem
+                              </div>
+                            </div>
                           </tr>
                           <tr>
-                            <th className="creatby">
-                              {/* <img className="Profile" src={profile} /> */}
+                            {/* <th className="creatby">
+                              <img className="Profile" src={profile} />
                               <span className="Name">{menu.create}</span>
-                            </th>
+                            </th> */}
                             <th className="Time">
-                              <div>{convertTStoDate(menu.DateEdited)}</div>
+                              <div>{'Posted ' + convertTStoDate(menu[1].DateEdited)}</div>
                             </th>
                           </tr>
                         </div>
