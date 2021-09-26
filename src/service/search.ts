@@ -21,7 +21,7 @@ async function BasicSearch(Subject: string, Tag: Array<string>) {
       where('SubjectID', '==', Subject),
       where('Status', '==', true),
       where('TagID', 'array-contains-any', Tag),
-      orderBy('DateEdited')
+      orderBy('DateEdited', 'desc')
     )
     const querySnapshot = await getDocs(q)
     querySnapshot.forEach((doc) => {
