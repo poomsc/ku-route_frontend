@@ -13,31 +13,58 @@ import { Container, Card, Row, Col, Button, Form } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import filepdf1 from '../Data/pdf1'
 import PDF from '../assets/icons/PDF.png'
+import { useEffect, useState } from 'react'
+import { DocumentData, serverTimestamp } from '@firebase/firestore'
+import { BasicSearch } from 'service/search'
+import { stringify } from 'querystring'
 
-const AllPost = () => {
+function convertTStoDate(timestamp) {
+  const timeCurrent = new Date().getTime() / 1000
+  const timeDiff = timeCurrent - timestamp.seconds
+  console.log(timeCurrent)
+  console.log(timestamp)
+
+  if(timeDiff < 60) //second
+    return timeDiff.toString() + 's'
+  else if(timeDiff < 3600) { //minute
+    const minute = Math.floor(timeDiff / 60)
+    return minute.toString() + 'm'
+  }
+  else if(timeDiff < 86400) { //hour
+    const hour = Math.floor(timeDiff / 3600)
+    return hour.toString() + 'h'
+  }
+  else
+    return new Date(timestamp)
+}
+
+const AllPostPage = () => {
+  const [resultPost, setResultPost] = useState<DocumentData>()
+
+  useEffect(() => {
+    async function fetch() {
+      const result = await BasicSearch('02743552-60 นิติการบัญชีและการเงิน', [])
+      setResultPost(result)
+    }
+    fetch()
+  }, [])
+
+
   return (
     <div className="Component">
-      {Data.map((menu, index) => {
+      {resultPost?.map((menu, index) => {
         return (
           <div className="container" key={index}>
             <Container>
               <thead>
                 <div className="Subject">
                   <div>{menu.SubjectEng}</div>
-                  <div>{menu.SubjectThai}</div>
+                  <div>{menu.SubjectID.split(' ')[1]}</div>
                 </div>
                 <tr className="post-picture">
                   <th>
-                    <img className="pic" src={post_pic} />
-                    <span className="count">{menu.Comment}</span>
-                  </th>
-                  <th>
                     <img className="pic" src={write_pic} />
-                    <span className="count">{menu.Post}</span>
-                  </th>
-                  <th>
-                    <img className="pic" src={file_pic} />
-                    <span className="count">{menu.Bookmark}</span>
+                    <span className="count">{resultPost.length}</span>
                   </th>
                 </tr>
                 <div className="all">
@@ -46,7 +73,7 @@ const AllPost = () => {
                 </div>
                 <div className="Subjectnum">
                   <div>หมวดวิชาแกน</div>
-                  <div className="textcode">{menu.code}</div>
+                  <div className="textcode">{menu.SubjectID.split(' ')[0]}</div>
                 </div>
               </thead>
               <img className="line-white" src={linewhite} />
@@ -56,9 +83,9 @@ const AllPost = () => {
                     <tr>
                       <th className="category">{menu.Category}</th>
                     </tr>
-                    <div className="title">{menu.title}</div>
+                    <div className="title">{menu.Title}</div>
                     <img className="line-black" src={lineblack} />
-                    <div className="headtext">{menu.headtext}</div>
+                    <div className="headtext">{menu.Description}</div>
                     <tr className="pdfrow">
                       {filepdf1.map((pdftest, AAA) => {
                         return (
@@ -79,7 +106,7 @@ const AllPost = () => {
                         <span className="Name">{menu.create}</span>
                       </th>
                       <th className="Time">
-                        <div>{menu.Time}</div>
+                        <div>{convertTStoDate(menu.DateEdited)}</div>
                       </th>
                     </tr>
                   </div>
@@ -196,4 +223,4 @@ const AllPost = () => {
   )
 }
 
-export default AllPost
+export default AllPostPage
