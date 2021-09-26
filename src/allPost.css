@@ -81,9 +81,6 @@
   line-height: 28px;
   align-items: center;
 }
-.form {
-  top: auto;
-}
 
 .line-white {
   position: relative;
@@ -95,7 +92,6 @@
 .form {
   width: 350px;
   height: 350px;
-  margin-left: 20px;
   top: auto;
   background: #ffffff;
   border: 5px solid #3fd0c9;
@@ -113,13 +109,13 @@
   color: white;
 }
 .title {
-  position: absolute;
-  top: 75px;
-  left: 70px;
+  position: relative;
+  top: 10px;
+  left: 30px;
   font-family: Roboto;
   font-style: normal;
   font-weight: bold;
-  font-size: 24px;
+  font-size: 20px;
   line-height: 28px;
   display: flex;
   align-items: center;
@@ -129,7 +125,7 @@
 
 .line-black {
   position: relative;
-  top: 55px;
+  top: 35px;
   left: 20px;
   width: 300px;
   border: 1px solid #000000;
@@ -137,7 +133,7 @@
 
 .headtext {
   position: relative;
-  top: 70px;
+  top: 50px;
   left: 35px;
   font-family: Roboto;
   font-style: normal;
@@ -156,7 +152,7 @@
   text-align: left;
   position: relative;
   left: 35px;
-  top: 95px;
+  top: 65px;
   font-family: Roboto;
   font-size: 9px;
 }
@@ -169,14 +165,14 @@
   text-align: right;
   position: relative;
   left: 35px;
-  top: 110px;
+  top: 80px;
   font-family: Roboto;
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .Profile {
-  width: 35px;
-  height: 35px;
+  width: 45px;
+  height: 45px;
 }
 .Name {
   position: relative;
@@ -192,7 +188,7 @@
 .Time {
   position: relative;
   left: 170px;
-  top: 110px;
+  top: 80px;
   font-family: Roboto;
   font-style: normal;
   font-weight: normal;
