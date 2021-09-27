@@ -29,11 +29,11 @@ const HomePage = () => {
             <div className="form-group shadow d-flex">
               <input
                 type="text"
-                className="form-control"
+                className="form-control text-dark"
                 style={{
                   borderRadius: '5px 0rem 0rem 5px',
                   border: 'none',
-                  color: 'black !important',
+                  color: 'black',
                 }}
                 placeholder="เรื่องที่อยากรู้..."
               />
