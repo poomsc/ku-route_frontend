@@ -21,6 +21,9 @@ import applicationStore from 'stores/applicationStore'
 import React from 'react'
 import { useHistory } from 'react-router'
 
+let countE = -1
+let countF = -1
+
 function convertTStoDate(timestamp) {
   const timeCurrent = new Date().getTime() / 1000
   const timeDiff = timeCurrent - timestamp.seconds
@@ -115,7 +118,7 @@ const AllPostPage = () => {
       </thead>
       <img className="line-white" src={linewhite} />
       <div className="my-5 d-block"></div>
-      <div className="w-75" style={{ paddingLeft: '3vw' }}>
+      <div className="w-75" style={{ paddingLeft: '5rem', minWidth: "1000px"}}>
         <div
           className="left w-content d-inline-block  p-3"
           style={{ verticalAlign: 'top' }}
@@ -198,8 +201,8 @@ const AllPostPage = () => {
         </div>
 
         <div
-          className="right w-50 d-inline-block p-3"
-          style={{ verticalAlign: 'top' }}
+          className="right w-content d-inline-block p-3"
+          style={{verticalAlign: 'top'}}
         >
           {resultPost?.map((menu, index) => {
             const PostID = menu[0]
