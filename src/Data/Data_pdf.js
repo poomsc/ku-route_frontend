@@ -14,6 +14,7 @@ const Menu = [
     headtext: 'ไฟล์จะแบ่งเป็น 3ส่วน',
     create: 'By Saranpat',
     Time: '4 days ago',
+    // PDF:'filepdf1',
     path: '/sofeware',
   },
   // {

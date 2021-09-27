@@ -18,7 +18,8 @@ import {
   get_info_comment,
   get_one_post,
 } from 'service/system'
-import { constTags } from './../constants'
+import applicationStore from 'stores/applicationStore'
+import { create_comment } from 'service/user'
 
 const PostPage = () => {
   const [postData, setPostData] = useState<DocumentData>()
@@ -26,9 +27,18 @@ const PostPage = () => {
   const [commentData, setCommentData] = useState<DocumentData>()
   const [infocommentData, setInfoCommentData] = useState<DocumentData>()
 
+  const handleOnAddComment = () => {
+    if (!applicationStore.user) return
+    // create_comment({
+
+    // })
+  }
+
   useEffect(() => {
     async function fetch() {
-      const post = (await get_one_post('x6XyIHVqD9BVslonhypR')) as DocumentData
+      const currentViewPost = localStorage.getItem('currentViewPost')
+      if (!currentViewPost) return
+      const post = (await get_one_post(currentViewPost)) as DocumentData
       const info = (await get_info(post?.AccountID)) as DocumentData
       const comment = (await get_comment(
         'x6XyIHVqD9BVslonhypR'
