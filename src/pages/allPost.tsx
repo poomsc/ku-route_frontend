@@ -95,11 +95,14 @@ const AllPostPage = () => {
   ]
   const maxColor = colors.length
 
-  return (
-    <div
-      className="blue-bg jumbotron jumbotron-fluid mb-0"
-      style={{ paddingLeft: '20vw' }}
+  return ( 
+    <div className="blue-bg2 jumbotron jumbotron-fluid mb-0"
     >
+      <div
+      className="d-inline-block justify-content-center d-flex"
+      // style={{ paddingLeft: '20vw' }}
+    >
+      <div>
       <thead>
         <div className="Subject">
           <div className="SubjectENG">{SubjectENG}</div>
@@ -115,10 +118,11 @@ const AllPostPage = () => {
           <div className="textnum">รหัสวิชา</div>
           <div className="textcode">{SubjectIDandTH[0]}</div>
         </div>
+        <img className="line-white" src={linewhite} />
       </thead>
-      <img className="line-white" src={linewhite} />
+
       <div className="my-5 d-block"></div>
-      <div className="w-75" style={{ paddingLeft: '5rem', minWidth: "1000px"}}>
+      <div className="w-content d-inline-block" style={{ paddingLeft: '5rem', minWidth: "1000px"}}>
         <div
           className="left w-content d-inline-block  p-3"
           style={{ verticalAlign: 'top' }}
@@ -282,6 +286,10 @@ const AllPostPage = () => {
         </div>
       </div>
     </div>
+      </div>
+      
+    </div>
+    
   )
 }
 

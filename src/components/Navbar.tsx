@@ -88,7 +88,7 @@ const NavBar = observer(() => {
                 </Link>
                 <NavDropdown title={navDropdownTitle} id="basic-nav-dropdown">
                   <NavDropdown.Item
-                    // href="edit-profile"
+                    href="/edit-profile"
                     style={{
                       fontWeight:
                         currentPage === '/edit-profile' ? 'bold' : 'normal',

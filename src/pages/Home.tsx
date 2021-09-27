@@ -91,13 +91,18 @@ const HomePage = () => {
                 onChange={handleOnSelectSubject}
                 onSearchChange={onSearchChange}
                 type="text"
-                className="form-control text-black"
+                className="form-control text-black d-flex border-0"
                 style={{
                   borderRadius: '5px 0rem 0rem 5px',
                   border: 'none',
                   color: 'black',
                 }}
-                placeholder="เรื่องที่อยากรู้..."
+                icon={
+                  <div className="ml-auto">
+                    <BsFillCaretDownFill />
+                  </div>
+                }
+                placeholder="พิมพ์ชื่อวิชา / รหัสวิชา..."
               />
               <Dropdown>
                 <Dropdown.Toggle
