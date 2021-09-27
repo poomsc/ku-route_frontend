@@ -52,12 +52,13 @@ const HomePage = () => {
     if (!subjectSelected) return
     const SubjectIDandTH = subjectSelected.split(' ')
     const SubjectENG = subjectSelected.split('(')
-    applicationStore.setSubjectSearch(
-      SubjectIDandTH[0],
-      SubjectIDandTH[1],
-      SubjectENG[1].replace(')', '')
-    )
-    console.log('Searching... ' + applicationStore.subjectID)
+    // applicationStore.setSubjectSearch(
+    //   SubjectIDandTH[0],
+    //   SubjectIDandTH[1],
+    //   SubjectENG[1].replace(')', '')
+    // )
+    localStorage.setItem('currentSearch', subjectSelected)
+    console.log('Searching... ' + SubjectIDandTH[0])
     goToAllPost()
   }
 

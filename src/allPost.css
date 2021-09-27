@@ -10,16 +10,31 @@
   /* position: absolute; */
   text-align: left;
   position: relative;
-  width: 431px;
+  width: 1000px;
   height: 36px;
   left: 66px;
   top: auto;
   margin-top: 20px;
   /* margin-left: auto; */
+}
+
+.SubjectENG {
   font-family: Roboto;
   font-style: normal;
   font-weight: bold;
-  font-size: 42px;
+  font-size: 40px;
+  line-height: 60px;
+  /* display: flex; */
+  /* align-items: center; */
+  color: #ffffff;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.SubjectTH {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 35px;
   line-height: 60px;
   /* display: flex; */
   /* align-items: center; */
@@ -50,8 +65,8 @@
 .Subjectnum {
   text-align: right;
   position: relative;
-  left: 355px;
-  bottom: 40px;
+  left: 400px;
+  bottom: 10px;
 }
 .textpost {
   margin-left: 3px;
@@ -89,8 +104,8 @@
 .line-white {
   position: relative;
   top: 30px;
-  left: 71px;
-  width: 800px;
+  left: 66px;
+  width: 950px;
 }
 
 .form {
@@ -158,7 +173,7 @@
   text-align: left;
   position: relative;
   left: 35px;
-  top: 50px;
+  top: 60px;
   font-family: Roboto;
   font-size: 9px;
 }
@@ -193,8 +208,8 @@
 
 .Time {
   position: relative;
-  left: 160px;
-  top: 90px;
+  left: 28px;
+  top: 95px;
   width: 100%;
   /* background: #00FF99;
   height: 20px; */
@@ -202,7 +217,7 @@
   font-family: Roboto;
   font-style: normal;
   font-weight: normal;
-  font-size: 26px;
+  font-size: 18px;
   line-height: 11px;
 }
 
@@ -224,6 +239,6 @@
   position: relative;
   bottom: 20px;
   left: 10px;
-  margin-bottom: -;
+  /* margin-bottom: -; */
   display: inline-flex;
 }

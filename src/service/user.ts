@@ -75,9 +75,7 @@ async function create_post(
   try {
     console.log('Post is being added...')
     const docRef = await addDoc(collection(firestore, 'Post'), data)
-    const uploadFile = allFiles.forEach((file) =>
-      upload_file(file.file, docRef.id)
-    )
+    allFiles.forEach((file) => upload_file(file.file, docRef.id))
     console.log('Post written with ID: ', docRef.id)
     callBack && callBack()
     return docRef.id
