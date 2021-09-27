@@ -83,6 +83,7 @@ const HomePage = () => {
           <Form style={{ paddingLeft: '7vw', paddingRight: '7vw' }}>
             <div className="form-group shadow d-flex w-100">
               <SMTDropdown
+                id="home-search-block"
                 fluid
                 search
                 selection
@@ -90,14 +91,13 @@ const HomePage = () => {
                 onChange={handleOnSelectSubject}
                 onSearchChange={onSearchChange}
                 type="text"
-                className="form-control font-weight-bold d-flex border-0"
-                //style={{ borderRadius: '30px 0rem 0rem 30px', border: 'none' }}
-                placeholder="ค้นหาชื่อวิชา / รหัสวิชา..."
-                icon={
-                  <div className="ml-auto">
-                    <BsFillCaretDownFill />
-                  </div>
-                }
+                className="form-control text-black"
+                style={{
+                  borderRadius: '5px 0rem 0rem 5px',
+                  border: 'none',
+                  color: 'black',
+                }}
+                placeholder="เรื่องที่อยากรู้..."
               />
               <Dropdown>
                 <Dropdown.Toggle
