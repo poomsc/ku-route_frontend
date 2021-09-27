@@ -19,6 +19,9 @@ import { BasicSearch } from 'service/search'
 import { stringify } from 'querystring'
 import applicationStore from 'stores/applicationStore'
 
+let countE = -1
+let countF = -1
+
 function convertTStoDate(timestamp) {
   const timeCurrent = new Date().getTime() / 1000
   const timeDiff = timeCurrent - timestamp.seconds
@@ -85,66 +88,145 @@ const AllPostPage = () => {
           <div className="textcode">{applicationStore.subjectID}</div>
         </div>
       </thead>
-      <img className="line-white" src={linewhite} />     
-      {resultPost?.map((menu, index) => {
-        return (
-          <div className="container" key={index}> 
-            <Container>             
-              <div className="row">
-                <div className="col-4">
-                  <div className="form">
-                    <tr className="TAG">
-                      {menu.TagID.map((tag, idx) => (
-                        <div
-                          className=" max-w-content rounded cursor-pointer  px-2 py-1  ml-3 "
-                          key={tag}
-                          style={{
-                            backgroundColor:
-                              colors[maxColor - (idx % maxColor) - 1],
-                            color: '#FFFFFF',
-                          }}
-                        >
-                          {tag}
+      <img className="line-white" src={linewhite} />
+      <div className="my-5 d-block"></div>
+      <div className="w-75">
+      <div className="left w-content d-inline-block bg-dark p-3"
+           style={{verticalAlign:"top"}}
+      >
+        {resultPost?.map((menu, index) => {
+          countE = countE + 1
+          if (countE % 2 == 0){
+            return (
+              <div className="w-content d-flex" key={index}> 
+                <Container className="w-content d-inline-block">             
+                  <div className="row m-0 p-0 d-inline w-25">
+                    <div className="col-4 d-inline-block">
+                      <div className="form">
+                        <tr className="TAG">
+                          {menu.TagID.map((tag, idx) => (
+                            <div
+                              className=" max-w-content rounded cursor-pointer  px-2 py-1  ml-3 "
+                              key={tag}
+                              style={{
+                                backgroundColor:
+                                  colors[maxColor - (idx % maxColor) - 1],
+                                color: '#FFFFFF',
+                              }}
+                            >
+                              {tag}
+                            </div>
+                          ))}
+                          {/* <th className="category">{menu.Category}</th> */}
+                        </tr>
+                        <div className="title w-100 mr-3">{menu.Title}</div>
+                        <img className="line-black" src={lineblack} />
+                        <div className="headtext">
+                          ใครสนใจเข้ามาดาวน์โหลดได้ที่โพสนี้
                         </div>
-                      ))}
-                      {/* <th className="category">{menu.Category}</th> */}
-                    </tr>
-                    <div className="title">{menu.Title}</div>
-                    <img className="line-black" src={lineblack} />
-                    <div className="headtext">
-                      ใครสนใจเข้ามาดาวน์โหลดได้ที่โพสนี้
-                    </div>
 
-                    <tr className="pdfrow">
-                      {filepdf1.map((pdftest, AAA) => {
-                        return (
-                          <Link to={pdftest.path} className="pdfcount">
-                            <img className="pdf" src={PDF} />
-                            <div>{pdftest.name}</div>
+                        <tr className="pdfrow">
+                          {filepdf1.map((pdftest, AAA) => {
+                            return (
+                              <Link to={pdftest.path} className="pdfcount">
+                                <img className="pdf" src={PDF} />
+                                <div>{pdftest.name}</div>
+                              </Link>
+                            )
+                          })}
+                          <Link to="/pdf1" className="pdfcount">
+                            <img className="moreItem" src={moreitem} />
+                            <div className="textmore">MoreItem</div>
                           </Link>
-                        )
-                      })}
-                      <Link to="/pdf1" className="pdfcount">
-                        <img className="moreItem" src={moreitem} />
-                        <div className="textmore">MoreItem</div>
-                      </Link>
-                    </tr>
-                    <tr>
-                      <th className="creatby">
-                        <img className="Profile" src={profile} />
-                        <span className="Name">{menu.create}</span>
-                      </th>
-                      <th className="Time">
-                        <div>{convertTStoDate(menu.DateEdited)}</div>
-                      </th>
-                    </tr>
+                        </tr>
+                        <tr>
+                          <th className="creatby">
+                            <img className="Profile" src={profile} />
+                            <span className="Name">{menu.create}</span>
+                          </th>
+                          <th className="Time">
+                            <div>{convertTStoDate(menu.DateEdited)}</div>
+                          </th>
+                        </tr>
+                      </div>
+                    </div>
+                  </div>
+                </Container>
+              </div>
+            )
+          }
+          })}
+      </div>
+      
+      <div className="right w-50 d-inline-block bg-success p-3"
+           style={{verticalAlign:"top"}}
+      >
+      {
+        resultPost?.map((menu, index) => {
+          countF = countF + 1
+          if (countF % 2 == 1){
+          return (
+            <div className="w-content d-flex" key={index}> 
+              <Container className="w-content d-inline-block">             
+                <div className="row m-0 p-0 d-inline w-25">
+                  <div className="col-4 d-inline-block">
+                    <div className="form">
+                      <tr className="TAG">
+                        {menu.TagID.map((tag, idx) => (
+                          <div
+                            className=" max-w-content rounded cursor-pointer  px-2 py-1  ml-3 "
+                            key={tag}
+                            style={{
+                              backgroundColor:
+                                colors[maxColor - (idx % maxColor) - 1],
+                              color: '#FFFFFF',
+                            }}
+                          >
+                            {tag}
+                          </div>
+                        ))}
+                        {/* <th className="category">{menu.Category}</th> */}
+                      </tr>
+                      <div className="title w-100 mr-3">{menu.Title}</div>
+                      <img className="line-black" src={lineblack} />
+                      <div className="headtext">
+                        {menu.Description}
+                      </div>
+
+                      <tr className="pdfrow">
+                        {filepdf1.map((pdftest, AAA) => {
+                          return (
+                            <Link to={pdftest.path} className="pdfcount">
+                              <img className="pdf" src={PDF} />
+                              <div>{pdftest.name}</div>
+                            </Link>
+                          )
+                        })}
+                        <Link to="/pdf1" className="pdfcount">
+                          <img className="moreItem" src={moreitem} />
+                          <div className="textmore">MoreItem</div>
+                        </Link>
+                      </tr>
+                      <tr>
+                        <th className="creatby">
+                          <img className="Profile" src={profile} />
+                          <span className="Name">{menu.create}</span>
+                        </th>
+                        <th className="Time">
+                          <div>{convertTStoDate(menu.DateEdited)}</div>
+                        </th>
+                      </tr>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Container>
-          </div>
-        )
+              </Container>
+            </div>
+          )
+        }
       })}
+        </div>
+      </div>
+      
     </div>
   )
 }
