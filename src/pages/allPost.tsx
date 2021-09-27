@@ -18,7 +18,7 @@ import { DocumentData, serverTimestamp } from '@firebase/firestore'
 import { BasicSearch } from 'service/search'
 import { stringify } from 'querystring'
 import applicationStore from 'stores/applicationStore'
-import React from 'react' 
+import React from 'react'
 import { useHistory } from 'react-router'
 
 let countE = -1
@@ -32,21 +32,20 @@ function convertTStoDate(timestamp) {
   if (timeDiff < 60) {
     //second
     const second = Math.floor(timeDiff)
-    if(second == 1) return second.toString() + ' second ago'
+    if (second == 1) return second.toString() + ' second ago'
     return timeDiff.toString() + ' seconds ago'
-  }
-  else if (timeDiff < 3600) {
+  } else if (timeDiff < 3600) {
     //minute
     const minute = Math.floor(timeDiff / 60)
-    if(minute == 1) return minute.toString() + ' minute ago'
+    if (minute == 1) return minute.toString() + ' minute ago'
     return minute.toString() + ' minutes ago'
   } else if (timeDiff < 86400) {
     //hour
     const hour = Math.floor(timeDiff / 3600)
-    if(hour == 1) return hour.toString() + ' hour ago'
+    if (hour == 1) return hour.toString() + ' hour ago'
     return hour.toString() + ' hours ago'
   } else {
-    const date = new Date(timestamp.seconds*1000)
+    const date = new Date(timestamp.seconds * 1000)
     return date.toLocaleString().split(',')[0]
   }
 }
@@ -58,9 +57,13 @@ const AllPostPage = () => {
   const [resultPost, setResultPost] = useState<DocumentData>()
 
   const currentSearch = localStorage.getItem('currentSearch')
-  const SubjectIDandTH = currentSearch ? currentSearch.split(' ') : [' ', 'ชื่อวิชา่']
-  const SubjectENG = currentSearch ? currentSearch.split('(')[1].replace(')','') : 'SubjectName'
-  
+  const SubjectIDandTH = currentSearch
+    ? currentSearch.split(' ')
+    : [' ', 'ชื่อวิชา่']
+  const SubjectENG = currentSearch
+    ? currentSearch.split('(')[1].replace(')', '')
+    : 'SubjectName'
+
   const handleOnViewPage = (PostID: string) => {
     localStorage.setItem('currentViewPost', PostID)
     history.push('/post')
@@ -68,7 +71,7 @@ const AllPostPage = () => {
 
   useEffect(() => {
     async function fetch() {
-      if(!currentSearch) return
+      if (!currentSearch) return
       const result = await BasicSearch(SubjectIDandTH[0], [])
       setResultPost(result)
     }
@@ -167,13 +170,12 @@ const AllPostPage = () => {
                                 </Link>
                               )
                             })}
-                            <div 
+                            <div
                               className="pdfcount cursor-pointer"
-                              onClick={() => handleOnViewPage(PostID)}>
+                              onClick={() => handleOnViewPage(PostID)}
+                            >
                               <img className="moreItem" src={moreitem} />
-                              <div className="textmore">
-                                MoreItem
-                              </div>
+                              <div className="textmore">MoreItem</div>
                             </div>
                           </tr>
                           <tr>
@@ -182,7 +184,10 @@ const AllPostPage = () => {
                               <span className="Name">{menu.create}</span>
                             </th> */}
                             <th className="Time">
-                              <div>{'Posted ' + convertTStoDate(menu[1].DateEdited)}</div>
+                              <div>
+                                {'Posted ' +
+                                  convertTStoDate(menu[1].DateEdited)}
+                              </div>
                             </th>
                           </tr>
                         </div>
@@ -196,8 +201,13 @@ const AllPostPage = () => {
         </div>
 
         <div
+<<<<<<< HEAD
           className="right w-content d-inline-block p-3"
           style={{verticalAlign: 'top'}}
+=======
+          className="right w-50 d-inline-block p-3"
+          style={{ verticalAlign: 'top' }}
+>>>>>>> 5a8dd1554d3e0c7c9c60fe5647462f04c6b6d3da
         >
           {resultPost?.map((menu, index) => {
             const PostID = menu[0]
@@ -246,14 +256,12 @@ const AllPostPage = () => {
                                 </Link>
                               )
                             })}
-                            <div 
+                            <div
                               className="pdfcount cursor-pointer"
-                              onClick={() => handleOnViewPage(PostID)}>
+                              onClick={() => handleOnViewPage(PostID)}
+                            >
                               <img className="moreItem" src={moreitem} />
-                              <div 
-                                className="textmore">
-                                MoreItem
-                              </div>
+                              <div className="textmore">MoreItem</div>
                             </div>
                           </tr>
                           <tr>
@@ -262,7 +270,10 @@ const AllPostPage = () => {
                               <span className="Name">{menu.create}</span>
                             </th> */}
                             <th className="Time">
-                              <div>{'Posted ' + convertTStoDate(menu[1].DateEdited)}</div>
+                              <div>
+                                {'Posted ' +
+                                  convertTStoDate(menu[1].DateEdited)}
+                              </div>
                             </th>
                           </tr>
                         </div>
