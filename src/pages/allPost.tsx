@@ -115,7 +115,7 @@ const AllPostPage = () => {
       </thead>
       <img className="line-white" src={linewhite} />
       <div className="my-5 d-block"></div>
-      <div className="w-75" style={{ paddingLeft: '3vw' }}>
+      <div className="w-75" style={{ paddingLeft: '5rem', minWidth: "1000px"}}>
         <div
           className="left w-content d-inline-block  p-3"
           style={{ verticalAlign: 'top' }}
@@ -196,7 +196,7 @@ const AllPostPage = () => {
         </div>
 
         <div
-          className="right w-50 d-inline-block p-3"
+          className="right w-content d-inline-block p-3"
           style={{verticalAlign: 'top'}}
         >
           {resultPost?.map((menu, index) => {
