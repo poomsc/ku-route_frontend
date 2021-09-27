@@ -30,7 +30,11 @@ const HomePage = () => {
               <input
                 type="text"
                 className="form-control"
-                style={{ borderRadius: '5px 0rem 0rem 5px', border: 'none' }}
+                style={{
+                  borderRadius: '5px 0rem 0rem 5px',
+                  border: 'none',
+                  color: 'black !important',
+                }}
                 placeholder="เรื่องที่อยากรู้..."
               />
               <Dropdown>
