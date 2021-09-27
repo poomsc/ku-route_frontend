@@ -201,13 +201,8 @@ const AllPostPage = () => {
         </div>
 
         <div
-<<<<<<< HEAD
           className="right w-content d-inline-block p-3"
           style={{verticalAlign: 'top'}}
-=======
-          className="right w-50 d-inline-block p-3"
-          style={{ verticalAlign: 'top' }}
->>>>>>> 5a8dd1554d3e0c7c9c60fe5647462f04c6b6d3da
         >
           {resultPost?.map((menu, index) => {
             const PostID = menu[0]
