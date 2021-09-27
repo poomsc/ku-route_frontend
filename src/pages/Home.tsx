@@ -29,7 +29,7 @@ const HomePage = () => {
             <div className="form-group shadow d-flex">
               <input
                 type="text"
-                className="form-control text-dark"
+                className="form-control text-black"
                 style={{
                   borderRadius: '5px 0rem 0rem 5px',
                   border: 'none',
