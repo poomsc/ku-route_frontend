@@ -63,11 +63,19 @@ const PostPage = () => {
     ['สรุปแถม.jpg', '2.70 MB'],
   ]
   let postOwner = infoData?.DisplayName ? infoData?.DisplayName : ''
-  let datePosted = '05/06/2564'
+  let datePosted = postData?.DateEdited
+    ? new Date(postData?.DateEdited?.seconds * 1000).toLocaleString()
+    : '00/00/0000, 00:00:00 AM'
   let title = postData?.Title ? postData?.Title : ''
   let descript = postData?.Description ? postData?.Description : ''
   const mockTags = postData?.TagID ? postData?.TagID : ['']
-  const mockSubjectName = ['01204241', 'Software Engineer']
+  const currentSearch = localStorage.getItem('currentSearch')
+  const mockSubjectName = currentSearch
+    ? [
+        currentSearch.split(' ')[0],
+        currentSearch.split('(')[1].replace(')', ''),
+      ]
+    : 'รหัสวิชา | SubjectName'
   //const [allTag, setAllTag] = useState<string[]>(mockTags)
   //console.log(mockTags)
   //console.log(allTag)

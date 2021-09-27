@@ -33,7 +33,7 @@ function convertTStoDate(timestamp) {
     //second
     const second = Math.floor(timeDiff)
     if (second == 1) return second.toString() + ' second ago'
-    return timeDiff.toString() + ' seconds ago'
+    return second.toString() + ' seconds ago'
   } else if (timeDiff < 3600) {
     //minute
     const minute = Math.floor(timeDiff / 60)
