@@ -40,7 +40,11 @@ const HomePage = () => {
 
   const onSearchChange = (event: any) => {
     setSubjects(
-      _subjects.filter((s) => s.text.includes(event.target.value)).slice(0, 10)
+      _subjects
+        .filter((s) =>
+          s.text.toLowerCase().includes(event.target.value.toLowerCase())
+        )
+        .slice(0, 10)
     )
   }
 
