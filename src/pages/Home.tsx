@@ -90,7 +90,7 @@ const HomePage = () => {
                 onChange={handleOnSelectSubject}
                 onSearchChange={onSearchChange}
                 type="text"
-                className="form-control text-dark"
+                className="form-control text-black"
                 style={{
                   borderRadius: '5px 0rem 0rem 5px',
                   border: 'none',

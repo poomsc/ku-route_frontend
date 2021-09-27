@@ -17,3 +17,7 @@ a {
 .search {
   color: white;
 }
+
+.text-black {
+  color: black !important;
+}
