@@ -80,15 +80,10 @@ const HomePage = () => {
             {' '}
             ค้นหาชื่อวิชา / รหัสวิชาที่อยากรู้
           </p>
-          <Form style={{ paddingLeft: '7vw', paddingRight: '7vw' }}>
-            <div className="form-group shadow d-flex w-100">
-              <SMTDropdown
-                fluid
-                search
-                selection
-                options={subjects.slice(0, 10)}
-                onChange={handleOnSelectSubject}
-                onSearchChange={onSearchChange}
+          <Form style={{ paddingLeft: '22vw', paddingRight: '22vw' }}>
+            <div className="form-group shadow d-flex">
+              <input
+                id="home-search-block"
                 type="text"
                 className="form-control text-black"
                 style={{
