@@ -28,6 +28,7 @@ const HomePage = () => {
           <Form style={{ paddingLeft: '22vw', paddingRight: '22vw' }}>
             <div className="form-group shadow d-flex">
               <input
+                id="home-search-block"
                 type="text"
                 className="form-control text-black"
                 style={{
