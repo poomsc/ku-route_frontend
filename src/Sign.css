@@ -16,6 +16,18 @@
         -o-background-size: cover;
         min-height:100vh;
 }
+
+.white-bg{
+    background-image: url('./assets/images/white-bg.png');
+    background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        min-height:100vh;
+}
+
 .header{
     color:#02353C;
     font-family: 'Roboto';

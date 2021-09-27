@@ -9,12 +9,12 @@
 .Subject {
   /* position: absolute; */
   text-align: left;
-  position: relative;
+  /* position: relative;
   width: 1000px;
   height: 36px;
   left: 66px;
   top: auto;
-  margin-top: 20px;
+  margin-top: 20px; */
   /* margin-left: auto; */
 }
 
@@ -34,11 +34,11 @@
   font-family: Roboto;
   font-style: normal;
   font-weight: bold;
-  font-size: 35px;
-  line-height: 60px;
+  font-size: 28px;
+  /* line-height: 60px; */
   /* display: flex; */
   /* align-items: center; */
-  color: #ffffff;
+  color: #b9fff3;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
@@ -59,59 +59,59 @@
 }
 
 .Subjectnum {
-  text-align: right;
+  /* text-align: right;
   position: relative;
   left: 400px;
-  bottom: 10px;
+  bottom: 10px; */
 }
 .textpost {
   margin-left: 3px;
 }
 .textcode {
-  position: relative;
+  /* position: relative; */
   text-align: center;
-  width: 200px;
-  height: 35px;
-  left: 321px;
+  /* width: 200px;
+  height: 35px; */
+  /* left: 321px; */
   background: #02353c;
-  top: 35px;
+  /* top: 35px; */
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 0px 0px 5px 5px;
   color: #ffffff;
   font-family: Roboto;
   font-style: normal;
   font-weight: bold;
-  font-size: 24px;
+  font-size: 28px;
   line-height: 28px;
   align-items: center;
 }
 
 .textnum {
-  position: relative;
+  /* position: relative; */
   text-align: center;
   width: 200px;
-  top: 35px;
+  /* top: 35px; */
   height: 25px;
-  left: 321px;
+  /* left: 321px; */
   background: #5cccab;
   border-radius: 5px 5px 0px 0px;
 }
 
 .line-white {
-  position: relative;
-  top: 30px;
-  left: 66px;
-  width: 950px;
+  /* top: 30px;
+  left: 66px; */
+  width: 1000px;
+  height: 3px;
 }
 
 .form {
-  width: 350px;
+  width: 430px;
   height: 350px;
-  top: auto;
-  margin-left: 21px;
+  /* top: auto; */
+  /* margin-left: 21px; */
   background: #ffffff;
-  border: 5px solid #3fd0c9;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border: 6px solid #40E5DF;
+  box-shadow: 2px 6px 8px rgba(0, 0, 0, 0.25);
   border-radius: 20px;
 }
 .category {
@@ -125,57 +125,58 @@
   color: white;
 }
 .title {
-  position: relative;
-  left: 30px;
-  top: -1%;
-  width: 80%;
+  /* position: relative; */
+  /* left: 30px;
+  top: -1%; */
+  /* width: 80%; */
   font-family: Roboto;
   font-style: normal;
   font-weight: bold;
-  font-size: 20px;
+  font-size: 24px;
   line-height: 28px;
-  display: flex;
-  align-items: center;
+  /* display: flex;
+  align-items: center; */
   /* background-color: #000000; */
   color: #525252;
 }
 
 .line-black {
-  position: relative;
-  top: 5px;
-  left: 20px;
-  width: 300px;
-  border: 1px solid #000000;
+  /* position: relative;
+  top: 1px;
+  left: 20px; */
+  /* max-width: 400px; */
+  height: 2px;
+  /* border: 1px solid #000000; */
 }
 
 .headtext {
-  position: relative;
+  /* position: relative;
   top: 25px;
-  left: 25px;
+  left: 25px; */
   font-family: Roboto;
   font-style: normal;
   font-weight: normal;
-  font-size: 16px;
+  font-size: 18px;
   line-height: 21px;
 
   color: #525252;
 }
 
 .pdf {
-  width: 55px;
-  height: 55px;
+  width: 50px;
+  height: 50px;
 }
 .pdfcount {
   text-align: left;
-  position: relative;
+  /* position: relative;
   left: 35px;
-  top: 60px;
+  top: 60px; */
   font-family: Roboto;
   font-size: 9px;
 }
 .pdfrow {
-  display: flex;
-  flex-direction: row;
+  /* display: flex;
+  flex-direction: row; */
 }
 
 .creatby {
@@ -203,10 +204,10 @@
 }
 
 .Time {
-  position: relative;
+  /* position: relative;
   left: 28px;
   top: 95px;
-  width: 100%;
+  width: 100%; */
   /* background: #00FF99;
   height: 20px; */
   color: #3fd0c9;
@@ -214,15 +215,15 @@
   font-style: normal;
   font-weight: normal;
   font-size: 18px;
-  line-height: 11px;
+  /* line-height: 11px; */
 }
 
 .moreItem {
   position: relative;
   top: 4px;
   left: 5px;
-  width: 55px;
-  height: 53px;
+  width: 50px;
+  height: 49px;
 }
 .textmore {
   position: relative;
@@ -232,9 +233,9 @@
 }
 
 .TAG {
-  position: relative;
+  /* position: relative;
   bottom: 20px;
   left: 10px;
   /* margin-bottom: -; */
-  display: inline-flex;
+  /* display: inline-flex; */ 
 }

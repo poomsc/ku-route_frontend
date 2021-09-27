@@ -111,7 +111,7 @@ const PostPage = () => {
   return (
     <div className="white-bg" style={{ paddingTop: '90px' }}>
       <Container
-        className="box-shadow bg-white mx-auto mb-5"
+        className="box-shadow bg-secondary mx-auto mb-5"
         style={{
           height: '350px',
           left: '157px',
@@ -272,7 +272,7 @@ const PostPage = () => {
       </Container>
 
       <Container
-        className="box-shadow bg-white mx-auto mb-4 px-5 pt-4"
+        className="box-shadow bg-secondary mx-auto mb-4 px-5 pt-4"
         style={{
           borderRadius: '20px',
           boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',

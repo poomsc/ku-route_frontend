@@ -12,6 +12,7 @@ import applicationStore from 'stores/applicationStore'
 import { useHistory } from 'react-router'
 import { observer } from 'mobx-react'
 import { BasicSearch } from 'service/search'
+import { border } from '@mui/system'
 
 const facultyList = [] as any
 let facultyLoader = 0
@@ -330,7 +331,7 @@ const EditProfilePage = observer(() => {
           <div className="mx-2"></div>
           <Button
             disabled={!saveButtonClickable}
-            style={{ width: '7rem' }}
+            style={{ width: '7rem',}}
             type="submit"
             onClick={(e) => {
               saveCurrentState(title, about, userFaculty)

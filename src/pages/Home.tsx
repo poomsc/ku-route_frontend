@@ -175,7 +175,7 @@ const HomePage = () => {
             </div>
             <button
               type="submit"
-              className="btn btn-primary btn-sm"
+              className="btn btn-primary btn-sm px-3 py-2 mt-2 rounded-lg"
               style={{ backgroundColor: '#02353C', borderWidth: '0px' }}
               onClick={handleOnSearch}
             >
