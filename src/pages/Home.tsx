@@ -83,6 +83,7 @@ const HomePage = () => {
           <Form style={{ paddingLeft: '7vw', paddingRight: '7vw' }}>
             <div className="form-group shadow d-flex w-100">
               <SMTDropdown
+                id="home-search-block"
                 fluid
                 search
                 selection
