@@ -11,13 +11,15 @@ import LockLabel from '@material-ui/icons/Lock'
 import applicationStore from 'stores/applicationStore'
 import { useHistory } from 'react-router'
 import { observer } from 'mobx-react'
+import { BasicSearch } from 'service/search'
+import { border } from '@mui/system'
 
 const facultyList = [] as any
 let facultyLoader = 0
 let currentFaculty, newFacultySelected
 let sectionChangeStatus = [false, false, false]
 
-let updateDatabaseTarget = 'Account'
+let databaseTarget = 'Account'
 let UUID = 'Account01'
 
 function loadFaculty(components) {
@@ -59,8 +61,8 @@ const EditProfilePage = observer(() => {
   const [animationAlert, setAnimationAlert] = useState(false)
 
   useEffect(() => {
-    if (!applicationStore.user) return
     async function fetch() {
+      if (!applicationStore.user) return
       const rawInfo = (await get_info(UUID)) as DocumentData
       const rawFaculty = await get_faculty()
       setUserInfo(rawInfo)
@@ -70,7 +72,7 @@ const EditProfilePage = observer(() => {
   }, [])
 
   async function uploadInfo(changedInfo) {
-    let result = await edit(changedInfo, UUID, updateDatabaseTarget)
+    let result = await edit(changedInfo, UUID, databaseTarget)
     if (result === 'Successful') {
       setTimeout(() => {
         fetchInfo()

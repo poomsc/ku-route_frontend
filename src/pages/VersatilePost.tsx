@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Button, Dropdown, FormControl, InputGroup } from 'react-bootstrap'
 import { useHistory, useLocation } from 'react-router'
 import { generateRandomColor, removeElementFromArray } from 'utils'
@@ -9,33 +9,14 @@ import mail from 'assets/icons/mail.png'
 import phone from 'assets/icons/phone.png'
 import { Dropdown as SMTDropdown } from 'semantic-ui-react'
 import DropFileZone from 'components/DropFileZone'
-import { delete_post, get_one_post } from 'service/system'
-import { DocumentData } from '@firebase/firestore'
-import { get_post, get_info, get_file } from 'service/system'
-import { info } from 'console'
 import applicationStore from 'stores/applicationStore'
-import { checkAuthState } from 'service/auth'
 import { observer } from 'mobx-react-lite'
 import { IFileWithMeta, StatusValue } from 'react-dropzone-uploader'
 import { create_post } from 'service/user'
-
-const subjects = [
-  {
-    key: '02212641-55',
-    value: '02212641-55',
-    text: '02212641-55 สเปกโทรสโกปีอินฟราเรดใกล้ขั้นสูง',
-  },
-  {
-    key: '02743552-60',
-    value: '02743552-60',
-    text: '02743552-60 นิติการบัญชีและการเงิน',
-  },
-  {
-    key: '01204111-55',
-    value: '01204111-55',
-    text: '01204111-55 คอมพิวเตอร์และการโปรแกรม',
-  },
-]
+import { delete_post } from 'service/system'
+import { ISubject } from 'interface/subject.interface'
+import { constTags } from 'constants/index'
+import Subjects from 'constants/subjects.json'
 
 const contractChannels = [
   { Icon: mail, Placeholder: 'hello@kuroute.com' },
@@ -46,21 +27,28 @@ const contractChannels = [
 
 const pathType = { '/create-post': true, '/edit-post': false }
 
+interface dropdownType {
+  text: string
+  value: number
+}
+
 const VersatilePost = observer(() => {
+  const _subjects: dropdownType[] = (Subjects as ISubject[]).map((s, i) => {
+    return {
+      text: `${s.subjectCode} ${s.subjectNameTh} (${s.subjectNameEn})`,
+      value: i,
+      key: i,
+    }
+  })
   const preprocessTags = generateRandomColor(
-    [
-      'ทั่วไป',
-      'รีวิวรายวิชา',
-      'คลังความรู้',
-      'แบบฝึกหัด',
-      'Lecture',
-      'สรุป',
-      'อื่นๆ',
-    ].map((t) => {
-      return { text: t }
+    constTags.map((text) => {
+      return { text }
     })
   )
-  const [topicSelected, setTopicSelected] = useState(subjects[0].text)
+  const [subjects, setSubjects] = useState<dropdownType[]>(
+    _subjects.slice(0, 10)
+  )
+  const [topicSelected, setTopicSelected] = useState<string>()
   const [title, setTitle] = useState<string>('')
   const [description, setDescription] = useState<string>('')
   const [tags, setTags] = useState<{ [name: string]: string }[]>(preprocessTags)
@@ -73,6 +61,11 @@ const VersatilePost = observer(() => {
   const { pathname } = useLocation()
   const isNewPost = pathType[pathname]
 
+  const history = useHistory()
+  const backToHome = () => {
+    history.push('/')
+  }
+
   const handleOnTagChange = (value: string, event: 'add' | 'remove') => {
     if (event === 'add') {
       setTagSelected([...tagsSelected, value])
@@ -82,24 +75,40 @@ const VersatilePost = observer(() => {
   }
 
   const handleOnSelectSubject = (event: any) => {
-    setTopicSelected(event.target.innerText)
+    console.log(event.target.innerText.split(' ')[0])
+
+    setTopicSelected(event.target.innerText.split(' ')[0])
   }
 
   const onFileChange = (status: StatusValue, allFiles: IFileWithMeta[]) => {
     setFilesUpload({ status, allFiles })
   }
 
+  const onSearchChange = (event: any) => {
+    setSubjects(
+      _subjects.filter((s) => s.text.includes(event.target.value)).slice(0, 10)
+    )
+  }
+
   const handelOnCreatePost = () => {
-    if (filesUpload.status !== 'done') return
+    if (
+      !topicSelected ||
+      filesUpload.status !== 'done' ||
+      !applicationStore.user
+    )
+      return
     // create_post
-    create_post({
-      AccountID: applicationStore.user.uid,
-      FileID: [],
-      TagID: tagsSelected,
-      SubjectID: topicSelected,
-      Title: title,
-      Description: description,
-    })
+    create_post(
+      {
+        AccountID: applicationStore.user.uid,
+        TagID: tagsSelected,
+        SubjectID: topicSelected,
+        Title: title,
+        Description: description,
+      },
+      filesUpload.allFiles,
+      backToHome
+    )
   }
 
   const handleOnDeletePost = () => {
@@ -121,8 +130,10 @@ const VersatilePost = observer(() => {
           fluid
           search
           selection
-          options={subjects}
+          options={subjects.slice(0, 10)}
           onChange={handleOnSelectSubject}
+          onSearchChange={onSearchChange}
+          // searchQuery={searchQuery}
           className="rounded-10 bg-primary-dark text-white font-weight-bold d-flex"
           icon={
             <div className="ml-auto">
@@ -258,7 +269,7 @@ const VersatilePost = observer(() => {
       </div>
       <div className="mx-auto my-5" style={{ maxWidth: '70rem' }}>
         <div className="d-flex justify-content-end">
-          {isNewPost && (
+          {!isNewPost && (
             <Button
               variant="danger"
               style={{ width: '7rem' }}

@@ -1,19 +1,14 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
 import { makeAutoObservable } from 'mobx'
-import { observer } from 'mobx-react-lite'
-import { User, UserCredential } from '@firebase/auth'
-import { doc, DocumentData } from '@firebase/firestore'
-import { firestore } from 'config/firebase'
-import { get_info } from 'service/system'
+import { User } from '@firebase/auth'
 
 class applicationStore {
-  user = {} as User
-  userDisplayName = {} as string
+  user: User | null = null
+  userDisplayName: string = ''
+  subjectID: string = ''
+  subjectTH: string = ''
+  subjectENG: string = ''
 
   constructor() {
-    this.user = null as any
-    this.userDisplayName = null as any
     makeAutoObservable(this)
   }
 
@@ -23,6 +18,12 @@ class applicationStore {
 
   setUserDisplayName(Name: string | null) {
     this.userDisplayName = Name as string
+  }
+
+  setSubjectSearch(subjectID: string, subjectTH: string, subjectENG: string) {
+    this.subjectID = subjectID as string
+    this.subjectTH = subjectTH as string
+    this.subjectENG = subjectENG as string
   }
 }
 

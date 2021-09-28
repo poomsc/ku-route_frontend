@@ -3,10 +3,20 @@ import { Jumbotron, Container, Form, Dropdown } from 'react-bootstrap'
 import { Checkbox } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import KU_ROUTE from '../assets/icons/KU-ROUTE.png'
-import dropdown_arrow from '../assets/icons/dropdownArrow.png'
-import uncheckIcon from './../assets/icons/checkbox.png'
+import dropdown_arrow from '../assets/icons/Vector (2).png'
 import 'semantic-ui-css/semantic.min.css'
-import Multiselect from 'multiselect-react-dropdown'
+import Subjects from 'constants/subjects.json'
+import { ISubject } from 'interface/subject.interface'
+import { Dropdown as SMTDropdown } from 'semantic-ui-react'
+import { BsFillCaretDownFill } from 'react-icons/bs'
+import { constTags } from 'constants/index'
+import { useHistory, useLocation } from 'react-router'
+import applicationStore from 'stores/applicationStore'
+
+interface dropdownType {
+  text: string
+  value: number
+}
 
 const HomePage = () => {
   const mockFilter = [['คลังหนังสือ'], ['ชีทสรุป'], ['แบบฝึกหัด']]
@@ -14,9 +24,47 @@ const HomePage = () => {
 
   const [allFilter, setAllFilter] = useState<string[][]>(mockFilter)
 
-  const [checked, setChecked] = React.useState(false)
-  const handleChange = () => {
-    setChecked(!checked)
+  const _subjects: dropdownType[] = (Subjects as ISubject[]).map((s, i) => {
+    return {
+      text: `${s.subjectCode} ${s.subjectNameTh} (${s.subjectNameEn})`,
+      value: i,
+      key: i,
+    }
+  })
+
+  const [subjectSelected, setSubjectSelected] = useState<string>()
+  const history = useHistory()
+
+  const [subjects, setSubjects] = useState<dropdownType[]>(
+    _subjects.slice(0, 10)
+  )
+
+  const goToAllPost = () => {
+    history.push('/all-post')
+  }
+
+  const onSearchChange = (event: any) => {
+    setSubjects(
+      _subjects.filter((s) => s.text.includes(event.target.value)).slice(0, 10)
+    )
+  }
+
+  const handleOnSelectSubject = (event: any) => {
+    setSubjectSelected(event.target.innerText)
+  }
+
+  const handleOnSearch = () => {
+    if (!subjectSelected) return
+    const SubjectIDandTH = subjectSelected.split(' ')
+    const SubjectENG = subjectSelected.split('(')
+    // applicationStore.setSubjectSearch(
+    //   SubjectIDandTH[0],
+    //   SubjectIDandTH[1],
+    //   SubjectENG[1].replace(')', '')
+    // )
+    localStorage.setItem('currentSearch', subjectSelected)
+    console.log('Searching... ' + SubjectIDandTH[0])
+    goToAllPost()
   }
 
   return (
@@ -56,31 +104,37 @@ const HomePage = () => {
             {' '}
             ค้นหาชื่อวิชา / รหัสวิชาที่อยากรู้
           </p>
-          <Form style={{ paddingLeft: '22vw', paddingRight: '22vw' }}>
-            <div
-              className="d-inline-flex shadow"
-              style={{
-                marginBottom: '15px',
-              }}
-            >
-              <input
+          <Form style={{ paddingLeft: '7vw', paddingRight: '7vw' }}>
+            <div className="form-group shadow d-flex w-100 rounded-lg">
+              <SMTDropdown
+                id="home-search-block"
+                fluid
+                search
+                selection
+                options={subjects.slice(0, 10)}
+                onChange={handleOnSelectSubject}
+                onSearchChange={onSearchChange}
                 type="text"
-                className="form-control"
+                className="form-control text-black d-flex border-0 pr-3"
                 style={{
                   borderRadius: '5px 0rem 0rem 5px',
-                  height: '34px',
                   border: 'none',
-                  width: '450px',
+                  color: 'black',
                 }}
-                placeholder="เรื่องที่อยากรู้..."
+                icon={
+                  <div className="ml-auto">
+                    <BsFillCaretDownFill />
+                  </div>
+                }
+                placeholder="พิมพ์ชื่อวิชา / รหัสวิชา..."
               />
               <Dropdown>
                 <Dropdown.Toggle
                   variant="success"
                   id="dropdown-basic"
+                  className="h-100"
                   style={{
                     backgroundColor: '#FFFFFF',
-                    height: '34px',
                     border: 'none',
                     borderRadius: '0rem 5px 5px 0rem',
                   }}
@@ -130,8 +184,9 @@ const HomePage = () => {
             <br />
             <button
               type="submit"
-              className="btn btn-primary btn-sm"
+              className="btn btn-primary btn-sm px-3 py-2 mt-2 rounded-lg"
               style={{ backgroundColor: '#02353C', borderWidth: '0px' }}
+              onClick={handleOnSearch}
             >
               SEARCH
             </button>
@@ -148,6 +203,9 @@ const HomePage = () => {
         <Link to="/post">post</Link>
         <br />
         <Link to="/create-post">create-post</Link>
+        <br />
+        <br />
+        <Link to="/all-post">all-post</Link>
         <br />
       </div>
     </div>
