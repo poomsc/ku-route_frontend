@@ -10,7 +10,8 @@ import userIcon from './../assets/icons/user-icon.png'
 import sendArrow from './../assets/icons/sendArrow.png'
 import Comment from './../assets/icons/Comment.png'
 import Like from './../assets/icons/Like.png'
-import { DocumentData } from '@firebase/firestore'
+import Unlike from './../assets/icons/Unlike.png'
+import { collection, DocumentData } from '@firebase/firestore'
 import {
   get_comment,
   get_file,
@@ -19,13 +20,17 @@ import {
   get_one_post,
 } from 'service/system'
 import applicationStore from 'stores/applicationStore'
-import { create_comment } from 'service/user'
+import { create_comment, like, disable } from 'service/user'
+import { getDocLike, getLikeOfPost } from 'service/system'
+import { awaitExpression } from '@babel/types'
 
 const PostPage = () => {
   const [postData, setPostData] = useState<DocumentData>()
   const [infoData, setInfoData] = useState<DocumentData>()
   const [commentData, setCommentData] = useState<DocumentData>()
   const [infocommentData, setInfoCommentData] = useState<DocumentData>()
+  const [likeData, setLikeData] = useState<boolean | null>()
+  const [amountLike, setAmountLike] = useState<DocumentData>()
 
   const handleOnAddComment = () => {
     if (!applicationStore.user) return
@@ -47,6 +52,15 @@ const PostPage = () => {
         'x6XyIHVqD9BVslonhypR'
       )) as Array<string>
 
+      if (!applicationStore.user) {
+        setLikeData(null)
+      } else {
+        const LikeDoc = await getDocLike(
+          'Like:' + applicationStore.user.uid + '_' + currentViewPost
+        )
+        setLikeData(LikeDoc?.Status)
+      }
+
       setPostData(post)
       setInfoData(info)
       setCommentData(comment)
@@ -55,7 +69,30 @@ const PostPage = () => {
     fetch()
   }, [])
 
-  console.log(infocommentData)
+  const handleOnLike = async () => {
+    const currentViewPost = localStorage.getItem('currentViewPost')
+    if (!applicationStore.user || !currentViewPost) return
+    like(applicationStore.user.uid, currentViewPost)
+
+    const status = likeData
+    setLikeData(!status)
+    const countLike = await getLikeOfPost(currentViewPost)
+    setAmountLike(countLike)
+  }
+
+  const handleOnUnlike = async () => {
+    const currentViewPost = localStorage.getItem('currentViewPost')
+    if (!applicationStore.user || !currentViewPost) return
+    const likeID = 'Like:' + applicationStore.user.uid + '_' + currentViewPost
+    disable({}, likeID, 'Like')
+
+    const status = likeData
+    setLikeData(!status)
+    const countLike = await getLikeOfPost(currentViewPost)
+    setAmountLike(countLike)
+  }
+
+  // console.log(infocommentData)
   const mockFiles = [
     ['สรุปบทที่ 1.pdf', '23.40 MB'],
     ['สรุปบทที่ 2.pdf', '4.70 MB'],
@@ -400,15 +437,16 @@ const PostPage = () => {
               paddingRight: '0vw',
             }}
           >
-            &nbsp;&nbsp;7&nbsp;&nbsp;
+            &nbsp;&nbsp;{amountLike}&nbsp;&nbsp;
           </div>
           <img
-            className="float-right mt-2"
+            className="float-right mt-2 cursor-pointer"
+            onClick={likeData ? handleOnUnlike : handleOnLike}
             style={{
               width: '20px',
               height: '20px',
             }}
-            src={Like}
+            src={likeData ? Like : Unlike}
           />
           <div
             className="float-right mt-0 "

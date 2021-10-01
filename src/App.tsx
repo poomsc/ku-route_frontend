@@ -13,6 +13,8 @@ import {
   delete_file,
   get_one_post,
   get_faculty,
+  getDocLike,
+  getLikeOfPost,
 } from 'service/system'
 import { like } from 'service/user'
 import { BasicSearch } from 'service/search'
@@ -36,6 +38,8 @@ const App = () => {
   //console.log(res.to)
   //console.log(TagSearch(['คลังความรู้', 'คลังข้อสอบ']))
   //edit({Faculty:'คณะหมูกรอบ'}, 'QgeVAV0fQHgqv99ttcdB', 'Account')
+  // getDocLike('Like:sf77wrdhiENidGmA1GwWPaEfEXp1_bGzcRjPiMQyoDPIA2q7n')?
+  // console.log(getLikeOfPost('bGzcRjPiMQyoDPIA2q7n'))
 
   return <Routes />
 }
