@@ -29,8 +29,8 @@ async function BasicSearch(Subject: string, Tag: Array<string>) {
       all_post.push([doc.id, doc.data()])
       // console.log(doc.id, ' => ', doc.data())
     })
-    console.log(all_post)
-    console.log(querySnapshot)
+    // console.log(all_post)
+    // console.log(querySnapshot)
     return all_post
   } catch (e) {
     console.error('Error searching: ', e)

@@ -20,12 +20,13 @@ import {
 } from 'service/system'
 import applicationStore from 'stores/applicationStore'
 import { create_comment } from 'service/user'
+import { convertTStoDate } from './AllPost'
 
 const PostPage = () => {
   const [postData, setPostData] = useState<DocumentData>()
   const [infoData, setInfoData] = useState<DocumentData>()
   const [commentData, setCommentData] = useState<DocumentData>()
-  const [infocommentData, setInfoCommentData] = useState<DocumentData>()
+  const [infocommentData, setInfoCommentData] = useState<DocumentData[]>()
 
   const handleOnAddComment = () => {
     if (!applicationStore.user) return
@@ -34,28 +35,33 @@ const PostPage = () => {
     // })
   }
 
+  const currentViewPost = localStorage.getItem('currentViewPost')
+
   useEffect(() => {
     async function fetch() {
-      const currentViewPost = localStorage.getItem('currentViewPost')
       if (!currentViewPost) return
       const post = (await get_one_post(currentViewPost)) as DocumentData
       const info = (await get_info(post?.AccountID)) as DocumentData
-      const comment = (await get_comment(
-        'x6XyIHVqD9BVslonhypR'
-      )) as DocumentData
-      const info_comment = (await get_info_comment(
-        'x6XyIHVqD9BVslonhypR'
-      )) as Array<string>
+      const comment = (await get_comment(currentViewPost)) as DocumentData
+      const infoComment = (await get_info_comment(comment)) as DocumentData[]
 
       setPostData(post)
       setInfoData(info)
       setCommentData(comment)
-      setInfoCommentData(info_comment)
+      setInfoCommentData(infoComment)
     }
     fetch()
   }, [])
 
+  const mockComment = !!commentData ? commentData : ['']
+  const mockInfoComment = !!infocommentData ? infocommentData : ['']
+
   console.log(infocommentData)
+  if (!!mockInfoComment) {
+    console.log(commentData)
+    console.log(mockInfoComment.length)
+  }
+
   const mockFiles = [
     ['สรุปบทที่ 1.pdf', '23.40 MB'],
     ['สรุปบทที่ 2.pdf', '4.70 MB'],
@@ -96,16 +102,8 @@ const PostPage = () => {
     '#74C493',
   ]
 
-  //let mockComment = []
-  if (infocommentData && commentData) {
-  }
-  const mockComment = [
-    ['ขอบคุณที่แชร์ครับ ^_^', 'MAMMOTH123', '1'],
-    ['พอจะมีของวิชา Digital Design มั้ยครับ', 'XanXiah', '2'],
-    ['ขอด้วยคนคร้าบบ', 'Max', '2'],
-  ]
-  const [allComment, setAllComment] =
-    useState<(string | number)[][]>(mockComment)
+  // const [allComment, setAllComment] =
+  //   useState<(string | number)[][]>(mockComment)
 
   const maxColor = colors.length
   return (
@@ -421,7 +419,7 @@ const PostPage = () => {
               paddingRight: '0vw',
             }}
           >
-            &nbsp;&nbsp;6&nbsp;&nbsp;
+            &nbsp;&nbsp;{commentData?.length}&nbsp;&nbsp;
           </div>
           <img
             className="float-right mt-2"
@@ -433,7 +431,7 @@ const PostPage = () => {
           />
         </div>
 
-        {allComment.map((comment) => (
+        {mockInfoComment?.map((infoComment, index) => (
           <div className="d-block mx-auto px-5">
             <div
               className="d-block d-inline-flex"
@@ -456,7 +454,7 @@ const PostPage = () => {
                   border: 'none',
                 }}
               >
-                {comment[0]}
+                {mockComment[index]?.Description}
               </div>
               <div className="py-2">
                 <img
@@ -489,7 +487,7 @@ const PostPage = () => {
                 >
                   &nbsp;&nbsp;by&nbsp;&nbsp;
                   <br />
-                  &nbsp;&nbsp;{comment[2]}&nbsp;&nbsp;&nbsp;&nbsp;
+                  &nbsp;&nbsp;{convertTStoDate(mockComment[index]?.DateEdited)}
                 </div>
                 <div
                   className="d-inline-flex py-2"
@@ -500,7 +498,7 @@ const PostPage = () => {
                     border: 'none',
                   }}
                 >
-                  {comment[1]}
+                  {infoComment?.DisplayName}
                 </div>
               </div>
             </div>

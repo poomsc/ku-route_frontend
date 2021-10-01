@@ -24,7 +24,7 @@ const NavBar = observer(() => {
     fetch()
   }, [applicationStore.user?.uid, applicationStore.userDisplayName])
 
-  let isLoggedin = 'loggedin'
+  let isLoggedin = !!applicationStore.user
   let userName = applicationStore.userDisplayName
     ? applicationStore.userDisplayName
     : 'userName'
@@ -57,7 +57,7 @@ const NavBar = observer(() => {
             alt="logo"
           />
         </Navbar.Brand>
-        {isLoggedin === 'loggedin' ? (
+        {isLoggedin ? (
           <div>
             <Navbar.Toggle aria-controls="basic-navbar-nav align-middle" />
             <Navbar.Collapse id="basic-navbar-nav ">
@@ -111,13 +111,18 @@ const NavBar = observer(() => {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav activeKey={pathname}>
-                <Nav.Link href="/signin">SIGN IN</Nav.Link>
                 <Nav.Link
+                  style={{ border: '0.1px solid', borderRadius: '6px' }}
+                  href="/signin"
+                >
+                  SIGN IN
+                </Nav.Link>
+                {/* <Nav.Link
                   style={{ border: '0.1px solid', borderRadius: '5px' }}
                   href="/signup"
                 >
                   SIGN UP
-                </Nav.Link>
+                </Nav.Link> */}
               </Nav>
             </Navbar.Collapse>
           </div>

@@ -8,6 +8,7 @@ import {
   query,
   where,
   deleteDoc,
+  DocumentData,
 } from 'firebase/firestore'
 import {
   getStorage,
@@ -101,7 +102,7 @@ export async function get_comment(PostID: string) {
     console.log('get_comment')
     const q = query(collection(db, 'Comment'), where('PostID', '==', PostID))
     const querySnapshot = await getDocs(q)
-    const all_comment = [] as any
+    const all_comment = [] as DocumentData
     querySnapshot.forEach((doc) => {
       // doc.data() is never undefined for query doc snapshots
       // console.log(doc.id, ' => ', doc.data())
@@ -114,17 +115,15 @@ export async function get_comment(PostID: string) {
   }
 }
 
-export async function get_info_comment(PostID: string) {
+export async function get_info_comment(comment: DocumentData) {
   try {
     console.log('get_info_comment')
-    const comment = await get_comment(PostID)
-    const comment_info = [] as any
+    let infoComment = [] as DocumentData[]
     comment.forEach(async (cm) => {
-      // console.log(i.AccountID)
-      const info = await get_info(cm.AccountID)
-      comment_info.push(info)
+      const info = (await get_info(cm.AccountID)) as DocumentData
+      infoComment.push(info)
     })
-    return comment_info
+    return infoComment
   } catch (error) {
     console.log('get_info_comment', error)
     // alert(error)
