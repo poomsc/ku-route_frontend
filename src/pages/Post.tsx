@@ -80,6 +80,7 @@ const PostPage = () => {
     setLikeData(!status)
     const countLike = await getLikeOfPost(currentViewPost)
     setAmountLike(countLike)
+    console.log(amountLike)
   }
 
   const handleOnUnlike = async () => {
@@ -104,9 +105,18 @@ const PostPage = () => {
       PostID: currentViewPost,
       Description: commentDescription,
     })
+    setTimeout(() => {
+      fetchComment(currentViewPost)
+    }, 0)
+  }
+
+  async function fetchComment(currentViewPost: string) {
     const comment = (await get_comment(currentViewPost)) as DocumentData
     const infoComment = (await get_info_comment(comment)) as DocumentData[]
+    console.log(comment)
+    console.log(infoComment)
     setCommentData(comment)
+    console.log(commentData)
     setInfoCommentData(infoComment)
   }
 

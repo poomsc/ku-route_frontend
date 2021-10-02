@@ -6,7 +6,7 @@ import {
   delete_post,
   get_comment,
   get_info,
-  get_post,
+  get_my_post,
   delete_comment,
   get_file,
   get_pathfile,
