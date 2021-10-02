@@ -85,7 +85,7 @@ const HomePage = () => {
             ค้นหาชื่อวิชา / รหัสวิชาที่อยากรู้
           </p>
           <Form style={{ paddingLeft: '7vw', paddingRight: '7vw' }}>
-            <div className="form-group shadow d-flex w-100">
+            <div className="form-group shadow d-flex w-100 rounded-lg">
               <SMTDropdown
                 id="home-search-block"
                 fluid
@@ -95,7 +95,7 @@ const HomePage = () => {
                 onChange={handleOnSelectSubject}
                 onSearchChange={onSearchChange}
                 type="text"
-                className="form-control text-black d-flex border-0"
+                className="form-control text-black d-flex border-0 pr-3"
                 style={{
                   borderRadius: '5px 0rem 0rem 5px',
                   border: 'none',
@@ -112,9 +112,9 @@ const HomePage = () => {
                 <Dropdown.Toggle
                   variant="success"
                   id="dropdown-basic"
+                  className="h-100"
                   style={{
                     backgroundColor: '#FFFFFF',
-                    height: '34px',
                     border: 'none',
                     borderRadius: '0rem 5px 5px 0rem',
                   }}
@@ -179,7 +179,7 @@ const HomePage = () => {
             </div>
             <button
               type="submit"
-              className="btn btn-primary btn-sm"
+              className="btn btn-primary btn-sm px-3 py-2 mt-2 rounded-lg"
               style={{ backgroundColor: '#02353C', borderWidth: '0px' }}
               onClick={handleOnSearch}
             >
