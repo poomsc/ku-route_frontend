@@ -53,7 +53,7 @@ const PostPage = () => {
         )
         setLikeData(LikeDoc?.Status)
       }
-      const countLike = await getLikeOfPost(currentViewPost)
+      // const countLike = await getLikeOfPost(currentViewPost)
       setAmountLike(countLike)
 
       setPostData(post)
