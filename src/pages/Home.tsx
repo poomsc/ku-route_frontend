@@ -188,7 +188,7 @@ const HomePage = () => {
           </Form>
         </Container>
       </Jumbotron>
-      <div>
+      {/* <div>
         HomePage
         <br />
         <Link to="/">Home</Link>
@@ -202,7 +202,7 @@ const HomePage = () => {
         <br />
         <Link to="/all-post">all-post</Link>
         <br />
-      </div>
+      </div> */}
     </div>
   )
 }

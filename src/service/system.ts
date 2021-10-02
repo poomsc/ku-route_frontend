@@ -195,5 +195,40 @@ export async function delete_comment(CommentID: string) {
   }
 }
 
-// export async function download_file(filepath: string) {
-// }
+export async function getDocLike(LikeID: string) {
+  try {
+    const LikeRef = doc(db, 'Like', LikeID)
+    const LikeSnap = await getDoc(LikeRef)
+    if (LikeSnap.exists()) {
+      // console.log(LikeSnap.data())
+      return LikeSnap.data()
+    } else {
+      console.log('No such document!')
+      return null
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export async function getLikeOfPost(PostID: string) {
+  try {
+    const q = query(
+      collection(db, 'Like'),
+      where('PostID', '==', PostID),
+      where('Status', '==', true)
+    )
+    const querySnapshot = await getDocs(q)
+    // console.log(querySnapshot)
+    const all_like = [] as any
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      // console.log(doc.id, ' => ', doc.data())
+      all_like.push(doc.data())
+    })
+    // console.log("count of like: " + all_like.length)
+    return all_like.length
+  } catch (error) {
+    console.log(error)
+  }
+}
