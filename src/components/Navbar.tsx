@@ -66,8 +66,8 @@ const NavBar = observer(() => {
                   to="/"
                   className="my-auto mx-2"
                   style={{
-                    fontWeight: currentPage === '/all-post' ? 'bold' : 'normal',
-                    color: currentPage === '/all-post' ? '#2EAF7D' : '#02353C',
+                    fontWeight: currentPage === '/' ? 'bold' : 'normal',
+                    color: currentPage === '/' ? '#2EAF7D' : '#02353C',
                     height: '22px',
                   }}
                 >
@@ -97,6 +97,16 @@ const NavBar = observer(() => {
                     }}
                   >
                     <Link to="/edit-profile"> EDIT PROFILE </Link>
+                  </NavDropdown.Item>
+                  <NavDropdown.Item
+                    href="/favourite-post"
+                    style={{
+                      fontWeight:
+                        currentPage === '/favourite-post' ? 'bold' : 'normal',
+                      color: '#02353C',
+                    }}
+                  >
+                    <Link to="/favourite-post"> FAVOURITE POST </Link>
                   </NavDropdown.Item>
                   <NavDropdown.Divider />
                   <NavDropdown.Item href="/" onClick={logOut}>

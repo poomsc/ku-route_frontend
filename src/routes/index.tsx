@@ -11,6 +11,7 @@ import VersatilePostPage from 'pages/VersatilePost'
 import PublicRoute from './PublicRoute'
 import PrivateRoute from './PrivateRoute'
 import NavBar from 'components/Navbar'
+import FavouriteMenu from 'pages/FavouriteMenu'
 
 const NAVBAR = withRouter(NavBar)
 
@@ -43,6 +44,11 @@ const Routes: React.FC = (): JSX.Element => {
           restricted={false}
           path="/edit-post"
           component={VersatilePostPage}
+        />
+        <PrivateRoute
+          restricted={false}
+          path="/favourite-post"
+          component={FavouriteMenu}
         />
         <PublicRoute restricted={false} component={NotFound} />
       </Switch>
