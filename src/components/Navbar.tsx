@@ -99,6 +99,16 @@ const NavBar = observer(() => {
                     <Link to="/edit-profile"> EDIT PROFILE </Link>
                   </NavDropdown.Item>
                   <NavDropdown.Item
+                    href="/my-post"
+                    style={{
+                      fontWeight:
+                        currentPage === '/my-post' ? 'bold' : 'normal',
+                      color: currentPage === '/my-post' ? '#2EAF7D' : '#02353C',
+                    }}
+                  >
+                    <Link to="/my-post"> MY POST </Link>
+                  </NavDropdown.Item>
+                  <NavDropdown.Item
                     href="/favourite-post"
                     style={{
                       fontWeight:

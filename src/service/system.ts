@@ -58,21 +58,26 @@ export async function get_info(accountid: string) {
   }
 }
 
-export async function get_post() {
+export async function get_my_post(AccountID: string) {
   try {
     console.log('get_post')
-    const querySnapshot = await getDocs(collection(db, 'Post'))
-    const all_post = [] as any
+    const q = query(
+      collection(db, 'Account'),
+      where('AccountID', '==', AccountID)
+    )
+    const querySnapshot = await getDocs(q)
+    const my_post = [] as any
     querySnapshot.forEach((doc) => {
       // doc.data() is never undefined for query doc snapshots
-      all_post.push(doc.data())
+      my_post.push([doc.id, doc.data()])
       // console.log(doc.id, ' => ', doc.data())
     })
-    console.log(all_post)
-    return all_post
+    console.log(my_post)
+    return my_post
   } catch (error) {
     console.log('get_post', error)
     // alert(error)
+    return null
   }
 }
 

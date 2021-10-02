@@ -12,6 +12,7 @@ import PublicRoute from './PublicRoute'
 import PrivateRoute from './PrivateRoute'
 import NavBar from 'components/Navbar'
 import FavouriteMenu from 'pages/FavouriteMenu'
+import EditPostMenu from 'pages/EditPostMenu'
 
 const NAVBAR = withRouter(NavBar)
 
@@ -29,7 +30,7 @@ const Routes: React.FC = (): JSX.Element => {
         <PublicRoute exact path="/post" component={PostPage} />
         <PublicRoute restricted={true} path="/signin" component={SignPage} />
         <PublicRoute restricted={false} path="/signup" component={SignPage} />
-        <PrivateRoute path="/all-post" component={AllPostPage} />
+        <PublicRoute path="/all-post" component={AllPostPage} />
         <PrivateRoute
           restricted={false}
           path="/edit-profile"
@@ -49,6 +50,11 @@ const Routes: React.FC = (): JSX.Element => {
           restricted={false}
           path="/favourite-post"
           component={FavouriteMenu}
+        />
+        <PrivateRoute
+          restricted={false}
+          path="/my-post"
+          component={EditPostMenu}
         />
         <PublicRoute restricted={false} component={NotFound} />
       </Switch>
