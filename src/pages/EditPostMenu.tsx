@@ -108,7 +108,7 @@ const EditPostMenu = () => {
             </Link>
           </div>
         </div>
-        <Container className="white-bg">
+        <Container className="white-bg d-flex">
           <div className="Info">
             <h1 style={{ color: 'black' }}>ประวัติการอัพโหลด </h1>
             <div className="table">
@@ -158,7 +158,7 @@ const EditPostMenu = () => {
                       onClick={() => handleOnViewPage(object[0])}
                       className="fixbutton max-w-content d-inline-block cursor-pointer"
                     >
-                      แก้ไข
+                      EDIT
                     </div>
                     <ModalEditPostMenu
                       PostID={object[0]}

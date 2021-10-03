@@ -72,8 +72,8 @@ const ModalEditPostMenu = observer(({ PostID, onClick }: Props) => {
       onClose={() => setOpen(false)}
       onOpen={() => setOpen(true)}
       trigger={
-        <div className="deletebutton max-w-content d-inline-block cursor-pointer">
-          <img src={logo_delete} width="8px" height="10px" />
+        <div className="removebutton max-w-content d-inline-block cursor-pointer">
+          REMOVE
         </div>
       }
       open={open}

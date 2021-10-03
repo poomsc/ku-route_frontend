@@ -100,7 +100,7 @@ const FavouriteMenu = () => {
             </Link>
           </div>
         </div>
-        <Container className="white-bg">
+        <Container className="white-bg d-flex">
           <div className="Info">
             <h1 style={{ color: 'black' }}>โพสที่ถูกใจ </h1>
             <div className="table">

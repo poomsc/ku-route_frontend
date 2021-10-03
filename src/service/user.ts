@@ -60,7 +60,7 @@ async function create_post(
   allFiles: IFileWithMeta[],
   callBack?: () => void
 ) {
-  console.log({ AccountID, TagID, SubjectID, Title, Description })
+  //console.log({ AccountID, TagID, SubjectID, Title, Description })
 
   const data = {
     AccountID,
