@@ -85,7 +85,7 @@ const HomePage = () => {
   //   }
   // }
 
-  const [dropdown, setDropdrown] = useState(true)
+  const [dropdown, setDropdrown] = useState(false)
 
   return (
     <div>
