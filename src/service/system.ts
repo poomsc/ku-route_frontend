@@ -52,10 +52,36 @@ async function get_info(accountid: string) {
   }
 }
 
+async function get_mylikepost(AccountID: string) {
+  try {
+    const q = query(
+      collection(db, 'Like'),
+      where('AccountID', '==', AccountID),
+      where('Status', '==', true),
+      orderBy('DateCreate', 'desc')
+    )
+    const querySnapshot = (await getDocs(q)) as DocumentData
+    const Posts = querySnapshot.docs.map((doc) => doc.data().PostID)
+    const infoPosts = (await Promise.all(
+      Posts.map((ID) => get_one_post(ID))
+    )) as DocumentData
+    // console.log(infoPosts)
+    return infoPosts
+  } catch (error) {
+    console.log('get_likepost', error)
+    return null
+  }
+}
+
 async function get_my_post(AccountID: string) {
   try {
     console.log('get_my_post')
-    const q = query(collection(db, 'Post'), where('AccountID', '==', AccountID))
+    const q = query(
+      collection(db, 'Post'),
+      where('AccountID', '==', AccountID),
+      where('Status', '==', true),
+      orderBy('DateCreate', 'desc')
+    )
     const querySnapshot = await getDocs(q)
     const Posts = querySnapshot.docs.map((doc) => [doc.id, doc.data()])
     return Posts
@@ -213,6 +239,7 @@ export {
   get_info,
   get_my_post,
   get_one_post,
+  get_mylikepost,
   get_comment,
   get_info_comment,
   get_file,

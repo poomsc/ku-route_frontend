@@ -63,7 +63,7 @@ const PostPage = () => {
         )
         setLikeData(LikeDoc?.Status)
       }
-
+      // const countLike = await getLikeOfPost(currentViewPost)
       setPostData(post[1])
       setInfoData(info)
       setCommentData(comment)
@@ -336,8 +336,9 @@ const PostPage = () => {
 
         <div className="d-flex pb-4 px-3 mb-5 cursor-pointer">
           {allFiles &&
-            allFiles.map((file) => (
-              <div
+            linkFiles &&
+            allFiles.map((file, index) => (
+              <a
                 className="mr-2 ml-4 mb-4"
                 style={{
                   border: '1px solid #BFBFBF ',
@@ -346,6 +347,9 @@ const PostPage = () => {
                   boxSizing: 'border-box',
                 }}
                 key={file.name}
+                href={linkFiles[index]}
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <div
                   className="d-flex flex-column mb-3"
@@ -394,7 +398,7 @@ const PostPage = () => {
                     {file.name.split('.')[1].toUpperCase()}
                   </div>
                 </div>
-              </div>
+              </a>
             ))}
         </div>
       </Container>

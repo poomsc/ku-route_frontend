@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Container, Card } from 'react-bootstrap'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -7,26 +7,49 @@ import logo_sort from '../assets/icons/Vector (2).png'
 import logo_image from '../assets/icons/Image.png'
 import logo_delete from '../assets/icons/Vector.png'
 import '../FavouriteMenu.css'
+import applicationStore from 'stores/applicationStore'
+import { get_mylikepost, get_one_post } from 'service/system'
+import { DocumentData } from '@firebase/firestore'
+import { useHistory } from 'react-router'
+import { convertTStoDate } from './AllPost'
+import { disable } from 'service/user'
+import ModalFavouriteMenu from 'components/Modal'
+
 const FavouriteMenu = () => {
+  const [likepostData, setlikepostData] = useState<DocumentData>([])
+
+  useEffect(() => {
+    async function fetch() {
+      if (!applicationStore.user) return
+      const likepost = (await get_mylikepost(
+        applicationStore.user.uid
+      )) as DocumentData
+      // console.log(likepost)
+
+      setlikepostData(likepost)
+    }
+    fetch()
+  }, [])
+
+  const history = useHistory()
+  const handleOnViewPage = (PostID: string) => {
+    localStorage.setItem('currentViewPost', PostID)
+    history.push('/post')
+  }
+
+  const handleOnDelete = async (PostID: string) => {
+    applicationStore.setDeletePost(PostID)
+    if (!applicationStore.user) return
+    const likepost = (await get_mylikepost(
+      applicationStore.user.uid
+    )) as DocumentData
+    console.log(likepost)
+    setlikepostData(likepost)
+  }
+
   var InitialSorted = 0
-  const InitialmockDatas = [
-    {
-      PostID: 'AX01749',
-      Title: 'แจกสรุป Math',
-      Description: 'ไฟล์แนบมีทั้งหมดสามส่วน',
-      NumFile: ['2', '1'],
-      Time: '1',
-    },
-    {
-      PostID: 'AB01864',
-      Title: 'แจกสรุป Physics',
-      Description: 'ไฟล์แนบมีสามส่วน',
-      NumFile: ['1', '2'],
-      Time: '2',
-    },
-  ]
   const [setSortStated, setClick] = useState(InitialSorted)
-  const [mockDatas, setData] = useState(InitialmockDatas)
+  const [mockDatas, setData] = useState(likepostData)
   const handleOnClick = () => {
     if (setSortStated === 1) {
       setClick(0)
@@ -48,15 +71,15 @@ const FavouriteMenu = () => {
     <div className="blue-bg">
       <Container className="rounded-10 bg-primary-dark text-white font-weight-bold d-flex">
         <div className="Menutab">
-          <Link to="/" style={{ color: 'white' }}>
+          <Link to="/edit-profile" style={{ color: 'white' }}>
             Edit Profile
           </Link>{' '}
           <br />
-          <Link to="/" style={{ color: 'white' }}>
+          <Link to="/my-post" style={{ color: 'white' }}>
             My Posts
           </Link>{' '}
           <br />
-          <Link to="/" style={{ color: 'white' }}>
+          <Link to="/favourite-post" style={{ color: 'white' }}>
             Favourite
           </Link>
           <div className="Menu2">
@@ -83,7 +106,7 @@ const FavouriteMenu = () => {
             <div className="table">
               <thead>
                 <tr>
-                  <th scope="col">ไอดี</th>
+                  <th scope="col">รหัสวิชา</th>
                   <th scope="col">หัวเรื่อง</th>
                   <th scope="col">ข้อความ</th>
                   <th scope="col">ไฟล์แนบ</th>
@@ -100,11 +123,15 @@ const FavouriteMenu = () => {
                 </tr>
               </thead>
 
-              {mockDatas.map((object, idx) => (
+              {likepostData.map((object, idx) => (
                 <tr>
-                  <td>{object.PostID}</td>
-                  <td>{object.Title}</td>
-                  <td>{object.Description}</td>
+                  <td>{object[1]?.SubjectID}</td>
+                  <td>{object[1]?.Title}</td>
+                  <td>
+                    {object[1]?.Description.length > 40
+                      ? object[1]?.Description.substring(0, 40) + '...'
+                      : object[1]?.Description}
+                  </td>
                   <td>
                     <img
                       src={logo_pdf}
@@ -112,23 +139,27 @@ const FavouriteMenu = () => {
                       width="24px"
                       height="24px"
                     />
-                    {object.NumFile[0]}
+                    {/* {object.NumFile[0]} */}
                     <img
                       src={logo_image}
                       style={{ padding: '2px' }}
                       width="24px"
                       height="24px"
                     />
-                    {object.NumFile[1]}
+                    {/* {object.NumFile[1]} */}
                   </td>
-                  <td>{object.Time}</td>
+                  <td>{convertTStoDate(object[1]?.DateEdited)}</td>
                   <td>
-                    <Link to="/" className="viewbutton">
+                    <div
+                      onClick={() => handleOnViewPage(object[0])}
+                      className="viewbutton max-w-content d-inline-block cursor-pointer"
+                    >
                       VIEW
-                    </Link>
-                    <Link to="/" className="removebutton">
-                      REMOVE
-                    </Link>
+                    </div>
+                    <ModalFavouriteMenu
+                      PostID={object[0]}
+                      onClick={handleOnDelete}
+                    />
                   </td>
                 </tr>
               ))}
