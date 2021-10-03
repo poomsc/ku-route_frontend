@@ -12,6 +12,7 @@ import { BsFillCaretDownFill } from 'react-icons/bs'
 import { constTags } from 'constants/index'
 import { useHistory, useLocation } from 'react-router'
 import applicationStore from 'stores/applicationStore'
+import '../App.css'
 
 interface dropdownType {
   text: string
@@ -45,7 +46,11 @@ const HomePage = () => {
 
   const onSearchChange = (event: any) => {
     setSubjects(
-      _subjects.filter((s) => s.text.includes(event.target.value)).slice(0, 10)
+      _subjects
+        .filter((s) =>
+          s.text.toLowerCase().includes(event.target.value.toLowerCase())
+        )
+        .slice(0, 10)
     )
   }
 
@@ -66,6 +71,21 @@ const HomePage = () => {
     console.log('Searching... ' + SubjectIDandTH[0])
     goToAllPost()
   }
+
+  // var expanded = false;
+
+  // function showCheckboxes() {
+  //   var checkboxes = document.getElementById("checkboxes");
+  //   if (!expanded) {
+  //     checkboxes.style.display = "block";
+  //     expanded = true;
+  //   } else {
+  //     checkboxes.style.display = "none";
+  //     expanded = false;
+  //   }
+  // }
+
+  const [dropdown, setDropdrown] = useState(true)
 
   return (
     <div>
@@ -128,7 +148,7 @@ const HomePage = () => {
                 }
                 placeholder="พิมพ์ชื่อวิชา / รหัสวิชา..."
               />
-              <Dropdown>
+              <Dropdown show={dropdown}>
                 <Dropdown.Toggle
                   variant="success"
                   id="dropdown-basic"
@@ -139,12 +159,14 @@ const HomePage = () => {
                     borderRadius: '0rem 5px 5px 0rem',
                   }}
                 >
-                  <img
-                    src={dropdown_arrow}
-                    className="p-1"
-                    width="18px"
-                    height="14px"
-                  />
+                  <div onClick={() => setDropdrown(!dropdown)}>
+                    <img
+                      src={dropdown_arrow}
+                      className="p-1"
+                      width="18px"
+                      height="14px"
+                    />
+                  </div>
                   <Dropdown.Menu>
                     <Dropdown.Item
                       style={{
@@ -172,6 +194,7 @@ const HomePage = () => {
                             style={{
                               boxSizing: 'border-box',
                             }}
+                            onClick={() => console.log(filter[0])}
                           />
                           <label>&nbsp;&nbsp;{filter[0]}</label>
                         </form>
@@ -193,7 +216,7 @@ const HomePage = () => {
           </Form>
         </Container>
       </Jumbotron>
-      <div>
+      {/* <div>
         HomePage
         <br />
         <Link to="/">Home</Link>
@@ -207,7 +230,7 @@ const HomePage = () => {
         <br />
         <Link to="/all-post">all-post</Link>
         <br />
-      </div>
+      </div> */}
     </div>
   )
 }

@@ -22,10 +22,10 @@ import React from 'react'
 import { useHistory } from 'react-router'
 import { height } from '@mui/system'
 
-function convertTStoDate(timestamp) {
+export function convertTStoDate(timestamp) {
+  if (!timestamp) return
   const timeCurrent = new Date().getTime() / 1000
   const timeDiff = timeCurrent - timestamp.seconds
-  console.log(timeCurrent)
 
   if (timeDiff < 60) {
     //second
@@ -212,14 +212,16 @@ const AllPostPage = () => {
               style={{ width: '35%', maxWidth: '350px', verticalAlign: 'top' }}
             >
               <div className="d-flex justify-content-end pb-1">
-                <div>
+                {/* <div>
                   <div className="d-flex flex-row-reverse align-items-end mt-5 pt-2 mr-4">
                     <div className=""> ลุงพล1</div>
                     <div className=""> ลุงพล2</div>
                     <div className=""> ลุงพล3</div>
                   </div>
-                  <div className="d-flex justify-content-end mr-4">กินข้าว</div>
-                </div>
+                  <div className="d-flex justify-content-end mr-4">
+                    กินข้าว
+                  </div>
+                </div> */}
                 <div className="mt-3 pb-1">
                   <div className="textnum d-block font-weight-bold pt-1">
                     รหัสวิชา

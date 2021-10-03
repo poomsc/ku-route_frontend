@@ -8,6 +8,8 @@ import {
   query,
   where,
   deleteDoc,
+  DocumentData,
+  orderBy,
 } from 'firebase/firestore'
 import {
   getStorage,
@@ -57,21 +59,43 @@ export async function get_info(accountid: string) {
   }
 }
 
-export async function get_post() {
+export async function get_mylikepost(AccountID: string) {
   try {
-    console.log('get_post')
-    const querySnapshot = await getDocs(collection(db, 'Post'))
-    const all_post = [] as any
-    querySnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
-      all_post.push(doc.data())
-      // console.log(doc.id, ' => ', doc.data())
-    })
-    console.log(all_post)
-    return all_post
+    const q = query(
+      collection(db, 'Like'),
+      where('AccountID', '==', AccountID),
+      where('Status', '==', true),
+      orderBy('DateCreate', 'desc')
+    )
+    const querySnapshot = (await getDocs(q)) as DocumentData
+    const Posts = querySnapshot.docs.map((doc) => doc.data().PostID)
+    const infoPosts = (await Promise.all(
+      Posts.map((ID) => get_one_post(ID))
+    )) as DocumentData
+    // console.log(infoPosts)
+    return infoPosts
+  } catch (error) {
+    console.log('get_likepost', error)
+    return null
+  }
+}
+
+export async function get_my_post(AccountID: string) {
+  try {
+    console.log('get_my_post')
+    const q = query(
+      collection(db, 'Post'),
+      where('AccountID', '==', AccountID),
+      where('Status', '==', true),
+      orderBy('DateCreate', 'desc')
+    )
+    const querySnapshot = await getDocs(q)
+    const Posts = querySnapshot.docs.map((doc) => [doc.id, doc.data()])
+    return Posts
   } catch (error) {
     console.log('get_post', error)
     // alert(error)
+    return null
   }
 }
 
@@ -82,8 +106,8 @@ export async function get_one_post(PostID: string) {
     const docSnap = await getDoc(docRef)
 
     if (docSnap.exists()) {
-      console.log('Document data:', docSnap.data())
-      return docSnap.data()
+      // console.log('Document data:', docSnap.data())
+      return [docSnap.id, docSnap.data()]
     } else {
       // doc.data() will be undefined in this case
       console.log('No such document!')
@@ -101,7 +125,7 @@ export async function get_comment(PostID: string) {
     console.log('get_comment')
     const q = query(collection(db, 'Comment'), where('PostID', '==', PostID))
     const querySnapshot = await getDocs(q)
-    const all_comment = [] as any
+    const all_comment = [] as DocumentData
     querySnapshot.forEach((doc) => {
       // doc.data() is never undefined for query doc snapshots
       // console.log(doc.id, ' => ', doc.data())
@@ -114,17 +138,15 @@ export async function get_comment(PostID: string) {
   }
 }
 
-export async function get_info_comment(PostID: string) {
+export async function get_info_comment(comment: DocumentData) {
   try {
     console.log('get_info_comment')
-    const comment = await get_comment(PostID)
-    const comment_info = [] as any
+    let infoComment = [] as DocumentData[]
     comment.forEach(async (cm) => {
-      // console.log(i.AccountID)
-      const info = await get_info(cm.AccountID)
-      comment_info.push(info)
+      const info = (await get_info(cm.AccountID)) as DocumentData
+      infoComment.push(info)
     })
-    return comment_info
+    return infoComment
   } catch (error) {
     console.log('get_info_comment', error)
     // alert(error)
@@ -196,5 +218,40 @@ export async function delete_comment(CommentID: string) {
   }
 }
 
-// export async function download_file(filepath: string) {
-// }
+export async function getDocLike(LikeID: string) {
+  try {
+    const LikeRef = doc(db, 'Like', LikeID)
+    const LikeSnap = await getDoc(LikeRef)
+    if (LikeSnap.exists()) {
+      // console.log(LikeSnap.data())
+      return LikeSnap.data()
+    } else {
+      console.log('No such document!')
+      return null
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export async function getLikeOfPost(PostID: string) {
+  try {
+    const q = query(
+      collection(db, 'Like'),
+      where('PostID', '==', PostID),
+      where('Status', '==', true)
+    )
+    const querySnapshot = await getDocs(q)
+    // console.log(querySnapshot)
+    const all_like = [] as any
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      // console.log(doc.id, ' => ', doc.data())
+      all_like.push(doc.data())
+    })
+    // console.log("count of like: " + all_like.length)
+    return all_like.length
+  } catch (error) {
+    console.log(error)
+  }
+}

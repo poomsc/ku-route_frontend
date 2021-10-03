@@ -24,7 +24,7 @@ const NavBar = observer(() => {
     fetch()
   }, [applicationStore.user?.uid, applicationStore.userDisplayName])
 
-  let isLoggedin = 'loggedin'
+  let isLoggedin = !!applicationStore.user
   let userName = applicationStore.userDisplayName
     ? applicationStore.userDisplayName
     : 'userName'
@@ -57,7 +57,7 @@ const NavBar = observer(() => {
             alt="logo"
           />
         </Navbar.Brand>
-        {isLoggedin === 'loggedin' ? (
+        {isLoggedin ? (
           <div>
             <Navbar.Toggle aria-controls="basic-navbar-nav align-middle" />
             <Navbar.Collapse id="basic-navbar-nav ">
@@ -66,8 +66,8 @@ const NavBar = observer(() => {
                   to="/"
                   className="my-auto mx-2"
                   style={{
-                    fontWeight: currentPage === '/all-post' ? 'bold' : 'normal',
-                    color: currentPage === '/all-post' ? '#2EAF7D' : '#02353C',
+                    fontWeight: currentPage === '/' ? 'bold' : 'normal',
+                    color: currentPage === '/' ? '#2EAF7D' : '#02353C',
                     height: '22px',
                   }}
                 >
@@ -98,6 +98,26 @@ const NavBar = observer(() => {
                   >
                     <Link to="/edit-profile"> EDIT PROFILE </Link>
                   </NavDropdown.Item>
+                  <NavDropdown.Item
+                    href="/my-post"
+                    style={{
+                      fontWeight:
+                        currentPage === '/my-post' ? 'bold' : 'normal',
+                      color: currentPage === '/my-post' ? '#2EAF7D' : '#02353C',
+                    }}
+                  >
+                    <Link to="/my-post"> MY POST </Link>
+                  </NavDropdown.Item>
+                  <NavDropdown.Item
+                    href="/favourite-post"
+                    style={{
+                      fontWeight:
+                        currentPage === '/favourite-post' ? 'bold' : 'normal',
+                      color: '#02353C',
+                    }}
+                  >
+                    <Link to="/favourite-post"> FAVOURITE POST </Link>
+                  </NavDropdown.Item>
                   <NavDropdown.Divider />
                   <NavDropdown.Item href="/" onClick={logOut}>
                     LOG OUT
@@ -111,13 +131,18 @@ const NavBar = observer(() => {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav activeKey={pathname}>
-                <Nav.Link href="/signin">SIGN IN</Nav.Link>
                 <Nav.Link
+                  style={{ border: '0.1px solid', borderRadius: '6px' }}
+                  href="/signin"
+                >
+                  SIGN IN
+                </Nav.Link>
+                {/* <Nav.Link
                   style={{ border: '0.1px solid', borderRadius: '5px' }}
                   href="/signup"
                 >
                   SIGN UP
-                </Nav.Link>
+                </Nav.Link> */}
               </Nav>
             </Navbar.Collapse>
           </div>
