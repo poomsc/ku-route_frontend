@@ -3,7 +3,7 @@ import { Jumbotron, Container, Form, Dropdown } from 'react-bootstrap'
 import { Checkbox } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import KU_ROUTE from '../assets/icons/KU-ROUTE.png'
-import dropdown_arrow from '../assets/icons/Vector (2).png'
+import dropdown_arrow from '../assets/icons/dropdownArrow.png'
 import 'semantic-ui-css/semantic.min.css'
 import Subjects from 'constants/subjects.json'
 import { ISubject } from 'interface/subject.interface'
@@ -12,6 +12,7 @@ import { BsFillCaretDownFill } from 'react-icons/bs'
 import { constTags } from 'constants/index'
 import { useHistory, useLocation } from 'react-router'
 import applicationStore from 'stores/applicationStore'
+import '../App.css'
 
 interface dropdownType {
   text: string
@@ -19,6 +20,11 @@ interface dropdownType {
 }
 
 const HomePage = () => {
+  const mockFilter = [['คลังหนังสือ'], ['ชีทสรุป'], ['แบบฝึกหัด']]
+  const [filter, setFilter] = useState(['คลังหนังสือ', 'ชีทสรุป', 'แบบฝึกหัด'])
+
+  const [allFilter, setAllFilter] = useState<string[][]>(mockFilter)
+
   const _subjects: dropdownType[] = (Subjects as ISubject[]).map((s, i) => {
     return {
       text: `${s.subjectCode} ${s.subjectNameTh} (${s.subjectNameEn})`,
@@ -66,6 +72,21 @@ const HomePage = () => {
     goToAllPost()
   }
 
+  // var expanded = false;
+
+  // function showCheckboxes() {
+  //   var checkboxes = document.getElementById("checkboxes");
+  //   if (!expanded) {
+  //     checkboxes.style.display = "block";
+  //     expanded = true;
+  //   } else {
+  //     checkboxes.style.display = "none";
+  //     expanded = false;
+  //   }
+  // }
+
+  const [dropdown, setDropdrown] = useState(true)
+
   return (
     <div>
       <Jumbotron className="blue-bg jumbotron jumbotron-fluid mb-0">
@@ -74,9 +95,28 @@ const HomePage = () => {
             src={KU_ROUTE}
             className="mx-auto d-block mb-2"
             width="230px"
-            height="35px"
+            height="38px"
             alt="KU_ROUTE"
           />
+          {/* <div
+            style={{
+              width: '462px',
+              height: '122px',
+              left: '489px',
+              top: '303px',
+              fontFamily: 'Roboto',
+              fontStyle: 'normal',
+              fontWeight: 'bold',
+              fontSize: '72px',
+              lineHeight: '84px',
+              display: 'flex',
+              // aligntems: 'center',
+              // text-align: 'center',
+              color: '#02353C',
+            }}
+          >
+            KU-ROUTE  
+          </div> */}
           <p
             className="mb-2"
             style={{ color: '#137D54', fontWeight: 'bold', fontSize: '25px' }}
@@ -108,7 +148,7 @@ const HomePage = () => {
                 }
                 placeholder="พิมพ์ชื่อวิชา / รหัสวิชา..."
               />
-              <Dropdown>
+              <Dropdown show={dropdown}>
                 <Dropdown.Toggle
                   variant="success"
                   id="dropdown-basic"
@@ -119,64 +159,52 @@ const HomePage = () => {
                     borderRadius: '0rem 5px 5px 0rem',
                   }}
                 >
-                  <img
-                    src={dropdown_arrow}
-                    className="p-1"
-                    width="17px"
-                    height="15px"
-                  />
+                  <div onClick={() => setDropdrown(!dropdown)}>
+                    <img
+                      src={dropdown_arrow}
+                      className="p-1"
+                      width="18px"
+                      height="14px"
+                    />
+                  </div>
+                  <Dropdown.Menu>
+                    <Dropdown.Item
+                      style={{
+                        color: '#02353C',
+                        fontWeight: 'bold',
+                        fontSize: '12px',
+                      }}
+                    >
+                      FILTER BY
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      style={{ color: '#02353C', fontSize: '11px' }}
+                    >
+                      ประเภท
+                    </Dropdown.Item>
+                    {allFilter.map((filter) => (
+                      <Dropdown.Item
+                        href="#/action-3"
+                        style={{ color: '#02353C', fontSize: '11px' }}
+                      >
+                        <form>
+                          <input
+                            type="checkbox"
+                            className="checkbox-round"
+                            style={{
+                              boxSizing: 'border-box',
+                            }}
+                            onClick={() => console.log(filter[0])}
+                          />
+                          <label>&nbsp;&nbsp;{filter[0]}</label>
+                        </form>
+                      </Dropdown.Item>
+                    ))}
+                  </Dropdown.Menu>
                 </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  <Dropdown.Item
-                    style={{
-                      color: '#02353C',
-                      fontWeight: 'bold',
-                      fontSize: '12px',
-                    }}
-                  >
-                    FILTER BY
-                  </Dropdown.Item>
-                  {/* <Dropdown.Item style={{ color: '#02353C', fontSize: '11px'}}>สาระวิชา</Dropdown.Item>
-              <Dropdown.Item href="#/action-3" >
-			  	<Checkbox label="สาระอยู่ดีมีสุข" style={{ color: '#02353C', fontSize: '11px'}} />
-			  </Dropdown.Item>
-              <Dropdown.Item href="#/action-3" style={{ color: '#02353C', fontSize: '11px'}}>
-			  	<Checkbox label="สาระพลเมืองโลก" style={{ color: '#02353C', fontSize: '11px'}} />
-			  </Dropdown.Item>
-			  <Dropdown.Item href="#/action-3" style={{ color: '#02353C', fontSize: '11px'}}>
-			  	<Checkbox label="สาระสุนทรียาสตร์" style={{ color: '#02353C', fontSize: '11px'}} />
-			  </Dropdown.Item> */}
-                  <Dropdown.Divider />
-                  <Dropdown.Item style={{ color: '#02353C', fontSize: '11px' }}>
-                    ประเภท
-                  </Dropdown.Item>
-                  <Dropdown.Item href="#/action-3">
-                    <Checkbox
-                      label="คลังหนังสือ"
-                      style={{ color: '#02353C', fontSize: '11px' }}
-                    />
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    href="#/action-3"
-                    style={{ color: '#02353C', fontSize: '11px' }}
-                  >
-                    <Checkbox
-                      label="ชีทสรุป"
-                      style={{ color: '#02353C', fontSize: '11px' }}
-                    />
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    href="#/action-3"
-                    style={{ color: '#02353C', fontSize: '11px' }}
-                  >
-                    <Checkbox
-                      label="แบบฝึกหัด"
-                      style={{ color: '#02353C', fontSize: '11px' }}
-                    />
-                  </Dropdown.Item>
-                </Dropdown.Menu>
               </Dropdown>
             </div>
+            <br />
             <button
               type="submit"
               className="btn btn-primary btn-sm px-3 py-2 mt-2 rounded-lg"

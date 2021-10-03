@@ -331,7 +331,7 @@ const EditProfilePage = observer(() => {
           <div className="mx-2"></div>
           <Button
             disabled={!saveButtonClickable}
-            style={{ width: '7rem',}}
+            style={{ width: '7rem' }}
             type="submit"
             onClick={(e) => {
               saveCurrentState(title, about, userFaculty)
