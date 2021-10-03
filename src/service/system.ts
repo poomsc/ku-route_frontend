@@ -9,6 +9,7 @@ import {
   where,
   deleteDoc,
   DocumentData,
+  orderBy,
 } from 'firebase/firestore'
 import {
   getStorage,
@@ -58,22 +59,39 @@ export async function get_info(accountid: string) {
   }
 }
 
+export async function get_mylikepost(AccountID: string) {
+  try {
+    const q = query(
+      collection(db, 'Like'),
+      where('AccountID', '==', AccountID),
+      where('Status', '==', true),
+      orderBy('DateCreate', 'desc')
+    )
+    const querySnapshot = (await getDocs(q)) as DocumentData
+    const Posts = querySnapshot.docs.map((doc) => doc.data().PostID)
+    const infoPosts = (await Promise.all(
+      Posts.map((ID) => get_one_post(ID))
+    )) as DocumentData
+    // console.log(infoPosts)
+    return infoPosts
+  } catch (error) {
+    console.log('get_likepost', error)
+    return null
+  }
+}
+
 export async function get_my_post(AccountID: string) {
   try {
-    console.log('get_post')
+    console.log('get_my_post')
     const q = query(
-      collection(db, 'Account'),
-      where('AccountID', '==', AccountID)
+      collection(db, 'Post'),
+      where('AccountID', '==', AccountID),
+      where('Status', '==', true),
+      orderBy('DateCreate', 'desc')
     )
     const querySnapshot = await getDocs(q)
-    const my_post = [] as any
-    querySnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
-      my_post.push([doc.id, doc.data()])
-      // console.log(doc.id, ' => ', doc.data())
-    })
-    console.log(my_post)
-    return my_post
+    const Posts = querySnapshot.docs.map((doc) => [doc.id, doc.data()])
+    return Posts
   } catch (error) {
     console.log('get_post', error)
     // alert(error)
@@ -88,8 +106,8 @@ export async function get_one_post(PostID: string) {
     const docSnap = await getDoc(docRef)
 
     if (docSnap.exists()) {
-      console.log('Document data:', docSnap.data())
-      return docSnap.data()
+      // console.log('Document data:', docSnap.data())
+      return [docSnap.id, docSnap.data()]
     } else {
       // doc.data() will be undefined in this case
       console.log('No such document!')

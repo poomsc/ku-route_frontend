@@ -56,7 +56,7 @@ const PostPage = () => {
       // const countLike = await getLikeOfPost(currentViewPost)
       setAmountLike(countLike)
 
-      setPostData(post)
+      setPostData(post[1])
       setInfoData(info)
       setCommentData(comment)
       setInfoCommentData(infoComment)
@@ -87,7 +87,7 @@ const PostPage = () => {
     const currentViewPost = localStorage.getItem('currentViewPost')
     if (!applicationStore.user || !currentViewPost) return
     const likeID = 'Like:' + applicationStore.user.uid + '_' + currentViewPost
-    disable({}, likeID, 'Like')
+    await disable({}, likeID, 'Like')
 
     const status = likeData
     setLikeData(!status)
