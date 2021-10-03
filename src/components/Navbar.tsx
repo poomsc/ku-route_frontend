@@ -94,6 +94,7 @@ const NavBar = observer(() => {
                         currentPage === '/edit-profile' ? 'bold' : 'normal',
                       color:
                         currentPage === '/edit-profile' ? '#2EAF7D' : '#02353C',
+                      backgroundColor: 'transparent',
                     }}
                   >
                     <Link to="/edit-profile"> EDIT PROFILE </Link>
@@ -104,6 +105,7 @@ const NavBar = observer(() => {
                       fontWeight:
                         currentPage === '/my-post' ? 'bold' : 'normal',
                       color: currentPage === '/my-post' ? '#2EAF7D' : '#02353C',
+                      backgroundColor: 'transparent',
                     }}
                   >
                     <Link to="/my-post"> MY POST </Link>
@@ -114,6 +116,7 @@ const NavBar = observer(() => {
                       fontWeight:
                         currentPage === '/favourite-post' ? 'bold' : 'normal',
                       color: '#02353C',
+                      backgroundColor: 'transparent',
                     }}
                   >
                     <Link to="/favourite-post"> FAVOURITE POST </Link>
