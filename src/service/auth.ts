@@ -99,7 +99,7 @@ async function signIn_Google() {
   provider.addScope('https://www.googleapis.com/auth/contacts.readonly')
   provider.addScope('https://www.googleapis.com/auth/userinfo.email')
   provider.addScope('https://www.googleapis.com/auth/userinfo.profile')
-  provider.setCustomParameters({ hd: 'ku.th' })
+  
   try {
     console.log('signIn_Google')
     const userCredential = await signInWithPopup(firebaseAuth, provider)
