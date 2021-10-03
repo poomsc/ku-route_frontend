@@ -20,6 +20,7 @@ import {
   get_one_post,
 } from 'service/system'
 import applicationStore from 'stores/applicationStore'
+import { convertTStoDate } from './AllPost'
 import { create_comment, like, disable } from 'service/user'
 import { getDocLike, getLikeOfPost } from 'service/system'
 import { awaitExpression } from '@babel/types'
@@ -31,26 +32,18 @@ const PostPage = () => {
   const [infocommentData, setInfoCommentData] = useState<DocumentData>()
   const [likeData, setLikeData] = useState<boolean | null>()
   const [amountLike, setAmountLike] = useState<DocumentData>()
+  const [commentDescription, setCommentDescription] = useState<string>('')
 
-  const handleOnAddComment = () => {
-    if (!applicationStore.user) return
-    // create_comment({
-
-    // })
-  }
+  const currentViewPost = localStorage.getItem('currentViewPost')
 
   useEffect(() => {
     async function fetch() {
-      const currentViewPost = localStorage.getItem('currentViewPost')
       if (!currentViewPost) return
       const post = (await get_one_post(currentViewPost)) as DocumentData
       const info = (await get_info(post?.AccountID)) as DocumentData
-      const comment = (await get_comment(
-        'x6XyIHVqD9BVslonhypR'
-      )) as DocumentData
-      const info_comment = (await get_info_comment(
-        'x6XyIHVqD9BVslonhypR'
-      )) as Array<string>
+      const comment = (await get_comment(currentViewPost)) as DocumentData
+      const infoComment = (await get_info_comment(comment)) as DocumentData[]
+      const countLike = await getLikeOfPost(currentViewPost)
 
       if (!applicationStore.user) {
         setLikeData(null)
@@ -60,14 +53,23 @@ const PostPage = () => {
         )
         setLikeData(LikeDoc?.Status)
       }
+      // const countLike = await getLikeOfPost(currentViewPost)
+      setAmountLike(countLike)
 
-      setPostData(post)
+      setPostData(post[1])
       setInfoData(info)
       setCommentData(comment)
-      setInfoCommentData(info_comment)
+      setInfoCommentData(infoComment)
+      setAmountLike(countLike)
     }
     fetch()
   }, [])
+
+  // console.log(infocommentData)
+  // if (!!mockInfoComment) {
+  //   console.log(commentData)
+  //   console.log(mockInfoComment.length)
+  // }
 
   const handleOnLike = async () => {
     const currentViewPost = localStorage.getItem('currentViewPost')
@@ -78,18 +80,44 @@ const PostPage = () => {
     setLikeData(!status)
     const countLike = await getLikeOfPost(currentViewPost)
     setAmountLike(countLike)
+    console.log(amountLike)
   }
 
   const handleOnUnlike = async () => {
     const currentViewPost = localStorage.getItem('currentViewPost')
     if (!applicationStore.user || !currentViewPost) return
     const likeID = 'Like:' + applicationStore.user.uid + '_' + currentViewPost
-    disable({}, likeID, 'Like')
+    await disable({}, likeID, 'Like')
 
     const status = likeData
     setLikeData(!status)
     const countLike = await getLikeOfPost(currentViewPost)
     setAmountLike(countLike)
+  }
+
+  const handleOnAddComment = async () => {
+    const currentViewPost = localStorage.getItem('currentViewPost')
+    if (!applicationStore.user || !currentViewPost || commentDescription == '')
+      return
+    console.log(commentDescription)
+    create_comment({
+      AccountID: applicationStore.user.uid,
+      PostID: currentViewPost,
+      Description: commentDescription,
+    })
+    setTimeout(() => {
+      fetchComment(currentViewPost)
+    }, 0)
+  }
+
+  async function fetchComment(currentViewPost: string) {
+    const comment = (await get_comment(currentViewPost)) as DocumentData
+    const infoComment = (await get_info_comment(comment)) as DocumentData[]
+    console.log(comment)
+    console.log(infoComment)
+    setCommentData(comment)
+    console.log(commentData)
+    setInfoCommentData(infoComment)
   }
 
   // console.log(infocommentData)
@@ -113,6 +141,8 @@ const PostPage = () => {
         currentSearch.split('(')[1].replace(')', ''),
       ]
     : 'รหัสวิชา | SubjectName'
+  const mockComment = !!commentData ? commentData : ['']
+  const mockInfoComment = !!infocommentData ? infocommentData : ['']
   //const [allTag, setAllTag] = useState<string[]>(mockTags)
   //console.log(mockTags)
   //console.log(allTag)
@@ -133,16 +163,8 @@ const PostPage = () => {
     '#74C493',
   ]
 
-  //let mockComment = []
-  if (infocommentData && commentData) {
-  }
-  const mockComment = [
-    ['ขอบคุณที่แชร์ครับ ^_^', 'MAMMOTH123', '1'],
-    ['พอจะมีของวิชา Digital Design มั้ยครับ', 'XanXiah', '2'],
-    ['ขอด้วยคนคร้าบบ', 'Max', '2'],
-  ]
-  const [allComment, setAllComment] =
-    useState<(string | number)[][]>(mockComment)
+  // const [allComment, setAllComment] =
+  //   useState<(string | number)[][]>(mockComment)
 
   const maxColor = colors.length
   return (
@@ -459,7 +481,7 @@ const PostPage = () => {
               paddingRight: '0vw',
             }}
           >
-            &nbsp;&nbsp;6&nbsp;&nbsp;
+            &nbsp;&nbsp;{commentData?.length}&nbsp;&nbsp;
           </div>
           <img
             className="float-right mt-2"
@@ -471,7 +493,7 @@ const PostPage = () => {
           />
         </div>
 
-        {allComment.map((comment) => (
+        {mockInfoComment?.map((infoComment, index) => (
           <div className="d-block mx-auto px-5">
             <div
               className="d-block d-inline-flex"
@@ -494,7 +516,7 @@ const PostPage = () => {
                   border: 'none',
                 }}
               >
-                {comment[0]}
+                {mockComment[index]?.Description}
               </div>
               <div className="py-2">
                 <img
@@ -527,7 +549,7 @@ const PostPage = () => {
                 >
                   &nbsp;&nbsp;by&nbsp;&nbsp;
                   <br />
-                  &nbsp;&nbsp;{comment[2]}&nbsp;&nbsp;&nbsp;&nbsp;
+                  &nbsp;&nbsp;{convertTStoDate(mockComment[index]?.DateEdited)}
                 </div>
                 <div
                   className="d-inline-flex py-2"
@@ -538,7 +560,7 @@ const PostPage = () => {
                     border: 'none',
                   }}
                 >
-                  {comment[1]}
+                  {infoComment?.DisplayName}
                 </div>
               </div>
             </div>
@@ -568,6 +590,7 @@ const PostPage = () => {
               type="text"
               className="form-control"
               placeholder="ตอบกลับโพสต์นี้..."
+              onChange={(e) => setCommentDescription(e.target.value)}
             />
             <button
               type="submit"
@@ -588,6 +611,7 @@ const PostPage = () => {
                   border: 'none',
                 }}
                 src={sendArrow}
+                onClick={handleOnAddComment}
               />
             </button>
           </div>

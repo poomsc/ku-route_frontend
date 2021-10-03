@@ -29,6 +29,7 @@ export async function upload_file(file: File, PostID: string) {
           console.log('Upload is running')
           break
       }
+      return false
     },
     (error) => {
       // A full list of error codes is available at
@@ -47,12 +48,14 @@ export async function upload_file(file: File, PostID: string) {
           // Unknown error occurred, inspect error.serverResponse
           break
       }
+      return null
     },
     () => {
       // Upload completed successfully, now we can get the download URL
       getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
         console.log('File available at', downloadURL)
       })
+      return true
     }
   )
 }
