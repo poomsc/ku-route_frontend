@@ -62,8 +62,8 @@ const VersatilePost = observer(() => {
   const isNewPost = pathType[pathname]
 
   const history = useHistory()
-  const backToHome = () => {
-    history.push('/')
+  const goToMyPost = () => {
+    history.push('/my-post')
   }
 
   const handleOnTagChange = (value: string, event: 'add' | 'remove') => {
@@ -86,11 +86,13 @@ const VersatilePost = observer(() => {
 
   const onSearchChange = (event: any) => {
     setSubjects(
-      _subjects.filter((s) => s.text.includes(event.target.value)).slice(0, 10)
+      _subjects.filter((s) =>
+        s.text.toLowerCase().includes(event.target.value.toLowerCase())
+      )
     )
   }
 
-  const handelOnCreatePost = () => {
+  const handelOnCreatePost = async () => {
     if (
       !topicSelected ||
       filesUpload.status !== 'done' ||
@@ -98,7 +100,7 @@ const VersatilePost = observer(() => {
     )
       return
     // create_post
-    create_post(
+    await create_post(
       {
         AccountID: applicationStore.user.uid,
         TagID: tagsSelected,
@@ -107,7 +109,7 @@ const VersatilePost = observer(() => {
         Description: description,
       },
       filesUpload.allFiles,
-      backToHome
+      goToMyPost
     )
   }
 

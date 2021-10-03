@@ -1,7 +1,7 @@
 import './App.css'
 import React, { useEffect } from 'react'
 import Routes from 'routes/index'
-import { signOut, signIn_Google } from 'service/auth'
+import { signOut, signInWithGoogle } from 'service/auth'
 import {
   delete_post,
   get_comment,
@@ -9,7 +9,6 @@ import {
   get_my_post,
   delete_comment,
   get_file,
-  get_pathfile,
   delete_file,
   get_one_post,
   get_faculty,

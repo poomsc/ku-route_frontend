@@ -105,7 +105,8 @@ const AllPostPage = () => {
                   style={{ height: '41px' }}
                 >
                   {menu[1].Description}
-                  <p className="font-weight-bold cursor-pointer">
+                  <p className="font-weight-bold cursor-pointer"
+                    onClick={() => handleOnViewPage(PostID)}>
                     {menu[1].Description.length > 40 ? 'ดูเพิ่มเติม...' : null}
                   </p>
                 </div>

@@ -9,27 +9,21 @@ import {
   where,
   deleteDoc,
   DocumentData,
+  orderBy,
 } from 'firebase/firestore'
-import {
-  getStorage,
-  ref,
-  listAll,
-  deleteObject,
-  getDownloadURL,
-} from 'firebase/storage'
+import { ref, listAll, deleteObject, getDownloadURL } from 'firebase/storage'
 import { firebaseApp, storage } from 'config/firebase'
 
 const db = getFirestore(firebaseApp)
 
-export async function get_faculty() {
+async function get_faculty() {
   try {
     console.log('get_faculty')
-    let faculty = [] as any
     const querySnapshot = await getDocs(collection(db, 'Faculty'))
-    querySnapshot.forEach((doc) => {
-      faculty.push(doc.data().name)
-    })
-    return faculty
+    const Facultys = querySnapshot.docs.map(
+      (doc) => doc.data().name
+    ) as string[]
+    return Facultys
   } catch (error) {
     console.log('get_faculty', error)
     // alert(error)
@@ -37,7 +31,7 @@ export async function get_faculty() {
   }
 }
 
-export async function get_info(accountid: string) {
+async function get_info(accountid: string) {
   try {
     console.log('get_info')
     const docRef = doc(db, 'Account', accountid)
@@ -58,22 +52,13 @@ export async function get_info(accountid: string) {
   }
 }
 
-export async function get_my_post(AccountID: string) {
+async function get_my_post(AccountID: string) {
   try {
-    console.log('get_post')
-    const q = query(
-      collection(db, 'Account'),
-      where('AccountID', '==', AccountID)
-    )
+    console.log('get_my_post')
+    const q = query(collection(db, 'Post'), where('AccountID', '==', AccountID))
     const querySnapshot = await getDocs(q)
-    const my_post = [] as any
-    querySnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
-      my_post.push([doc.id, doc.data()])
-      // console.log(doc.id, ' => ', doc.data())
-    })
-    console.log(my_post)
-    return my_post
+    const Posts = querySnapshot.docs.map((doc) => [doc.id, doc.data()])
+    return Posts
   } catch (error) {
     console.log('get_post', error)
     // alert(error)
@@ -81,15 +66,15 @@ export async function get_my_post(AccountID: string) {
   }
 }
 
-export async function get_one_post(PostID: string) {
+async function get_one_post(PostID: string) {
   try {
     console.log('get_one_post')
     const docRef = doc(db, 'Post', PostID)
     const docSnap = await getDoc(docRef)
 
     if (docSnap.exists()) {
-      console.log('Document data:', docSnap.data())
-      return docSnap.data()
+      // console.log('Document data:', docSnap.data())
+      return [docSnap.id, docSnap.data()]
     } else {
       // doc.data() will be undefined in this case
       console.log('No such document!')
@@ -102,74 +87,65 @@ export async function get_one_post(PostID: string) {
   }
 }
 
-export async function get_comment(PostID: string) {
+async function get_comment(PostID: string) {
   try {
     console.log('get_comment')
-    const q = query(collection(db, 'Comment'), where('PostID', '==', PostID))
+    const q = query(
+      collection(db, 'Comment'),
+      where('PostID', '==', PostID),
+      orderBy('DateEdited', 'desc')
+    )
     const querySnapshot = await getDocs(q)
-    const all_comment = [] as DocumentData
-    querySnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
-      // console.log(doc.id, ' => ', doc.data())
-      all_comment.push(doc.data())
-    })
-    return all_comment
+    const Comments = querySnapshot.docs.map((doc) => doc.data())
+    return Comments
   } catch (error) {
     console.log('get_comment', error)
     // alert(error)
   }
 }
 
-export async function get_info_comment(comment: DocumentData) {
+async function get_info_comment(comment: DocumentData) {
   try {
     console.log('get_info_comment')
-    let infoComment = [] as DocumentData[]
-    comment.forEach(async (cm) => {
-      const info = (await get_info(cm.AccountID)) as DocumentData
-      infoComment.push(info)
-    })
-    return infoComment
+    const infoComments = await Promise.all(
+      comment.map((cm) => get_info(cm.AccountID))
+    )
+    return infoComments
   } catch (error) {
     console.log('get_info_comment', error)
     // alert(error)
   }
 }
 
-export async function get_file(PostID: string) {
-  try {
-    console.log('get_file')
-    const listRef = ref(storage, PostID)
-    // Find all the prefixes and items.
-    const result = await listAll(listRef)
-    const all_filename = [] as any
-    result.items.forEach((file) => {
-      all_filename.push(file.name)
-    })
-    return all_filename
-  } catch (error) {
-    console.log('get_file', error)
-    // alert(error)
-  }
-}
+// export async function get_file(PostID: string) {
+//   try {
+//     console.log('get_file')
+//     const listRef = ref(storage, PostID)
+//     // Find all the prefixes and items.
+//     const result = await listAll(listRef)
+//     const allFileName = result.items.map(file => file.name)
+//     return allFileName
+//   } catch (error) {
+//     console.log('get_file', error)
+//     // alert(error)
+//   }
+// }
 
-export async function get_pathfile(PostID: string) {
+async function get_file(PostID: string) {
   try {
     // Create a reference under which you want to list
-    const listRef = ref(storage, PostID)
+    const listRef = ref(storage, PostID + '/')
     // Find all the prefixes and items.
     const result = await listAll(listRef)
-    const all_path = [] as any
     // console.log(result)
-    result.items.forEach((file) => {
-      all_path.push(file.fullPath)
-    })
-    return all_path
+    const allFilePath = result.items.map((file) => file.fullPath)
+    return result.items
   } catch (error) {
-    console.log('get_pathfile', error)
+    console.log('get_file', error)
   }
 }
 
-export async function delete_post(PostID: string) {
+async function delete_post(PostID: string) {
   try {
     await deleteDoc(doc(db, 'Post', PostID))
     console.log('Delete successfully')
@@ -178,8 +154,7 @@ export async function delete_post(PostID: string) {
   }
 }
 
-export async function delete_file(filepath: string) {
-  const storage = getStorage()
+async function delete_file(filepath: string) {
   // Create a reference to the file to delete
   const fileRef = ref(storage, filepath)
 
@@ -191,7 +166,7 @@ export async function delete_file(filepath: string) {
   }
 }
 
-export async function delete_comment(CommentID: string) {
+async function delete_comment(CommentID: string) {
   try {
     await deleteDoc(doc(db, 'Comment', CommentID))
     console.log('Delete successfully')
@@ -200,7 +175,7 @@ export async function delete_comment(CommentID: string) {
   }
 }
 
-export async function getDocLike(LikeID: string) {
+async function getDocLike(LikeID: string) {
   try {
     const LikeRef = doc(db, 'Like', LikeID)
     const LikeSnap = await getDoc(LikeRef)
@@ -216,7 +191,7 @@ export async function getDocLike(LikeID: string) {
   }
 }
 
-export async function getLikeOfPost(PostID: string) {
+async function getLikeOfPost(PostID: string) {
   try {
     const q = query(
       collection(db, 'Like'),
@@ -225,15 +200,25 @@ export async function getLikeOfPost(PostID: string) {
     )
     const querySnapshot = await getDocs(q)
     // console.log(querySnapshot)
-    const all_like = [] as any
-    querySnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
-      // console.log(doc.id, ' => ', doc.data())
-      all_like.push(doc.data())
-    })
+    const Likes = querySnapshot.docs.map((doc) => doc.data())
     // console.log("count of like: " + all_like.length)
-    return all_like.length
+    return Likes.length
   } catch (error) {
     console.log(error)
   }
+}
+
+export {
+  get_faculty,
+  get_info,
+  get_my_post,
+  get_one_post,
+  get_comment,
+  get_info_comment,
+  get_file,
+  delete_post,
+  delete_file,
+  delete_comment,
+  getDocLike,
+  getLikeOfPost,
 }

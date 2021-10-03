@@ -26,6 +26,7 @@
     "react-dropzone-uploader": "^2.11.0",
     "react-icons": "^4.2.0",
     "react-images-upload": "^1.2.8",
+    "react-pdf": "^5.4.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "react-scrollbars-custom": "^4.0.27",

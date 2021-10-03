@@ -75,8 +75,8 @@ async function create_post(
   try {
     console.log('Post is being added...')
     const docRef = await addDoc(collection(firestore, 'Post'), data)
-    allFiles.forEach((file) => upload_file(file.file, docRef.id))
-    console.log('Post written with ID: ', docRef.id)
+    await Promise.all(allFiles.map((file) => upload_file(file.file, docRef.id)))
+    console.log('Post was written')
     callBack && callBack()
     return docRef.id
   } catch (e) {
@@ -101,7 +101,7 @@ async function create_comment({
   try {
     console.log('Comment is being added...')
     const docRef = await addDoc(collection(firestore, 'Comment'), data)
-    console.log('Comment written with ID: ', docRef.id)
+    console.log('Comment was written')
     return true
   } catch (e) {
     console.error('Error adding Comment: ', e)
@@ -118,12 +118,12 @@ async function like(AccountID: string, PostID: string) {
     Status: true,
   }
   try {
-    console.log('Like is being added...')
+    console.log('Like...')
     const docRef = await setDoc(
       doc(firestore, 'Like', 'Like:' + AccountID + '_' + PostID),
       data
     )
-    console.log('Like was written') // with ID ");
+    //console.log('Like was written') // with ID ");
   } catch (e) {
     console.error('Error adding Like: ', e)
   }
