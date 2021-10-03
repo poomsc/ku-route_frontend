@@ -1,5 +1,5 @@
 import React from 'react'
-import '../Post.css'
+import '../PostStyles.css'
 import { Container, Card } from 'react-bootstrap'
 import { useState, useEffect } from 'react'
 import user_icon from './../assets/icons/user-icon.png'
@@ -168,247 +168,76 @@ const PostPage = () => {
 
   const maxColor = colors.length
   return (
-    <div className="white-bg" style={{ paddingTop: '90px' }}>
-      <Container
-        className="box-shadow bg-secondary mx-auto mb-5"
-        style={{
-          height: '350px',
-          left: '157px',
-          top: '190px',
-          width: '1126px',
-          backgroundColor: 'rgba(255, 255, 255, 0.5)',
-          boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-          borderRadius: '20px',
-        }}
-      >
+    <div className="white-bg pt-5">
+      <Container className="style1 box-shadow bg-secondary mx-auto my-5 px-5 p-5">
         <div className="">
-          <div
-            className="d-inline-flex pl-3"
-            style={{
-              height: '32px',
-              top: '228px',
-              borderRadius: '5px',
-              marginBottom: '5px',
-            }}
-          >
-            {mockTags.map((tag, idx) => (
-              <div
-                className="max-w-content cursor-pointer align-self-center px-3 pt-1 ml-3 "
-                key={tag}
-                style={{
-                  backgroundColor: colors[maxColor - (idx % maxColor) - 1],
-                  color: '#FFFFFF',
-                  top: '233px',
-                  fontSize: '18px',
-                  lineHeight: '21px',
-                  alignItems: 'center',
-                  textAlign: 'center',
-                  fontStyle: 'normal',
-                  fontWeight: 'bold',
-                  fontFamily: 'Roboto',
-                  borderRadius: '5px',
-                  marginTop: '75px',
-                }}
-              >
-                <div
-                  className=""
-                  style={{
-                    width: '91px',
-                    height: '25px',
-                    left: '222px',
-                    top: '233px',
-                    fontSize: '18px',
-                    lineHeight: '21px',
-                    alignItems: 'center',
-                    textAlign: 'center',
-                    fontStyle: 'normal',
-                    fontWeight: 'bold',
-                    fontFamily: 'Roboto',
-                    marginTop: '3px',
-                  }}
-                >
-                  {tag}
-                </div>
+          <div className="w-content d-flex justify-content-between">
+            <div className="max-w-content d-inline-block">
+              <div className="h-100 d-flex align-items-center flex-wrap">
+                {mockTags.map((tag, idx) => (
+                  <div
+                    className="d-inline-block mr-2 rounded-lg"
+                    key={tag}
+                    style={{
+                      backgroundColor: colors[maxColor - (idx % maxColor) - 1],
+                    }}
+                  >
+                    <div className="style4 p-1 px-3 max-w-content">{tag}</div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-          <div
-            className="float-right "
-            style={{
-              height: '80px',
-              color: '#02353C',
-              fontStyle: 'normal',
-              fontWeight: 'bold',
-              fontFamily: 'Roboto',
-              display: 'flex',
-              alignItems: 'center',
-              fontSize: '18px',
-              lineHeight: '21px',
-              textAlign: 'right',
-              marginTop: '15px',
-            }}
-          >
-            {mockSubjectName[0]} | {mockSubjectName[1]}
+            </div>
+            <div
+              className="style5 d-inline-block py-2 m-0 text-right"
+              style={{ maxWidth: '35%' }}
+            >
+              {mockSubjectName[0]} | {mockSubjectName[1]}
+            </div>
           </div>
         </div>
-        <h2
-          className="d-flex pt-4"
-          style={{
-            fontWeight: 'bold',
-            fontFamily: 'Roboto',
-            display: 'flex',
-            alignItems: 'center',
-            fontSize: '48px',
-            lineHeight: '56px',
-            color: '#525252',
-            left: '208px',
-            top: '273px',
-            paddingLeft: '25px',
-          }}
-        >
+        <div className="style6 d-flex pt-3" style={{ maxWidth: '70%' }}>
           {title}
-        </h2>
-        <div>
-          <div
-            className="d-flex d-inline-flex"
-            style={{
-              fontFamily: 'Roboto',
-              fontStyle: 'normal',
-              lineHeight: '28px',
-              fontWeight: 'bold',
-              fontSize: '24px',
-              color: '#525252',
-              height: '70px',
-              alignItems: 'center',
-              paddingLeft: '25px',
-              paddingBottom: '15px',
-            }}
-          >
-            โพสต์โดย &nbsp;{' '}
-            <img
-              src={user_icon}
-              className="mt-0"
-              style={{
-                padding: '2px',
-                background: '#E4E6E7',
-                width: '25px',
-                height: '25px',
-                borderRadius: '50px',
-              }}
-            />{' '}
-            &nbsp;{postOwner}
-          </div>
-          <div
-            className="float-right mt-4"
-            style={{
-              fontSize: '18px',
-              lineHeight: '11px',
-              fontFamily: 'Roboto',
-              fontStyle: 'normal',
-              fontWeight: 'normal',
-              color: '#000000',
-              textAlign: 'right',
-              height: '37px',
-              top: '416px',
-            }}
-          >
-            {datePosted}
+        </div>
+        <div className="mt-3">
+          <div className="w-100 d-flex justify-content-between m-0">
+            <div className="d-inline-block">
+              <div className="d-flex">
+                <p className="text h4 d-inline-block m-0 mt-1 mr-2">โพสต์โดย</p>
+                <img
+                  className="style8 d-inline-block mx-2"
+                  src={user_icon}
+                />{' '}
+                <p className="text h4 font-weight-bold d-inline-vlock mt-1">
+                  {postOwner}
+                </p>
+              </div>
+            </div>
+            <div className="style9 d-inline-block">{datePosted}</div>
           </div>
         </div>
-        <div
-          className="d-flex py-3 pl-5 pb-5 mb-5"
-          style={{
-            color: '#525252',
-            fontFamily: 'Roboto',
-            fontStyle: 'normal',
-            fontWeight: 'normal',
-            fontSize: '24px',
-            lineHeight: '28px',
-          }}
-        >
-          {descript}
-        </div>
+
+        <div className="style10 text-justify mt-4 pt-4 pb-3">{descript}</div>
       </Container>
 
-      <Container
-        className="box-shadow bg-secondary mx-auto mb-4 px-5 pt-4"
-        style={{
-          borderRadius: '20px',
-          boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-          background: 'rgba(255, 255, 255, 0.5)',
-          width: '1126px',
-          height: '308px',
-        }}
-      >
-        <h5
-          className="py-4 px-2"
-          style={{
-            fontWeight: 'bold',
-            fontFamily: 'Roboto',
-            fontStyle: 'normal',
-            fontSize: '24px',
-            lineHeight: '28px',
-            color: '#525252',
-          }}
-        >
-          ไฟล์ที่แนบมาด้วย
-        </h5>
-        <div className="d-flex pb-4 px-3 mb-5">
+      <Container className="style1 box-shadow bg-secondary mx-auto my-5 p-5 pt-4">
+        <h5 className="style12 mb-4">ไฟล์ที่แนบมาด้วย</h5>
+        <div className="max-w-content d-flex align-items-center flex-wrap">
           {allFile.map((file) => (
-            <div
-              className="mr-2 ml-4 mb-4"
-              style={{
-                border: '1px solid #BFBFBF ',
-                background: '#FAFAFA',
-                borderRadius: '10px',
-                boxSizing: 'border-box',
-              }}
-              key={file[0]}
-            >
-              <div
-                className="d-flex flex-column mb-3"
-                style={{
-                  fontFamily: 'Roboto',
-                  fontStyle: 'normal',
-                  fontWeight: 'normal',
-                  color: '#000000',
-                  fontSize: '10px',
-                  display: 'flex',
-                  lineHeight: '12px',
-                  textAlign: 'center',
-                }}
-              >
-                {file[0].split('.')[1] == 'pdf' ? (
-                  <div className="d-block mx-auto">
-                    {' '}
-                    <img
-                      src={pdf}
-                      style={{ width: '111px', height: '111px' }}
-                    />{' '}
-                  </div>
-                ) : (
-                  <div className="d-block mx-auto">
-                    <img
-                      src={jpg}
-                      style={{ width: '111px', height: '111px' }}
-                    />{' '}
-                  </div>
-                )}
-
+            <div className="style13 mr-4 mb-4" key={file[0]}>
+              <div className="style14 d-flex flex-column pb-3">
                 <div className="d-block mx-auto">
+                  <img
+                    src={file[0].split('.')[1] == 'pdf' ? pdf : jpg}
+                    style={{ width: '125px', height: '125px' }}
+                  />
+                </div>
+                <div className="style15 d-block mx-auto mb-0">
                   <div
-                    style={{
-                      marginBottom: '0px',
-                      fontFamily: 'Roboto',
-                      fontSize: '13px',
-                      lineHeight: '15px',
-                      fontWeight: 'normal',
-                      fontStyle: 'normal',
-                    }}
+                    className="text-truncate mb-3 px-3"
+                    style={{ maxWidth: '125px' }}
                   >
                     {file[0]}
                   </div>
-                  <br />
                   {file[1]}
                 </div>
               </div>
@@ -417,200 +246,106 @@ const PostPage = () => {
         </div>
       </Container>
 
-      <Container
-        className="box-shadow bg-white mx-auto mb-4 px-0 pt-4"
-        style={{
-          width: '1200px',
-          height: '310px',
-          left: '157px',
-          top: '1017px',
-          borderRadius: '5px 5px 5px 5px',
-        }}
-      >
-        <div
-          style={{
-            paddingLeft: '3vw',
-            paddingRight: '3vw',
-            marginBottom: '30px',
-            lineHeight: '38px',
-            height: '35px',
-          }}
-        >
-          <div
-            className="d-flex pl-3 pb-2 d-inline-flex"
-            style={{
-              fontFamily: 'Roboto',
-              fontStyle: 'normal',
-              fontSize: '25px',
-              fontWeight: 'bold',
-              color: '#525252',
-            }}
-          >
-            การตอบกลับ
-          </div>
-          <div
-            className="float-right mt-0 "
-            style={{
-              fontFamily: 'Roboto',
-              fontStyle: 'normal',
-              fontSize: '15px',
-              fontWeight: 'bold',
-              color: '#2EAF7D',
-              paddingRight: '0vw',
-            }}
-          >
-            &nbsp;&nbsp;{amountLike}&nbsp;&nbsp;
-          </div>
-          <img
-            className="float-right mt-2 cursor-pointer"
-            onClick={likeData ? handleOnUnlike : handleOnLike}
-            style={{
-              width: '20px',
-              height: '20px',
-            }}
-            src={likeData ? Like : Unlike}
-          />
-          <div
-            className="float-right mt-0 "
-            style={{
-              fontFamily: 'Roboto',
-              fontStyle: 'normal',
-              fontSize: '15px',
-              fontWeight: 'bold',
-              color: '#3FD0C9',
-              paddingRight: '0vw',
-            }}
-          >
-            &nbsp;&nbsp;{commentData?.length}&nbsp;&nbsp;
-          </div>
-          <img
-            className="float-right mt-2"
-            style={{
-              width: '20px',
-              height: '20px',
-            }}
-            src={Comment}
-          />
-        </div>
-
-        {mockInfoComment?.map((infoComment, index) => (
-          <div className="d-block mx-auto px-5">
-            <div
-              className="d-block d-inline-flex"
-              style={{
-                marginBottom: '15px',
-                boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                borderRadius: '5px 5px 5px 5px',
-                height: '50px',
-                width: '1060px',
-              }}
-            >
-              <div
-                style={{
-                  fontSize: '18px',
-                  color: '#525252',
-                  width: '860px',
-                  height: '50px',
-                  paddingLeft: '3vw',
-                  lineHeight: '50px',
-                  border: 'none',
-                }}
-              >
-                {mockComment[index]?.Description}
-              </div>
-              <div className="py-2">
-                <img
-                  src={userIcon}
-                  style={{
-                    border: 'none',
-                    background: '#E4E6E7',
-                    width: '35px',
-                    height: '35px',
-                    borderRadius: '50px',
-                  }}
-                />
-              </div>
-              <div
-                className="d-inline-flex"
-                style={{
-                  width: '165px',
-                  height: '15px',
-                }}
-              >
-                <div
-                  className="py-2"
-                  style={{
-                    color: '#525252',
-                    fontSize: '12px',
-                    fontWeight: 'lighter',
-                    border: 'none',
-                    width: '23px',
-                  }}
-                >
-                  &nbsp;&nbsp;by&nbsp;&nbsp;
-                  <br />
-                  &nbsp;&nbsp;{convertTStoDate(mockComment[index]?.DateEdited)}
+      <Container className="style1 box-shadow bg-secondary px-0 mt-5">
+        <div className="mx-auto px-5 pt-5 pb-4">
+          <div className="style17 mb-5">
+            <div className="w-content d-flex justify-content-between">
+              <div className="style18 d-inline-block">การตอบกลับ</div>
+              <div className="d-inline-block">
+                <div className="style20 mt-0 d-inline-block pr-1 mr-3">
+                  <img
+                    className="mr-2"
+                    style={{
+                      width: '20px',
+                      height: '20px',
+                    }}
+                    src={Comment}
+                  />
+                  <p className="h5 font-weight-bold d-inline-block">
+                    {commentData?.length}
+                  </p>
                 </div>
-                <div
-                  className="d-inline-flex py-2"
-                  style={{
-                    color: '#525252',
-                    fontSize: '15px',
-                    fontWeight: 'bolder',
-                    border: 'none',
-                  }}
-                >
-                  {infoComment?.DisplayName}
+                <div className="style19 mt-0 d-inline-block">
+                  <img
+                    className="mr-2 cursor-pointer"
+                    onClick={likeData ? handleOnUnlike : handleOnLike}
+                    style={{
+                      marginTop: '-10px',
+                      width: '20px',
+                      height: '20px',
+                    }}
+                    src={likeData ? Like : Unlike}
+                  />
+                  <p className="h5 font-weight-bold d-inline-block">
+                    {amountLike}
+                  </p>
                 </div>
               </div>
             </div>
           </div>
-        ))}
+          <div>
+            {mockInfoComment?.map((infoComment, index) => (
+              <div className="style21 d-block bg-white mx-auto w-100 p-4 mb-3">
+                <div className="w-content d-flex justify-content-between">
+                  <div
+                    className="d-flex align-items-center"
+                    style={{ width: '80%' }}
+                  >
+                    <p className="style22 text-break pl-3">
+                      {mockComment[index]?.Description}
+                    </p>
+                  </div>
 
-        <div
-          className="d-block mx-auto px-5 py-3"
-          style={{
-            width: '1140px',
-            height: '62px',
-            top: '1017px',
-            borderRadius: '0rem 0rem 5px 5px',
-            background: '#D9D9D9',
-            margin: '0px',
-            boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-          }}
-        >
-          <div className="form-group shadow d-flex">
+                  <div className="d-inline-block pl-4">
+                    <div
+                      className=" d-inline-block"
+                      style={{ verticalAlign: 'top' }}
+                    >
+                      <img className="style23 mr-3" src={userIcon} />
+                    </div>
+                    <div
+                      className="d-inline-block max-w-content"
+                      style={{ width: '70%' }}
+                    >
+                      <p className="h6 d-inline-block mr-1 my-0">by</p>
+                      <p
+                        className="style25 d-inline-flex text-truncate my-0 cursor-pointer"
+                        style={{ width: '75%' }}
+                      >
+                        {infoComment?.DisplayName}
+                      </p>
+                      <div className="style24 d-block">
+                        {convertTStoDate(mockComment[index]?.DateEdited)}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="style26 d-block mx-auto px-5 pt-4 pb-1">
+          <div
+            className="style27 form-group shadow d-flex"
+            style={{ borderRadius: '10px' }}
+          >
             <input
-              style={{
-                borderRadius: '4px 0px 0px 4px',
-                background: '#FFFFFF',
-                border: 'none',
-                width: '1160px',
-                height: '37px',
-              }}
               type="text"
-              className="form-control"
+              className="form-control pl-3 border-0"
+              style={{ height: '40px', borderRadius: '10px 0px 0px 10px' }}
               placeholder="ตอบกลับโพสต์นี้..."
               onChange={(e) => setCommentDescription(e.target.value)}
             />
             <button
               type="submit"
-              className="btn btn-primary btn-sm"
+              className="style28 btn btn-primary btn-sm px-3 border-0"
               style={{
-                borderRadius: '0px 4px 4px 0px',
                 backgroundColor: '#FFFFFF',
-                border: 'none',
-                height: '37px',
+                borderRadius: '0 10px 10px 0',
               }}
             >
               <img
-                style={{
-                  width: '15px',
-                  height: '15px',
-                  background: '#FFFFFF',
-                  borderRadius: '0px 4px 4px 0px',
-                  border: 'none',
-                }}
+                className="style29"
                 src={sendArrow}
                 onClick={handleOnAddComment}
               />
