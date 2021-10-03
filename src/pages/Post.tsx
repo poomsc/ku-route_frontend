@@ -255,7 +255,7 @@ const PostPage = () => {
       </Container>
 
       <Container className="style1 box-shadow bg-secondary px-0 mt-5">
-        <div  className="mx-auto px-5 py-4">
+        <div  className="mx-auto px-5 pt-5 pb-4">
           <div className="style17 mb-5">
             <div className="w-content d-flex justify-content-between">
               <div className="style18 d-inline-block">
