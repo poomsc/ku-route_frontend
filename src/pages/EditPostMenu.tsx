@@ -6,7 +6,7 @@ import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import '../EditPostMenu.css'
 import logo_pdf from '../assets/icons/PDF.png'
-import logo_sort from '../assets/icons/Vector (2).png'
+import logo_sort from '../assets/icons/dropdownArrow.png'
 import logo_image from '../assets/icons/Image.png'
 import logo_delete from '../assets/icons/Vector.png'
 import logo_fix from '../assets/icons/fix.png'
@@ -16,6 +16,7 @@ import { get_my_post, get_one_post } from 'service/system'
 import { convertTStoDate } from './AllPost'
 import { useHistory } from 'react-router'
 import { disable } from 'service/user'
+import { ModalEditPostMenu } from 'components/Modal'
 
 const EditPostMenu = () => {
   const [mypostData, setmypostData] = useState<DocumentData>([])
@@ -45,8 +46,7 @@ const EditPostMenu = () => {
     history.push('/post')
   }
 
-  const handelOnDelete = async (PostID: string) => {
-    disable({}, PostID, 'Post')
+  const handelOnDelete = async () => {
     if (!applicationStore.user) return
     const mypost = (await get_my_post(
       applicationStore.user.uid
@@ -160,12 +160,10 @@ const EditPostMenu = () => {
                     >
                       แก้ไข
                     </div>
-                    <div
-                      onClick={() => handelOnDelete(object[0])}
-                      className="deletebutton max-w-content d-inline-block cursor-pointer"
-                    >
-                      <img src={logo_delete} width="8px" height="10px" />
-                    </div>
+                    <ModalEditPostMenu
+                      PostID={object[0]}
+                      onClick={handelOnDelete}
+                    />
                   </td>
                 </tr>
               ))}
