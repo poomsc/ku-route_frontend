@@ -24,15 +24,19 @@ import { convertTStoDate } from './AllPost'
 import { create_comment, like, disable } from 'service/user'
 import { getDocLike, getLikeOfPost } from 'service/system'
 import { awaitExpression } from '@babel/types'
+import { getDownloadURL, StorageReference } from '@firebase/storage'
+import { Document, Page, pdfjs } from 'react-pdf'
 
 const PostPage = () => {
   const [postData, setPostData] = useState<DocumentData>()
   const [infoData, setInfoData] = useState<DocumentData>()
   const [commentData, setCommentData] = useState<DocumentData>()
   const [infocommentData, setInfoCommentData] = useState<DocumentData>()
-  const [likeData, setLikeData] = useState<boolean | null>()
-  const [amountLike, setAmountLike] = useState<DocumentData>()
+  const [likeData, setLikeData] = useState<boolean>()
+  const [amountLike, setAmountLike] = useState<number>()
   const [commentDescription, setCommentDescription] = useState<string>('')
+  const [allFiles, setAllFiles] = useState<StorageReference[]>()
+  const [linkFiles, setLinkFiles] = useState<string[]>()
 
   const currentViewPost = localStorage.getItem('currentViewPost')
 
@@ -42,45 +46,43 @@ const PostPage = () => {
       const post = (await get_one_post(currentViewPost)) as DocumentData
       const info = (await get_info(post?.AccountID)) as DocumentData
       const comment = (await get_comment(currentViewPost)) as DocumentData
-      const infoComment = (await get_info_comment(comment)) as DocumentData[]
-      const countLike = await getLikeOfPost(currentViewPost)
+      const infoComment = await get_info_comment(comment)
+      const countLike = (await getLikeOfPost(currentViewPost)) as number
+      const files = (await get_file(currentViewPost)) as StorageReference[]
+      const fileUrl = await Promise.all(
+        files.map((file) => getDownloadURL(file))
+      )
 
-      if (!applicationStore.user) {
-        setLikeData(null)
-      } else {
+      console.log(allFiles)
+      console.log(infoComment)
+      console.log(fileUrl)
+
+      if (applicationStore.user) {
         const LikeDoc = await getDocLike(
           'Like:' + applicationStore.user.uid + '_' + currentViewPost
         )
         setLikeData(LikeDoc?.Status)
       }
       // const countLike = await getLikeOfPost(currentViewPost)
-      setAmountLike(countLike)
-
       setPostData(post[1])
       setInfoData(info)
       setCommentData(comment)
       setInfoCommentData(infoComment)
       setAmountLike(countLike)
+      setAllFiles(files)
+      setLinkFiles(fileUrl)
     }
     fetch()
   }, [])
 
-  // console.log(infocommentData)
-  // if (!!mockInfoComment) {
-  //   console.log(commentData)
-  //   console.log(mockInfoComment.length)
-  // }
-
   const handleOnLike = async () => {
     const currentViewPost = localStorage.getItem('currentViewPost')
     if (!applicationStore.user || !currentViewPost) return
-    like(applicationStore.user.uid, currentViewPost)
+    await like(applicationStore.user.uid, currentViewPost)
 
-    const status = likeData
-    setLikeData(!status)
+    setLikeData(!likeData)
     const countLike = await getLikeOfPost(currentViewPost)
     setAmountLike(countLike)
-    console.log(amountLike)
   }
 
   const handleOnUnlike = async () => {
@@ -89,8 +91,7 @@ const PostPage = () => {
     const likeID = 'Like:' + applicationStore.user.uid + '_' + currentViewPost
     await disable({}, likeID, 'Like')
 
-    const status = likeData
-    setLikeData(!status)
+    setLikeData(!likeData)
     const countLike = await getLikeOfPost(currentViewPost)
     setAmountLike(countLike)
   }
@@ -105,28 +106,15 @@ const PostPage = () => {
       PostID: currentViewPost,
       Description: commentDescription,
     })
-    setTimeout(() => {
-      fetchComment(currentViewPost)
-    }, 0)
-  }
-
-  async function fetchComment(currentViewPost: string) {
     const comment = (await get_comment(currentViewPost)) as DocumentData
-    const infoComment = (await get_info_comment(comment)) as DocumentData[]
-    console.log(comment)
-    console.log(infoComment)
-    setCommentData(comment)
-    console.log(commentData)
-    setInfoCommentData(infoComment)
+    const infoComment = await get_info_comment(comment)
+    if (comment?.length && infoComment?.length) {
+      setCommentData(comment)
+      console.log(commentData)
+      setInfoCommentData(infoComment)
+    }
   }
 
-  // console.log(infocommentData)
-  const mockFiles = [
-    ['สรุปบทที่ 1.pdf', '23.40 MB'],
-    ['สรุปบทที่ 2.pdf', '4.70 MB'],
-    ['สรุปบทที่ 3.pdf', '5.20 MB'],
-    ['สรุปแถม.jpg', '2.70 MB'],
-  ]
   let postOwner = infoData?.DisplayName ? infoData?.DisplayName : ''
   let datePosted = postData?.DateEdited
     ? new Date(postData?.DateEdited?.seconds * 1000).toLocaleString()
@@ -141,12 +129,7 @@ const PostPage = () => {
         currentSearch.split('(')[1].replace(')', ''),
       ]
     : 'รหัสวิชา | SubjectName'
-  const mockComment = !!commentData ? commentData : ['']
-  const mockInfoComment = !!infocommentData ? infocommentData : ['']
-  //const [allTag, setAllTag] = useState<string[]>(mockTags)
-  //console.log(mockTags)
-  //console.log(allTag)
-  const [allFile, setAllFile] = useState<string[][]>(mockFiles)
+
   const colors = [
     '#5697C4',
     '#E0598B',
@@ -162,9 +145,6 @@ const PostPage = () => {
     '#E4BE7F',
     '#74C493',
   ]
-
-  // const [allComment, setAllComment] =
-  //   useState<(string | number)[][]>(mockComment)
 
   const maxColor = colors.length
   return (
@@ -222,27 +202,35 @@ const PostPage = () => {
       <Container className="style1 box-shadow bg-secondary mx-auto my-5 p-5 pt-4">
         <h5 className="style12 mb-4">ไฟล์ที่แนบมาด้วย</h5>
         <div className="max-w-content d-flex align-items-center flex-wrap">
-          {allFile.map((file) => (
-            <div className="style13 mr-4 mb-4" key={file[0]}>
-              <div className="style14 d-flex flex-column pb-3">
-                <div className="d-block mx-auto">
-                  <img
-                    src={file[0].split('.')[1] == 'pdf' ? pdf : jpg}
-                    style={{ width: '125px', height: '125px' }}
-                  />
-                </div>
-                <div className="style15 d-block mx-auto mb-0">
-                  <div
-                    className="text-truncate mb-3 px-3"
-                    style={{ maxWidth: '125px' }}
-                  >
-                    {file[0]}
+          {allFiles &&
+            linkFiles &&
+            allFiles.map((file, index) => (
+              <a
+                className="style13 mr-4 mb-4"
+                key={file.name}
+                href={linkFiles[index]}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <div className="style14 d-flex flex-column pb-3">
+                  <div className="d-block mx-auto">
+                    <img
+                      src={file.name.split('.')[1] == 'pdf' ? pdf : jpg}
+                      style={{ width: '125px', height: '125px' }}
+                    />
                   </div>
-                  {file[1]}
+                  <div className="style15 d-block mx-auto mb-0">
+                    <div
+                      className="text-truncate mb-3 px-3"
+                      style={{ maxWidth: '125px' }}
+                    >
+                      {file.name.split('.')[0]}
+                    </div>
+                    {file.name.split('.')[1].toUpperCase()}
+                  </div>
                 </div>
-              </div>
-            </div>
-          ))}
+              </a>
+            ))}
         </div>
       </Container>
 
@@ -284,46 +272,49 @@ const PostPage = () => {
             </div>
           </div>
           <div>
-            {mockInfoComment?.map((infoComment, index) => (
-              <div className="style21 d-block bg-white mx-auto w-100 p-4 mb-3">
-                <div className="w-content d-flex justify-content-between">
-                  <div
-                    className="d-flex align-items-center"
-                    style={{ width: '80%' }}
-                  >
-                    <p className="style22 text-break pl-3">
-                      {mockComment[index]?.Description}
-                    </p>
-                  </div>
-
-                  <div className="d-inline-block pl-4">
+            {infocommentData &&
+              commentData &&
+              infocommentData.map((infoComment, index) => (
+                <div className="style21 d-block bg-white mx-auto w-100 p-4 mb-3">
+                  <div className="w-content d-flex justify-content-between">
                     <div
-                      className=" d-inline-block"
-                      style={{ verticalAlign: 'top' }}
+                      className="d-flex align-items-center"
+                      style={{ width: '80%' }}
                     >
-                      <img className="style23 mr-3" src={userIcon} />
-                    </div>
-                    <div
-                      className="d-inline-block max-w-content"
-                      style={{ width: '70%' }}
-                    >
-                      <p className="h6 d-inline-block mr-1 my-0">by</p>
-                      <p
-                        className="style25 d-inline-flex text-truncate my-0 cursor-pointer"
-                        style={{ width: '75%' }}
-                      >
-                        {infoComment?.DisplayName}
+                      <p className="style22 text-break pl-3">
+                        {commentData[index]?.Description}
                       </p>
-                      <div className="style24 d-block">
-                        {convertTStoDate(mockComment[index]?.DateEdited)}
+                    </div>
+
+                    <div className="d-inline-block pl-4">
+                      <div
+                        className=" d-inline-block"
+                        style={{ verticalAlign: 'top' }}
+                      >
+                        <img className="style23 mr-3" src={userIcon} />
+                      </div>
+                      <div
+                        className="d-inline-block max-w-content"
+                        style={{ width: '70%' }}
+                      >
+                        <p className="h6 d-inline-block mr-1 my-0">by</p>
+                        <p
+                          className="style25 d-inline-flex text-truncate my-0 cursor-pointer"
+                          style={{ width: '75%' }}
+                        >
+                          {infoComment?.DisplayName}
+                        </p>
+                        <div className="style24 d-block">
+                          {convertTStoDate(commentData[index]?.DateEdited)}
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
+
         <div className="style26 d-block mx-auto px-5 pt-4 pb-1">
           <div
             className="style27 form-group shadow d-flex"
@@ -352,6 +343,81 @@ const PostPage = () => {
             </button>
           </div>
         </div>
+        {/* {infocommentData &&
+          commentData &&
+          infocommentData.map((infoComment, index) => (
+            <div className="d-block mx-auto px-5">
+              <div
+                className="d-block d-inline-flex"
+                style={{
+                  marginBottom: '15px',
+                  boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                  borderRadius: '5px 5px 5px 5px',
+                  height: '50px',
+                  width: '1060px',
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: '18px',
+                    color: '#525252',
+                    width: '860px',
+                    height: '50px',
+                    paddingLeft: '3vw',
+                    lineHeight: '50px',
+                    border: 'none',
+                  }}
+                >
+                  {commentData[index].Description}
+                </div>
+                <div className="py-2">
+                  <img
+                    src={userIcon}
+                    style={{
+                      border: 'none',
+                      background: '#E4E6E7',
+                      width: '35px',
+                      height: '35px',
+                      borderRadius: '50px',
+                    }}
+                  />
+                </div>
+                <div
+                  className="d-inline-flex"
+                  style={{
+                    width: '165px',
+                    height: '15px',
+                  }}
+                >
+                  <div
+                    className="py-2"
+                    style={{
+                      color: '#525252',
+                      fontSize: '12px',
+                      fontWeight: 'lighter',
+                      border: 'none',
+                      width: '23px',
+                    }}
+                  >
+                    &nbsp;&nbsp;by&nbsp;&nbsp;
+                    <br />
+                    &nbsp;&nbsp;{convertTStoDate(commentData[index].DateEdited)}
+                  </div>
+                  <div
+                    className="d-inline-flex py-2"
+                    style={{
+                      color: '#525252',
+                      fontSize: '15px',
+                      fontWeight: 'bolder',
+                      border: 'none',
+                    }}
+                  >
+                    {infoComment?.DisplayName}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))} */}
       </Container>
     </div>
   )

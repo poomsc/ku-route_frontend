@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Jumbotron, Container, Form, Dropdown } from 'react-bootstrap'
 import { Checkbox } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
@@ -20,10 +20,32 @@ interface dropdownType {
 }
 
 const HomePage = () => {
-  const mockFilter = [['คลังหนังสือ'], ['ชีทสรุป'], ['แบบฝึกหัด']]
-  const [filter, setFilter] = useState(['คลังหนังสือ', 'ชีทสรุป', 'แบบฝึกหัด'])
+  const [statusFilter, setStatusFilter] = useState<any>()
 
-  const [allFilter, setAllFilter] = useState<string[][]>(mockFilter)
+  useEffect(() => {
+    const statusFilter = {
+      ทั่วไป: false,
+      รีวิวรายวิชา: false,
+      คลังความรู้: false,
+      สรุป: false,
+      Lecture: false,
+      แบบฝึกหัด: false,
+      อื่นๆ: false,
+    }
+    setStatusFilter(statusFilter)
+  }, [])
+
+  const [filter, setFilter] = useState([
+    'ทั่วไป',
+    'รีวิวรายวิชา',
+    'คลังความรู้',
+    'สรุป',
+    'Lecture',
+    'แบบฝึกหัด',
+    'อื่นๆ',
+  ])
+
+  //const [allFilter, setAllFilter] = useState<string[][]>(mockFilter)
 
   const _subjects: dropdownType[] = (Subjects as ISubject[]).map((s, i) => {
     return {
@@ -44,6 +66,11 @@ const HomePage = () => {
     history.push('/all-post')
   }
 
+  const changeStatus = (TagID: string) => {
+    statusFilter[TagID] = !statusFilter[TagID]
+    console.log(statusFilter)
+  }
+
   const onSearchChange = (event: any) => {
     setSubjects(
       _subjects
@@ -62,12 +89,10 @@ const HomePage = () => {
     if (!subjectSelected) return
     const SubjectIDandTH = subjectSelected.split(' ')
     const SubjectENG = subjectSelected.split('(')
-    // applicationStore.setSubjectSearch(
-    //   SubjectIDandTH[0],
-    //   SubjectIDandTH[1],
-    //   SubjectENG[1].replace(')', '')
-    // )
+
     localStorage.setItem('currentSearch', subjectSelected)
+    //console.log(statusFilter)
+    localStorage.setItem('tagSearch', JSON.stringify(statusFilter))
     console.log('Searching... ' + SubjectIDandTH[0])
     goToAllPost()
   }
@@ -182,7 +207,7 @@ const HomePage = () => {
                     >
                       ประเภท
                     </Dropdown.Item>
-                    {allFilter.map((filter) => (
+                    {filter.map((filter) => (
                       <Dropdown.Item
                         href="#/action-3"
                         style={{ color: '#02353C', fontSize: '11px' }}
@@ -194,9 +219,9 @@ const HomePage = () => {
                             style={{
                               boxSizing: 'border-box',
                             }}
-                            onClick={() => console.log(filter[0])}
+                            onClick={() => changeStatus(filter)}
                           />
-                          <label>&nbsp;&nbsp;{filter[0]}</label>
+                          <label>&nbsp;&nbsp;{filter}</label>
                         </form>
                       </Dropdown.Item>
                     ))}

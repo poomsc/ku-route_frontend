@@ -16,6 +16,7 @@ import { get_my_post, get_one_post } from 'service/system'
 import { convertTStoDate } from './AllPost'
 import { useHistory } from 'react-router'
 import { disable } from 'service/user'
+import { ModalEditPostMenu } from 'components/Modal'
 
 const EditPostMenu = () => {
   const [mypostData, setmypostData] = useState<DocumentData>([])
@@ -45,8 +46,7 @@ const EditPostMenu = () => {
     history.push('/post')
   }
 
-  const handelOnDelete = async (PostID: string) => {
-    disable({}, PostID, 'Post')
+  const handelOnDelete = async () => {
     if (!applicationStore.user) return
     const mypost = (await get_my_post(
       applicationStore.user.uid
@@ -79,15 +79,15 @@ const EditPostMenu = () => {
     <div className="blue-bg">
       <Container className="rounded-10 bg-primary-dark text-white font-weight-bold d-flex">
         <div className="Menutab">
-          <Link to="/" style={{ color: 'white' }}>
+          <Link to="/edit-profile" style={{ color: 'white' }}>
             Edit Profile
           </Link>{' '}
           <br />
-          <Link to="/" style={{ color: 'white' }}>
+          <Link to="/my-post" style={{ color: 'white' }}>
             My Posts
           </Link>{' '}
           <br />
-          <Link to="/" style={{ color: 'white' }}>
+          <Link to="/favourite-post" style={{ color: 'white' }}>
             Favourite
           </Link>
           <div className="Menu2">
@@ -108,7 +108,7 @@ const EditPostMenu = () => {
             </Link>
           </div>
         </div>
-        <Container className="white-bg">
+        <Container className="white-bg d-flex">
           <div className="Info">
             <h1 style={{ color: 'black' }}>ประวัติการอัพโหลด </h1>
             <div className="table">
@@ -158,14 +158,12 @@ const EditPostMenu = () => {
                       onClick={() => handleOnViewPage(object[0])}
                       className="fixbutton max-w-content d-inline-block cursor-pointer"
                     >
-                      แก้ไข
+                      EDIT
                     </div>
-                    <div
-                      onClick={() => handelOnDelete(object[0])}
-                      className="deletebutton max-w-content d-inline-block cursor-pointer"
-                    >
-                      <img src={logo_delete} width="8px" height="10px" />
-                    </div>
+                    <ModalEditPostMenu
+                      PostID={object[0]}
+                      onClick={handelOnDelete}
+                    />
                   </td>
                 </tr>
               ))}

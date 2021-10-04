@@ -69,6 +69,7 @@ const NavBar = observer(() => {
                     fontWeight: currentPage === '/' ? 'bold' : 'normal',
                     color: currentPage === '/' ? '#2EAF7D' : '#02353C',
                     height: '22px',
+                    backgroundColor: 'transparent',
                   }}
                 >
                   BROWSE
@@ -82,6 +83,7 @@ const NavBar = observer(() => {
                     color:
                       currentPage === '/create-post' ? '#2EAF7D' : '#02353C',
                     height: '22px',
+                    backgroundColor: 'transparent',
                   }}
                 >
                   CREATE POST
@@ -115,7 +117,10 @@ const NavBar = observer(() => {
                     style={{
                       fontWeight:
                         currentPage === '/favourite-post' ? 'bold' : 'normal',
-                      color: '#02353C',
+                      color:
+                        currentPage === '/favourite-post'
+                          ? '#2EAF7D'
+                          : '#02353C',
                       backgroundColor: 'transparent',
                     }}
                   >
