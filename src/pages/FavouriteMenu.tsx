@@ -24,7 +24,7 @@ const FavouriteMenu = () => {
       const likepost = (await get_mylikepost(
         applicationStore.user.uid
       )) as DocumentData
-      // console.log(likepost)
+      console.log(likepost)
 
       setlikepostData(likepost)
     }
@@ -123,46 +123,49 @@ const FavouriteMenu = () => {
                 </tr>
               </thead>
 
-              {likepostData.map((object, idx) => (
-                <tr>
-                  <td>{object[1]?.SubjectID}</td>
-                  <td>{object[1]?.Title}</td>
-                  <td>
-                    {object[1]?.Description.length > 40
-                      ? object[1]?.Description.substring(0, 40) + '...'
-                      : object[1]?.Description}
-                  </td>
-                  <td>
-                    <img
-                      src={logo_pdf}
-                      style={{ padding: '2px' }}
-                      width="24px"
-                      height="24px"
-                    />
-                    {/* {object.NumFile[0]} */}
-                    <img
-                      src={logo_image}
-                      style={{ padding: '2px' }}
-                      width="24px"
-                      height="24px"
-                    />
-                    {/* {object.NumFile[1]} */}
-                  </td>
-                  <td>{convertTStoDate(object[1]?.DateEdited)}</td>
-                  <td>
-                    <div
-                      onClick={() => handleOnViewPage(object[0])}
-                      className="viewbutton max-w-content d-inline-block cursor-pointer"
-                    >
-                      VIEW
-                    </div>
-                    <ModalFavouriteMenu
-                      PostID={object[0]}
-                      onClick={handleOnDelete}
-                    />
-                  </td>
-                </tr>
-              ))}
+              {likepostData.map((object, idx) => {
+                if (!object) return
+                return (
+                  <tr>
+                    <td>{object[1]?.SubjectID}</td>
+                    <td>{object[1]?.Title}</td>
+                    <td>
+                      {object[1]?.Description.length > 40
+                        ? object[1]?.Description.substring(0, 40) + '...'
+                        : object[1]?.Description}
+                    </td>
+                    <td>
+                      <img
+                        src={logo_pdf}
+                        style={{ padding: '2px' }}
+                        width="24px"
+                        height="24px"
+                      />
+                      {/* {object.NumFile[0]} */}
+                      <img
+                        src={logo_image}
+                        style={{ padding: '2px' }}
+                        width="24px"
+                        height="24px"
+                      />
+                      {/* {object.NumFile[1]} */}
+                    </td>
+                    <td>{convertTStoDate(object[1]?.DateEdited)}</td>
+                    <td>
+                      <div
+                        onClick={() => handleOnViewPage(object[0])}
+                        className="viewbutton max-w-content d-inline-block cursor-pointer"
+                      >
+                        VIEW
+                      </div>
+                      <ModalFavouriteMenu
+                        PostID={object[0]}
+                        onClick={handleOnDelete}
+                      />
+                    </td>
+                  </tr>
+                )
+              })}
             </div>
           </div>
         </Container>

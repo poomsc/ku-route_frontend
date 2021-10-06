@@ -44,7 +44,7 @@ const PostPage = () => {
     async function fetch() {
       if (!currentViewPost) return
       const post = (await get_one_post(currentViewPost)) as DocumentData
-      const info = (await get_info(post?.AccountID)) as DocumentData
+      const info = (await get_info(post[1]?.AccountID)) as DocumentData
       const comment = (await get_comment(currentViewPost)) as DocumentData
       const infoComment = await get_info_comment(comment)
       const countLike = (await getLikeOfPost(currentViewPost)) as number
@@ -53,9 +53,9 @@ const PostPage = () => {
         files.map((file) => getDownloadURL(file))
       )
 
-      console.log(allFiles)
-      console.log(infoComment)
-      console.log(fileUrl)
+      // console.log(allFiles)
+      // console.log(infoComment)
+      // console.log(fileUrl)
 
       if (applicationStore.user) {
         const LikeDoc = await getDocLike(
@@ -64,6 +64,9 @@ const PostPage = () => {
         setLikeData(LikeDoc?.Status)
       }
       // const countLike = await getLikeOfPost(currentViewPost)
+      // console.log(post)
+      // console.log(info)
+
       setPostData(post[1])
       setInfoData(info)
       setCommentData(comment)

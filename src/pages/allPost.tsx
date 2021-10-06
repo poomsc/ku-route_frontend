@@ -55,6 +55,8 @@ const AllPostPage = () => {
   const [resultPost, setResultPost] = useState<DocumentData>()
 
   const currentSearch = localStorage.getItem('currentSearch')
+  const tagJSON = localStorage.getItem('tagSearch')
+  const tagSearch = tagJSON ? JSON.parse(tagJSON) : null
   const SubjectIDandTH = currentSearch
     ? currentSearch.split(' ')
     : [' ', 'ชื่อวิชา่']
@@ -73,7 +75,11 @@ const AllPostPage = () => {
 
     if (countPostColumn[col] % 2 == col) {
       return (
-        <div className="w-content d-flex mb-4" key={index}>
+        <div
+          onClick={() => handleOnViewPage(PostID)}
+          className="w-content d-flex mb-4 cursor-pointer"
+          key={index}
+        >
           <Container className="w-content d-inline-block p-0">
             <div className="row m-0 p-0 d-inline w-25">
               <div className="form py-4">
@@ -168,8 +174,12 @@ const AllPostPage = () => {
 
   useEffect(() => {
     async function fetch() {
-      if (!currentSearch) return
-      const result = await BasicSearch(SubjectIDandTH[0], [])
+      if (!currentSearch || !tagSearch) return
+      const tagResult = [] as Array<string>
+      for (const TagID in tagSearch) {
+        if (tagSearch[TagID]) tagResult.push(TagID)
+      }
+      const result = await BasicSearch(SubjectIDandTH[0], tagResult)
       setResultPost(result)
     }
     fetch()

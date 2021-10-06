@@ -91,7 +91,7 @@ const HomePage = () => {
     const SubjectENG = subjectSelected.split('(')
 
     localStorage.setItem('currentSearch', subjectSelected)
-    //console.log(statusFilter)
+    console.log(statusFilter)
     localStorage.setItem('tagSearch', JSON.stringify(statusFilter))
     console.log('Searching... ' + SubjectIDandTH[0])
     goToAllPost()

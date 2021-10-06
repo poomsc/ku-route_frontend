@@ -135,7 +135,11 @@ const EditPostMenu = () => {
                 <tr>
                   <td>{object[1]?.SubjectID}</td>
                   <td>{object[1]?.Title}</td>
-                  <td>{object[1]?.Description}</td>
+                  <td>
+                    {object[1]?.Description.length > 40
+                      ? object[1]?.Description.substring(0, 40) + '...'
+                      : object[1]?.Description}
+                  </td>
                   <td>
                     <img
                       src={logo_pdf}
