@@ -2,6 +2,7 @@ import React, { SyntheticEvent, useState, useEffect } from 'react'
 import { Alert, Button, FormControl, InputGroup } from 'react-bootstrap'
 import defaultUserProfile from 'assets/icons/user-icon.png'
 import { Dropdown as SMTDropdown } from 'semantic-ui-react'
+import 'semantic-ui-css/semantic.min.css'
 import { BsFillCaretDownFill } from 'react-icons/bs'
 import { DocumentData, serverTimestamp } from '@firebase/firestore'
 import { get_faculty, get_info } from 'service/system'
@@ -13,7 +14,6 @@ import { useHistory } from 'react-router'
 import { observer } from 'mobx-react'
 import { BasicSearch } from 'service/search'
 import { border } from '@mui/system'
-import '../DropdownFix.css'
 
 const facultyList = [] as any
 let facultyLoader = 0
@@ -288,7 +288,8 @@ const EditProfilePage = observer(() => {
                 ? facultyList[newFacultySelected]?.value
                 : facultyList[currentFaculty]?.value
             }
-            className="rounded-10 bg-primary-dark text-white font-weight-bold d-flex"
+            className="rounded-10 bg-primary-dark font-weight-bold d-flex"
+            style={{color: "aliceblue"}}
             icon={
               <div className="ml-auto">
                 <BsFillCaretDownFill />

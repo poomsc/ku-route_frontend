@@ -179,14 +179,14 @@ const PostPage = () => {
                     key={tag}
                     style={{backgroundColor: colors[maxColor - (idx % maxColor) - 1],}}
                   >
-                    <div className="style4 p-1 px-3 max-w-content">
+                    <div className="style4 p-2 px-3 max-w-content cursor-pointer">
                       {tag}
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-            <div className="style5 d-inline-block py-2 m-0 text-right"
+            <div className="style5 d-inline-block py-2 m-0 text-right cursor-pointer"
                  style={{maxWidth: "35%"}}
             >
               {mockSubjectName[0]} | {mockSubjectName[1]}
@@ -202,13 +202,13 @@ const PostPage = () => {
           <div className="w-100 d-flex justify-content-between m-0">
             <div className="d-inline-block">
               <div className="d-flex">
-                <p className="text h4 d-inline-block m-0 mt-1 mr-2">
+                <p className="textPostStyle h4 d-inline-block m-0 mt-1 mr-2">
                   โพสต์โดย
                 </p>
-                <img className="style8 d-inline-block mx-2"
+                <img className="style8 d-inline-block mx-2 cursor-pointer"
                     src={user_icon}
                 />{' '}
-                <p className= "text h4 font-weight-bold d-inline-vlock mt-1">
+                <p className= "textPostStyle h4 font-weight-bold d-inline-vlock mt-1">
                   {postOwner}
                 </p>
               </div>
@@ -230,7 +230,7 @@ const PostPage = () => {
         </h5>
         <div className="max-w-content d-flex align-items-center flex-wrap">
           {allFile.map((file) => (
-            <div className="style13 mr-4 mb-4"
+            <div className="style13 mr-4 mb-4 cursor-pointer"
                  key={file[0]}
             >
               <div className="style14 d-flex flex-column pb-3">
@@ -301,7 +301,7 @@ const PostPage = () => {
                     </p>
                   </div>
 
-                  <div className="d-inline-block pl-4"
+                  <div className="d-flex pl-4"
                        style={{width: "24%"}}
                   >
                     <div className=" d-inline-block"
@@ -321,11 +321,13 @@ const PostPage = () => {
                          data-toggle="tooltip"
                          data-placement="top" 
                          title={infoComment?.DisplayName}
-                         style={{width: "75%"}}
+                         style={{width: "75%", 
+                                maxWidth: "118.56px"
+                         }}
                       >
                         {infoComment?.DisplayName}
                       </p>
-                    <div className="style24 d-block">
+                    <div className="style24 d-block text-truncate">
                       {convertTStoDate(mockComment[index]?.DateEdited)}
                     </div>
                     </div>

@@ -17,7 +17,6 @@ import { delete_post } from 'service/system'
 import { ISubject } from 'interface/subject.interface'
 import { constTags } from 'constants/index'
 import Subjects from 'constants/subjects.json'
-import '../DropdownFix.css'
 
 const contractChannels = [
   { Icon: mail, Placeholder: 'hello@kuroute.com' },
@@ -50,6 +49,7 @@ const VersatilePost = observer(() => {
     _subjects.slice(0, 10)
   )
   const [topicSelected, setTopicSelected] = useState<string>()
+  const [unselectedTagCount, setUnselectedTagCount] = useState(0)
   const [title, setTitle] = useState<string>('')
   const [description, setDescription] = useState<string>('')
   const [tags, setTags] = useState<{ [name: string]: string }[]>(preprocessTags)
@@ -70,8 +70,10 @@ const VersatilePost = observer(() => {
   const handleOnTagChange = (value: string, event: 'add' | 'remove') => {
     if (event === 'add') {
       setTagSelected([...tagsSelected, value])
+      setUnselectedTagCount(unselectedTagCount + 1)
     } else {
       setTagSelected(removeElementFromArray(tagsSelected, value))
+      setUnselectedTagCount(unselectedTagCount - 1)
     }
   }
 
@@ -211,6 +213,7 @@ const VersatilePost = observer(() => {
             <Dropdown.Toggle
               id="dropdown-custom-components"
               className="px-2 py-1 rounded border-0"
+              hidden={unselectedTagCount != tags?.length ? false : true}
             >
               + เพิ่ม
             </Dropdown.Toggle>
