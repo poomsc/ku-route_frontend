@@ -165,13 +165,15 @@ const PostPage = () => {
                       backgroundColor: colors[maxColor - (idx % maxColor) - 1],
                     }}
                   >
-                    <div className="style4 p-1 px-3 max-w-content">{tag}</div>
+                    <div className="style4 p-2 px-3 max-w-content cursor-pointer">
+                      {tag}
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
             <div
-              className="style5 d-inline-block py-2 m-0 text-right"
+              className="style5 d-inline-block py-2 m-0 text-right cursor-pointer"
               style={{ maxWidth: '35%' }}
             >
               {mockSubjectName[0]} | {mockSubjectName[1]}
@@ -185,12 +187,14 @@ const PostPage = () => {
           <div className="w-100 d-flex justify-content-between m-0">
             <div className="d-inline-block">
               <div className="d-flex">
-                <p className="text h4 d-inline-block m-0 mt-1 mr-2">โพสต์โดย</p>
+                <p className="textPostStyle h4 d-inline-block m-0 mt-1 mr-2">
+                  โพสต์โดย
+                </p>
                 <img
-                  className="style8 d-inline-block mx-2"
+                  className="style8 d-inline-block mx-2 cursor-pointer"
                   src={user_icon}
                 />{' '}
-                <p className="text h4 font-weight-bold d-inline-vlock mt-1">
+                <p className="textPostStyle h4 font-weight-bold d-inline-vlock mt-1">
                   {postOwner}
                 </p>
               </div>
@@ -209,7 +213,7 @@ const PostPage = () => {
             linkFiles &&
             allFiles.map((file, index) => (
               <a
-                className="style13 mr-4 mb-4"
+                className="style13 mr-4 mb-4 cursor-pointer"
                 key={file.name}
                 href={linkFiles[index]}
                 target="_blank"
@@ -275,8 +279,7 @@ const PostPage = () => {
             </div>
           </div>
           <div>
-            {infocommentData &&
-              commentData &&
+            {infocommentData && commentData ? (
               infocommentData.map((infoComment, index) => (
                 <div className="style21 d-block bg-white mx-auto w-100 p-4 mb-3">
                   <div className="w-content d-flex justify-content-between">
@@ -314,7 +317,13 @@ const PostPage = () => {
                     </div>
                   </div>
                 </div>
-              ))}
+              ))
+            ) : (
+              <p className="h6 text-center">
+                ดูเหมือนว่ายังไม่มีความคิดเห็นใด ๆ
+                หากคุณต้องการเสนอแนะสามารถตอบกลับได้ผ่านช่องทางด้านล่าง
+              </p>
+            )}
           </div>
         </div>
 
