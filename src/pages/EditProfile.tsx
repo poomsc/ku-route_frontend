@@ -13,6 +13,7 @@ import { useHistory } from 'react-router'
 import { observer } from 'mobx-react'
 import { BasicSearch } from 'service/search'
 import { border } from '@mui/system'
+import '../DropdownFix.css'
 
 const facultyList = [] as any
 let facultyLoader = 0

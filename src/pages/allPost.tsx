@@ -80,7 +80,7 @@ const AllPostPage = () => {
                 <tr className="TAG d-block w-content my-1 mx-2 mb-3">
                   {menu[1].TagID.map((tag, idx) => (
                     <div
-                      className="max-w-content d-inline-block rounded cursor-pointer px-2 py-1 ml-3 "
+                      className="max-w-content d-inline-block rounded cursor-pointer px-2 py-1 ml-3 mb-2"
                       key={tag}
                       style={{
                         backgroundColor:
@@ -105,12 +105,14 @@ const AllPostPage = () => {
                   style={{ height: '41px' }}
                 >
                   {menu[1].Description}
-                  <p className="font-weight-bold cursor-pointer">
+                  <p className="font-weight-bold cursor-pointer"
+                     onClick={() => handleOnViewPage(PostID)}
+                  >
                     {menu[1].Description.length > 40 ? 'ดูเพิ่มเติม...' : null}
                   </p>
                 </div>
 
-                <div className="pdfrow mx-3 px-2 my-2 py-2">
+                <div className="pdfrow mx-3 px-2 mb-2 pb-2">
                   <div className="d-flex align-content-start flex-wrap">
                     {filepdf1.map((pdftest, AAA) => {
                       return (
@@ -151,11 +153,13 @@ const AllPostPage = () => {
                                 }}
                     >
                       </div> */}
-                  <div className="Time mx-3 px-2 pt-3 text-center">
-                    {'Posted ' + convertTStoDate(menu[1].DateEdited)}
-                  </div>
                 </tr>
               </div>
+            </div>
+            <div className="Time text-center"
+                 style={{marginTop: "-32px"}}
+            >
+              {'Posted ' + convertTStoDate(menu[1].DateEdited)}
             </div>
           </Container>
         </div>

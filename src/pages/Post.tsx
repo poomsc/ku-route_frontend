@@ -290,33 +290,38 @@ const PostPage = () => {
             </div>
           </div>
           <div>
-            {mockInfoComment?.map((infoComment, index) => (
+            {commentData?.length ? mockInfoComment?.map((infoComment, index) => (
               <div className="style21 d-block bg-white mx-auto w-100 p-4 mb-3">
                 <div className="w-content d-flex justify-content-between">
                   <div className="d-flex align-items-center"
-                      style={{width: "80%"}}
+                       style={{width: "80%"}}
                   >
                     <p className="style22 text-break pl-3">
                       {mockComment[index]?.Description}
                     </p>
                   </div>
 
-                  <div className="d-inline-block pl-4">
+                  <div className="d-inline-block pl-4"
+                       style={{width: "24%"}}
+                  >
                     <div className=" d-inline-block"
-                        style={{verticalAlign: "top"}}
+                         style={{verticalAlign: "top"}}
                     >
-                        <img className="style23 mr-3"
-                            src={userIcon}
-                        />
+                      <img className="style23 mr-3"
+                          src={userIcon}
+                      />
                     </div>
-                    <div className="d-inline-block max-w-content"
-                        style={{width: "70%"}}
+                    <div className="d-inline-block"
+                        style={{width: "74%"}}
                     >
-                      <p className="h6 d-inline-block mr-1 my-0">
+                      <p className="h6 d-inline-flex mr-1 my-0">
                         by
                       </p>
                       <p className="style25 d-inline-flex text-truncate my-0 cursor-pointer"
-                          style={{width: "75%"}}
+                         data-toggle="tooltip"
+                         data-placement="top" 
+                         title={infoComment?.DisplayName}
+                         style={{width: "75%"}}
                       >
                         {infoComment?.DisplayName}
                       </p>
@@ -327,7 +332,11 @@ const PostPage = () => {
                   </div>
                 </div>
               </div>
-            ))}
+            )) : 
+            <p className="h6 text-center">
+              ดูเหมือนว่ายังไม่มีความคิดเห็นใด ๆ หากคุณต้องการเสนอแนะสามารถตอบกลับได้ผ่านช่องทางด้านล่าง
+            </p>
+            }
           </div>
 
         </div>

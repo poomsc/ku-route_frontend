@@ -17,6 +17,7 @@ import { delete_post } from 'service/system'
 import { ISubject } from 'interface/subject.interface'
 import { constTags } from 'constants/index'
 import Subjects from 'constants/subjects.json'
+import '../DropdownFix.css'
 
 const contractChannels = [
   { Icon: mail, Placeholder: 'hello@kuroute.com' },
