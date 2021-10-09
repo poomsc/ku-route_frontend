@@ -110,6 +110,13 @@ const EditProfilePage = observer(() => {
     currentFaculty = findFacultyKey(faculty, userInfo?.Faculty)
   }
 
+  const triggerThis = () => {
+    window.onbeforeunload = confirmExit
+    function confirmExit() {
+      return 'show message'
+    }
+  }
+
   const saveCurrentState = (title, about, newFaculty) => {
     setSaveButtonClickable(false)
     let changedInfo = {}

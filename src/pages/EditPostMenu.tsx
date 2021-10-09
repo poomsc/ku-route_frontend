@@ -77,7 +77,7 @@ const EditPostMenu = () => {
 
   return (
     <div className="blue-bg">
-      <Container className="rounded-10 bg-primary-dark text-white font-weight-bold d-flex">
+      <Container className="rounded-10 bg-primary-dark text-white font-weight-bold d-flex h-auto">
         <div className="Menutab">
           <Link to="/edit-profile" style={{ color: 'white' }}>
             Edit Profile
@@ -108,10 +108,10 @@ const EditPostMenu = () => {
             </Link>
           </div>
         </div>
-        <Container className="white-bg d-flex">
+        <Container className="white-bg">
           <div className="Info">
             <h1 style={{ color: 'black' }}>ประวัติการอัพโหลด </h1>
-            <div className="table">
+            <div className="table max-w-content">
               <thead>
                 <tr>
                   <th scope="col">รหัสวิชา</th>
@@ -132,10 +132,14 @@ const EditPostMenu = () => {
               </thead>
 
               {mypostData.map((object, idx) => (
-                <tr>
+                <tr className="hover-darken bg-white">
                   <td>{object[1]?.SubjectID}</td>
-                  <td>{object[1]?.Title}</td>
-                  <td>{object[1]?.Description}</td>
+                  <td className="text-truncate" style={{ maxWidth: '100px' }}>
+                    {object[1]?.Title}
+                  </td>
+                  <td className="text-truncate" style={{ maxWidth: '100px' }}>
+                    {object[1]?.Description}
+                  </td>
                   <td>
                     <img
                       src={logo_pdf}
@@ -156,7 +160,7 @@ const EditPostMenu = () => {
                   <td>
                     <div
                       onClick={() => handleOnViewPage(object[0])}
-                      className="fixbutton max-w-content d-inline-block cursor-pointer"
+                      className="fixbutton max-w-content d-inline-block cursor-pointer hover-darken-2"
                     >
                       EDIT
                     </div>

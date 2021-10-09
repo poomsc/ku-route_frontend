@@ -26,6 +26,13 @@ import { getDocLike, getLikeOfPost } from 'service/system'
 import { awaitExpression } from '@babel/types'
 import { getDownloadURL, StorageReference } from '@firebase/storage'
 import { Document, Page, pdfjs } from 'react-pdf'
+import {
+  Button,
+  Popover,
+  PopoverHeader,
+  PopoverBody,
+  Tooltip,
+} from 'reactstrap'
 
 const PostPage = () => {
   const [postData, setPostData] = useState<DocumentData>()
@@ -44,7 +51,7 @@ const PostPage = () => {
     async function fetch() {
       if (!currentViewPost) return
       const post = (await get_one_post(currentViewPost)) as DocumentData
-      const info = (await get_info(post?.AccountID)) as DocumentData
+      const info = (await get_info(post[1]?.AccountID)) as DocumentData
       const comment = (await get_comment(currentViewPost)) as DocumentData
       const infoComment = await get_info_comment(comment)
       const countLike = (await getLikeOfPost(currentViewPost)) as number
@@ -115,12 +122,53 @@ const PostPage = () => {
     }
   }
 
+  const PopoverItem = (props) => {
+    const { id, item } = props
+    const [popoverOpen, setPopoverOpen] = useState(false)
+
+    const toggle = () => setPopoverOpen(!popoverOpen)
+
+    return (
+      <span>
+        <Popover
+          className="rounded-25"
+          style={{ minWidth: '225px' }}
+          placement={item.placement}
+          isOpen={popoverOpen}
+          target={'Popover-' + id}
+          toggle={toggle}
+        >
+          <PopoverHeader className="font-weight-bold py-2">
+            <p className="style25 p-0 m-0">{item.text?.DisplayName}</p>
+          </PopoverHeader>
+          <PopoverBody>
+            <div className="d-inline-flex">
+              <img className="style23 mr-3" src={userIcon} />
+              <div className="style25 font-weight-light d-flex-block">
+                <p className="p-0 m-0">
+                  {item.text?.Name + ' ' + item.text?.Surname}
+                </p>
+                <p className="p-0 m-0">{item.text?.Faculty}</p>
+              </div>
+            </div>
+          </PopoverBody>
+        </Popover>
+      </span>
+    )
+  }
+
+  const genLoadLabel = () => {
+    return labelCount++
+  }
+
   let postOwner = infoData?.DisplayName ? infoData?.DisplayName : ''
   let datePosted = postData?.DateEdited
     ? new Date(postData?.DateEdited?.seconds * 1000).toLocaleString()
     : '00/00/0000, 00:00:00 AM'
   let title = postData?.Title ? postData?.Title : ''
   let descript = postData?.Description ? postData?.Description : ''
+  let labelCount = 0
+
   const mockTags = postData?.TagID ? postData?.TagID : ['']
   const currentSearch = localStorage.getItem('currentSearch')
   const mockSubjectName = currentSearch
@@ -156,7 +204,7 @@ const PostPage = () => {
               <div className="h-100 d-flex align-items-center flex-wrap">
                 {mockTags.map((tag, idx) => (
                   <div
-                    className="d-inline-block mr-2 rounded-lg"
+                    className="d-inline-block mr-2 rounded-lg hover-darken-2"
                     key={tag}
                     style={{
                       backgroundColor: colors[maxColor - (idx % maxColor) - 1],
@@ -187,13 +235,25 @@ const PostPage = () => {
                 <p className="textPostStyle h4 d-inline-block m-0 mt-1 mr-2">
                   โพสต์โดย
                 </p>
-                <img
-                  className="style8 d-inline-block mx-2 cursor-pointer"
-                  src={user_icon}
-                />{' '}
-                <p className="textPostStyle h4 font-weight-bold d-inline-vlock mt-1">
-                  {postOwner}
-                </p>
+                <div className="cursor-pointer d-flex">
+                  <img className="style8 d-inline-block mx-2" src={user_icon} />{' '}
+                  <p
+                    className="textPostStyle h4 font-weight-bold d-inline-vlock mt-1"
+                    id={'Popover-' + labelCount}
+                  >
+                    {postOwner}
+                  </p>
+                  <PopoverItem
+                    key={labelCount}
+                    item={{
+                      placement: 'button',
+                      text: infoData,
+                      className:
+                        'textPostStyle h4 font-weight-bold d-inline-vlock mt-1',
+                    }}
+                    id={genLoadLabel()}
+                  />
+                </div>
               </div>
             </div>
             <div className="style9 d-inline-block">{datePosted}</div>
@@ -210,7 +270,7 @@ const PostPage = () => {
             linkFiles &&
             allFiles.map((file, index) => (
               <a
-                className="style13 mr-4 mb-4 cursor-pointer"
+                className="style13 mr-4 mb-4 cursor-pointer hover-darken"
                 key={file.name}
                 href={linkFiles[index]}
                 target="_blank"
@@ -259,7 +319,7 @@ const PostPage = () => {
                 </div>
                 <div className="style19 mt-0 d-inline-block">
                   <img
-                    className="mr-2 cursor-pointer"
+                    className="mr-2 cursor-pointer hover-darken-2"
                     onClick={likeData ? handleOnUnlike : handleOnLike}
                     style={{
                       marginTop: '-10px',
@@ -276,38 +336,47 @@ const PostPage = () => {
             </div>
           </div>
           <div>
-            {infocommentData && commentData ? (
+            {infocommentData && commentData && commentData?.length ? (
               infocommentData.map((infoComment, index) => (
                 <div className="style21 d-block bg-white mx-auto w-100 p-4 mb-3">
                   <div className="w-content d-flex justify-content-between">
                     <div
                       className="d-flex align-items-center"
-                      style={{ width: '80%' }}
+                      style={{ width: '76%' }}
                     >
                       <p className="style22 text-break pl-3">
                         {commentData[index]?.Description}
                       </p>
                     </div>
 
-                    <div className="d-inline-block pl-4">
+                    <div className="d-flex pl-4" style={{ width: '24%' }}>
                       <div
                         className=" d-inline-block"
                         style={{ verticalAlign: 'top' }}
                       >
                         <img className="style23 mr-3" src={userIcon} />
                       </div>
-                      <div
-                        className="d-inline-block max-w-content"
-                        style={{ width: '70%' }}
-                      >
+                      <div className="d-inline-block" style={{ width: '70%' }}>
                         <p className="h6 d-inline-block mr-1 my-0">by</p>
                         <p
                           className="style25 d-inline-flex text-truncate my-0 cursor-pointer"
-                          style={{ width: '75%' }}
+                          id={'Popover-' + labelCount}
+                          style={{ width: '80%', maxWidth: '120px' }}
                         >
                           {infoComment?.DisplayName}
                         </p>
-                        <div className="style24 d-block">
+                        <PopoverItem
+                          key={labelCount}
+                          item={{
+                            placement: 'top',
+                            text: infoComment,
+                            className:
+                              'style25 d-inline-flex text-truncate font-weight-bold my-0 cursor-pointer p-0',
+                          }}
+                          id={genLoadLabel()}
+                        />
+
+                        <div className="style24 d-block text-truncate">
                           {convertTStoDate(commentData[index]?.DateEdited)}
                         </div>
                       </div>
@@ -338,17 +407,14 @@ const PostPage = () => {
             />
             <button
               type="submit"
+              onClick={handleOnAddComment}
               className="style28 btn btn-primary btn-sm px-3 border-0"
               style={{
                 backgroundColor: '#FFFFFF',
                 borderRadius: '0 10px 10px 0',
               }}
             >
-              <img
-                className="style29"
-                src={sendArrow}
-                onClick={handleOnAddComment}
-              />
+              <img className="style29" src={sendArrow} />
             </button>
           </div>
         </div>
