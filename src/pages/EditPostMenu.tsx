@@ -41,9 +41,9 @@ const EditPostMenu = () => {
   // console.log(mypostData)
 
   const history = useHistory()
-  const handleOnViewPage = (PostID: string) => {
-    localStorage.setItem('currentViewPost', PostID)
-    history.push('/post')
+  const handleOnEditPost = (PostID: string) => {
+    // localStorage.setItem('currentViewPost', PostID)
+    history.push(`/edit-post/${PostID}`)
   }
 
   const handelOnDelete = async () => {
@@ -159,7 +159,7 @@ const EditPostMenu = () => {
                   <td>{convertTStoDate(object[1]?.DateEdited)}</td>
                   <td>
                     <div
-                      onClick={() => handleOnViewPage(object[0])}
+                      onClick={() => handleOnEditPost(object[0])}
                       className="fixbutton max-w-content d-inline-block cursor-pointer"
                     >
                       EDIT
