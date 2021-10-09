@@ -50,7 +50,7 @@ const EditProfilePage = observer(() => {
   if (applicationStore.user) UUID = applicationStore.user.uid
 
   const [saveButtonClickable, setSaveButtonClickable] = useState(false)
-  const [faculty, setFaculty] = useState<string>()
+  const [faculty, setFaculty] = useState<string[]>()
 
   const [userInfo, setUserInfo] = useState<DocumentData>()
   const [title, setTitle] = useState<string>()
@@ -65,7 +65,7 @@ const EditProfilePage = observer(() => {
     async function fetch() {
       if (!applicationStore.user) return
       const rawInfo = (await get_info(UUID)) as DocumentData
-      const rawFaculty = await get_faculty()
+      const rawFaculty = (await get_faculty()) as string[]
       setUserInfo(rawInfo)
       setFaculty(rawFaculty)
     }
@@ -100,7 +100,7 @@ const EditProfilePage = observer(() => {
   }
 
   async function fetchFaculty() {
-    const rawFaculty = await get_faculty()
+    const rawFaculty = (await get_faculty()) as string[]
     setFaculty(rawFaculty)
   }
 
@@ -289,7 +289,7 @@ const EditProfilePage = observer(() => {
                 : facultyList[currentFaculty]?.value
             }
             className="rounded-10 bg-primary-dark font-weight-bold d-flex"
-            style={{color: "aliceblue"}}
+            style={{ color: 'aliceblue' }}
             icon={
               <div className="ml-auto">
                 <BsFillCaretDownFill />
@@ -333,7 +333,7 @@ const EditProfilePage = observer(() => {
           <div className="mx-2"></div>
           <Button
             disabled={!saveButtonClickable}
-            style={{ width: '7rem',}}
+            style={{ width: '7rem' }}
             type="submit"
             onClick={(e) => {
               saveCurrentState(title, about, userFaculty)

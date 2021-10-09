@@ -65,3 +65,44 @@
 .cursor-pointer:hover {
   cursor: pointer;
 }
+
+.dimmed.dimmable > .ui.animating.dimmer,
+.dimmed.dimmable > .ui.visible.dimmer,
+.ui.active.dimmer {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.ui.modal,
+.ui.active.modal {
+  margin: 0 auto !important;
+  top: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  transform-origin: center;
+  transition: all ease 0.5s;
+}
+
+#myModal {
+  position: relative;
+}
+
+.checkbox-round {
+  width: 12px;
+  height: 12px;
+  background-color: white;
+  border-radius: 50%;
+  vertical-align: middle;
+  border: 1px solid #000000;
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.checkbox-round:checked {
+  background-color: #2eaf7d;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
