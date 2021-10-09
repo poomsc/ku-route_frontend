@@ -52,8 +52,6 @@ const VersatilePost = observer(() => {
     fetch()
   }, [PostID])
 
-  // console.log(postInfo)
-
   const _subjects: dropdownType[] = (Subjects as ISubject[]).map((s, i) => {
     return {
       text: `${s.subjectCode} ${s.subjectNameTh} (${s.subjectNameEn})`,
@@ -66,13 +64,9 @@ const VersatilePost = observer(() => {
       return { text }
     })
   )
+
   const [subjects, setSubjects] = useState<dropdownType[]>(
-    _subjects.find((s) => s.value === postInfo[1]?.SubjectID)
-      ? [
-          ..._subjects.slice(0, 10),
-          _subjects.find((s) => s.value === postInfo[1].SubjectID),
-        ]
-      : [..._subjects.slice(0, 10)]
+    _subjects.slice(0, 10)
   )
   const [topicSelected, setTopicSelected] = useState<string>()
   const [unselectedTagCount, setUnselectedTagCount] = useState(0)
@@ -88,6 +82,10 @@ const VersatilePost = observer(() => {
   useEffect(() => {
     if (isNewPost || !postInfo[1]) return
     console.log(postInfo[1].SubjectID)
+    const includingSubject = _subjects.find(
+      (s) => s.value === postInfo[1].SubjectID
+    )
+    if (includingSubject) setSubjects([...subjects, includingSubject])
     setTopicSelected(postInfo[1]?.SubjectID)
     setTitle(postInfo[1]?.Title)
     setTagSelected(postInfo[1]?.TagID)
