@@ -72,7 +72,7 @@ const ModalEditPostMenu = observer(({ PostID, onClick }: Props) => {
       onClose={() => setOpen(false)}
       onOpen={() => setOpen(true)}
       trigger={
-        <div className="removebutton max-w-content d-inline-block cursor-pointer">
+        <div className="removebutton max-w-content d-inline-block cursor-pointer hover-darken">
           REMOVE
         </div>
       }

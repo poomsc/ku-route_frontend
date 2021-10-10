@@ -87,8 +87,14 @@ const VersatilePost = observer(() => {
       (s) => s.value === postInfo[1].SubjectID
     )
     if (includingSubject) setSubjects([...subjects, includingSubject])
-
-    setTopicSelected(includingSubject?.text)
+    setTopicSelected(
+      postInfo[1]?.SubjectID +
+        ' ' +
+        postInfo[1]?.SubjectTH +
+        ' (' +
+        postInfo[1]?.SubjectENG +
+        ')'
+    )
     setTitle(postInfo[1]?.Title)
     setTagSelected(postInfo[1]?.TagID)
     setDescription(postInfo[1]?.Description)
@@ -113,8 +119,7 @@ const VersatilePost = observer(() => {
 
   const handleOnSelectSubject = (event: any) => {
     console.log(event.target.innerText.split(' ')[0])
-
-    setTopicSelected(event.target.innerText.split(' ')[0])
+    setTopicSelected(event.target.innerText)
   }
 
   const onFileChange = (status: StatusValue, allFiles: IFileWithMeta[]) => {
@@ -130,6 +135,7 @@ const VersatilePost = observer(() => {
   }
 
   const handelOnCreatePost = async () => {
+    console.log(topicSelected, filesUpload.status, applicationStore.user)
     if (
       !topicSelected ||
       filesUpload.status !== 'done' ||
@@ -141,7 +147,9 @@ const VersatilePost = observer(() => {
       {
         AccountID: applicationStore.user.uid,
         TagID: tagsSelected,
-        SubjectID: topicSelected,
+        SubjectID: topicSelected.split(' ')[0],
+        SubjectTH: topicSelected.split(' ')[1],
+        SubjectENG: topicSelected.split('(')[1].replace(')', ''),
         Title: title,
         Description: description,
       },
@@ -156,13 +164,20 @@ const VersatilePost = observer(() => {
 
   const handelOnEditPost = async () => {
     console.log('test edit')
-    if (!applicationStore.user) return
+    if (
+      !topicSelected ||
+      filesUpload.status !== 'done' ||
+      !applicationStore.user
+    )
+      return
     // create_post
     await edit(
       {
         AccountID: applicationStore.user.uid,
         TagID: tagsSelected,
-        SubjectID: topicSelected,
+        SubjectID: topicSelected.split(' ')[0],
+        SubjectTH: topicSelected.split(' ')[1],
+        SubjectENG: topicSelected.split('(')[1].replace(')', ''),
         Title: title,
         Description: description,
       },
@@ -184,7 +199,7 @@ const VersatilePost = observer(() => {
         {/* {console.log(topicSelected === postInfo[1]?.SubjectID)} */}
         <SMTDropdown
           placeholder={isNewPost ? 'กรุณาเลือกวิชา' : topicSelected}
-          value={topicSelected}
+          // value={topicSelected}
           fluid
           search
           selection

@@ -2,6 +2,7 @@ import { collection, orderBy, query, where, getDocs } from '@firebase/firestore'
 import { firestore } from 'config/firebase'
 
 async function BasicSearch(Subject: string, Tag: Array<string>) {
+  console.log(Subject)
   try {
     if (Tag.length == 0) {
       Tag = [

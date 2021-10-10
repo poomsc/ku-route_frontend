@@ -85,9 +85,8 @@ async function signInWithGoogle() {
   provider.addScope('https://www.googleapis.com/auth/contacts.readonly')
   provider.addScope('https://www.googleapis.com/auth/userinfo.email')
   provider.addScope('https://www.googleapis.com/auth/userinfo.profile')
-
   try {
-    console.log('signIn_Google')
+    console.log('signInWithGoogle')
     const userCredential = await signInWithPopup(firebaseAuth, provider)
     const credential = GoogleAuthProvider.credentialFromResult(userCredential)
 
@@ -107,8 +106,8 @@ async function signInWithGoogle() {
     applicationStore.setUser(user)
     return userCredential
   } catch (error) {
-    console.log('signInWithGoogle', error)
-    // alert(error)
+    //console.log('signInWithGoogle', error)
+    alert(error)
     return false
   }
 }

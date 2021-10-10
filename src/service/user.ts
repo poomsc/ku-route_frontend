@@ -21,6 +21,8 @@ interface postProps {
   AccountID: string
   TagID: string[]
   SubjectID: string
+  SubjectTH: string
+  SubjectENG: string
   Title: string
   Description: string
 }
@@ -56,7 +58,15 @@ async function register({ UID, Name, Surname, Email }: registerProps) {
 }
 
 async function create_post(
-  { AccountID, TagID, SubjectID, Title, Description }: postProps,
+  {
+    AccountID,
+    TagID,
+    SubjectID,
+    SubjectTH,
+    SubjectENG,
+    Title,
+    Description,
+  }: postProps,
   allFiles: IFileWithMeta[],
   callBack?: () => void
 ) {
@@ -66,6 +76,8 @@ async function create_post(
     AccountID,
     TagID,
     SubjectID,
+    SubjectTH,
+    SubjectENG,
     Title,
     Description,
     DateCreate: serverTimestamp(),
