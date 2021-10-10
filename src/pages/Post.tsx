@@ -1,6 +1,12 @@
 import React from 'react'
 import '../PostStyles.css'
-import { Container, Card, FormControl, InputGroup } from 'react-bootstrap'
+import {
+  Container,
+  Card,
+  FormControl,
+  InputGroup,
+  CloseButton,
+} from 'react-bootstrap'
 import { useState, useEffect } from 'react'
 import user_icon from './../assets/icons/user-icon.png'
 import { url } from 'inspector'
@@ -8,11 +14,12 @@ import pdf from './../assets/icons/PDF.png'
 import jpg from './../assets/icons/JPG.png'
 import userIcon from './../assets/icons/user-icon.png'
 import MoreLabel from '@material-ui/icons/MoreHoriz'
+import CloseLabel from '@material-ui/icons/Close'
 import sendArrow from './../assets/icons/sendArrow.png'
 import Comment from './../assets/icons/Comment.png'
 import Like from './../assets/icons/Like.png'
 import Unlike from './../assets/icons/Unlike.png'
-import { collection, DocumentData } from '@firebase/firestore'
+import { collection, DocumentData, serverTimestamp } from '@firebase/firestore'
 import {
   get_comment,
   get_file,
@@ -22,7 +29,7 @@ import {
 } from 'service/system'
 import applicationStore from 'stores/applicationStore'
 import { convertTStoDate } from './AllPost'
-import { create_comment, like, disable } from 'service/user'
+import { create_comment, like, disable, edit } from 'service/user'
 import { getDocLike, getLikeOfPost } from 'service/system'
 import { awaitExpression } from '@babel/types'
 import { getDownloadURL, StorageReference } from '@firebase/storage'
@@ -37,6 +44,7 @@ import {
 } from 'reactstrap'
 import { useLocation } from 'react-router'
 import { modalClasses } from '@mui/material'
+import { right } from '@popperjs/core'
 
 const PostPage = () => {
   const [postData, setPostData] = useState<DocumentData>()
@@ -49,6 +57,9 @@ const PostPage = () => {
   const [allFiles, setAllFiles] = useState<StorageReference[]>()
   const [linkFiles, setLinkFiles] = useState<string[]>()
   const [postOwnerUID, setPostOwnerUID] = useState('')
+  const [editCommentBlock, setEditCommentBlock] = useState(-1)
+  const [newCommentEdited, setNewCommentEdited] = useState('')
+  const [saveCommentEnable, setSaveCommentEnable] = useState(false)
 
   const { pathname } = useLocation()
   const PostID = pathname.split('/')[2]
@@ -113,13 +124,13 @@ const PostPage = () => {
     setAmountLike(countLike)
   }
 
-  const handleOnAddComment = async () => {
-    if (!applicationStore.user || commentDescription == '') return
-    console.log(commentDescription)
+  const handleOnAddComment = async (text) => {
+    if (!applicationStore.user || text == '') return
+    console.log(text)
     create_comment({
       AccountID: applicationStore.user.uid,
       PostID: PostID,
-      Description: commentDescription,
+      Description: text,
     })
     const comment = (await get_comment(PostID)) as DocumentData
     const infoComment = await get_info_comment(comment)
@@ -129,15 +140,12 @@ const PostPage = () => {
       setInfoCommentData(infoComment)
     }
     // reset comment message
+    setEditCommentBlock(editCommentBlock != -1 ? editCommentBlock + 1 : -1)
     setCommentDescription('')
   }
 
-  const handleOnEditComment = () => {
-    // doSomething;
-    // var like = document.getElementsByClassName("dork");
-    // for (let index = 0; index < like.length; ++index) {
-    //     like[index].style.display = "none"
-    // }
+  const handleOnEditComment = (index) => {
+    setEditCommentBlock(index)
   }
 
   const handleOnDeleteComment = async () => {
@@ -146,6 +154,31 @@ const PostPage = () => {
 
   const handleOnReport = () => {
     // doSomething;
+  }
+
+  const handleOnEditCommentChange = (oldComment, event: any) => {
+    setNewCommentEdited(event.target.value)
+    checkChangeData(oldComment, event)
+  }
+
+  const checkChangeData = (attr, event) => {
+    // Check equal of two string
+    if (attr && !(event.target.value === attr)) {
+      setSaveCommentEnable(true)
+    } else if (!attr) {
+      setSaveCommentEnable(true)
+    } else {
+      setSaveCommentEnable(false)
+    }
+  }
+
+  const handleOnSubmitEditedComment = async (text) => {
+    let changedInfo = {}
+    changedInfo['Description'] = text
+    changedInfo['DateEdited'] = serverTimestamp()
+    edit(changedInfo, targetUUID, databaseTarget)
+    setSaveCommentEnable(false)
+    setNewCommentEdited('')
   }
 
   const PopoverItem = (props) => {
@@ -201,7 +234,7 @@ const PostPage = () => {
             <div className="style25 font-weight-light d-flex-block">
               <Button
                 className={className}
-                onClick={handleOnEditComment}
+                onClick={(e) => handleOnEditComment(id / 2 - 1)}
                 hidden={applicationStore.user?.uid != item.data.AccountID}
               >
                 แก้ไข...
@@ -230,6 +263,54 @@ const PostPage = () => {
     )
   }
 
+  const renderEditBlock = (commentBlock) => {
+    return (
+      <Container className="d-block w-100 pl-0">
+        <InputGroup className="rounded-สเ bg-white shadow mb-4">
+          <FormControl
+            as="textarea"
+            defaultValue={commentBlock?.Description}
+            aria-label="title"
+            className="rounded-10 border-0"
+            placeholder="แก้ไขความคิดเห็น..."
+            onChange={(e) =>
+              handleOnEditCommentChange(commentBlock?.Description, e)
+            }
+            rows={3}
+            style={{ minHeight: '5rem' }}
+          />
+        </InputGroup>
+
+        <div className="d-flex justify-content-end">
+          <div className="mx-2"></div>
+          <Button
+            className="bg-dark text-white mr-3"
+            style={{ width: '7rem' }}
+            type="submit"
+            onClick={(e) => {
+              handleOnEditComment(-1)
+              setSaveCommentEnable(false)
+              setNewCommentEdited('')
+            }}
+          >
+            ยกเลิก
+          </Button>
+          <Button
+            className="bg-primary text-white"
+            disabled={!saveCommentEnable}
+            style={{ width: '7rem' }}
+            type="submit"
+            onClick={(e) => {
+              handleOnSubmitEditedComment(newCommentEdited)
+            }}
+          >
+            บันทึก
+          </Button>
+        </div>
+      </Container>
+    )
+  }
+
   const genLoadLabel = () => {
     return labelCount++
   }
@@ -241,6 +322,9 @@ const PostPage = () => {
   let title = postData?.Title ? postData?.Title : ''
   let descript = postData?.Description ? postData?.Description : ''
   let labelCount = 0
+
+  let databaseTarget = 'Comment'
+  let targetUUID = null
 
   const mockTags = postData?.TagID ? postData?.TagID : ['']
   const SubjectID = postData?.SubjectID ? postData?.SubjectID : 'รหัสวิชา'
@@ -341,7 +425,7 @@ const PostPage = () => {
               const extFile = fileSP[fileSP.length - 1]
               return (
                 <a
-                  className="style13 mr-4 mb-4 cursor-pointer hover-darken"
+                  className="style13 mr-4 mb-4 hover-darken cursor-pointer"
                   key={file.name}
                   href={linkFiles[index]}
                   target="_blank"
@@ -363,6 +447,17 @@ const PostPage = () => {
                       </div>
                       .{extFile.toUpperCase()}
                     </div>
+                    <Button
+                      className="p-0 m-0"
+                      style={{
+                        zIndex: 100,
+                        position: 'absolute',
+                        left: '100px',
+                        top: '5px',
+                      }}
+                    >
+                      <CloseLabel />
+                    </Button>
                   </div>
                 </a>
               )
@@ -417,54 +512,18 @@ const PostPage = () => {
                       className="d-flex align-items-center"
                       style={{ width: '72.5%' }}
                     >
-                      <p className="style22 text-break pl-3" hidden={false}>
-                        {commentData[index]?.Description}
+                      <p
+                        className="style22 text-break pl-3"
+                        hidden={editCommentBlock == index}
+                      >
+                        {commentData[index][1]?.Description}
                       </p>
 
-                      {/* {applicationStore.user?.uid == commentData[index].AccountID ?
-                        <Container className="dork d-block w-100"
-                                 hidden={true}
-                      >
-                        <InputGroup className="rounded-สเ bg-white shadow mb-4">
-                          <FormControl
-                            as="textarea"
-                            defaultValue={commentData[index]?.Description}
-                            aria-label="title"
-                            className="rounded-10 border-0"
-                            placeholder="คำอธิบายของตัวท่าน"
-                            // onChange={handleOnAboutChange}
-                            rows={3}
-                            style={{ minHeight: '5rem' }}
-                          />
-                        </InputGroup>
-
-                        <div className="d-flex justify-content-end">
-                          <div className="mx-2"></div>
-                          <Button
-                            className="bg-dark text-white mr-3"
-                            style={{ width: '7rem' }}
-                            type="submit"
-                            onClick={(e) => {
-                              // saveCurrentState(title, about, userFaculty)
-                            }}
-                          >
-                            ยกเลิก
-                          </Button>
-                          <Button
-                            className="bg-primary text-white"
-                            // disabled={!saveButtonClickable}
-                            style={{ width: '7rem' }}
-                            type="submit"
-                            onClick={(e) => {
-                              // saveCurrentState(title, about, userFaculty)
-                            }}
-                          >
-                            บันทึก
-                          </Button>
-                        </div>
-                      </Container>
-                      : <></>
-                      } */}
+                      {editCommentBlock == index ? (
+                        renderEditBlock(commentData[index][1])
+                      ) : (
+                        <></>
+                      )}
                     </div>
 
                     <div className="d-flex pl-4" style={{ width: '22.5%' }}>
@@ -501,7 +560,7 @@ const PostPage = () => {
                         />
 
                         <div className="style24 d-block text-truncate">
-                          {convertTStoDate(commentData[index]?.DateEdited)}
+                          {convertTStoDate(commentData[index][1]?.DateEdited)}
                         </div>
                       </div>
                     </div>
@@ -521,7 +580,7 @@ const PostPage = () => {
                         item={{
                           placement: 'top',
                           user: infoComment,
-                          data: commentData[index],
+                          data: commentData[index][1],
                           className:
                             'style25 d-inline-flex text-truncate font-weight-bold my-0 cursor-pointer p-0',
                         }}
@@ -554,7 +613,7 @@ const PostPage = () => {
             />
             <button
               type="submit"
-              onClick={handleOnAddComment}
+              onClick={(e) => handleOnAddComment(commentDescription)}
               className="style28 btn btn-primary btn-sm px-3 border-0"
               style={{
                 backgroundColor: '#FFFFFF',
@@ -590,7 +649,7 @@ const PostPage = () => {
                     border: 'none',
                   }}
                 >
-                  {commentData[index].Description}
+                  {commentData[index][1].Description}
                 </div>
                 <div className="py-2">
                   <img
@@ -623,7 +682,7 @@ const PostPage = () => {
                   >
                     &nbsp;&nbsp;by&nbsp;&nbsp;
                     <br />
-                    &nbsp;&nbsp;{convertTStoDate(commentData[index].DateEdited)}
+                    &nbsp;&nbsp;{convertTStoDate(commentData[index][1].DateEdited)}
                   </div>
                   <div
                     className="d-inline-flex py-2"
