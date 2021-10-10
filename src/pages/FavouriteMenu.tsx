@@ -11,7 +11,7 @@ import applicationStore from 'stores/applicationStore'
 import { get_mylikepost, get_one_post } from 'service/system'
 import { DocumentData } from '@firebase/firestore'
 import { useHistory } from 'react-router'
-import { convertTStoDate } from './allPost'
+import { convertTStoDate } from './AllPost'
 import { disable } from 'service/user'
 import { ModalFavouriteMenu } from 'components/Modal'
 

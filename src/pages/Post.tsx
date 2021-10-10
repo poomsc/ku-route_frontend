@@ -28,7 +28,7 @@ import {
   get_one_post,
 } from 'service/system'
 import applicationStore from 'stores/applicationStore'
-import { convertTStoDate } from './allPost'
+import { convertTStoDate } from './AllPost'
 import { create_comment, like, disable, edit } from 'service/user'
 import { getDocLike, getLikeOfPost } from 'service/system'
 import { awaitExpression } from '@babel/types'

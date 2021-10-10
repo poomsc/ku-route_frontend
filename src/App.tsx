@@ -21,7 +21,7 @@ import { title } from 'process'
 import { edit } from 'service/user'
 import { serverTimestamp } from '@firebase/firestore'
 import applicationStore from 'stores/applicationStore'
-import AllPostPage from './pages/allPost'
+import AllPostPage from './pages/AllPost'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import PDF1 from './assets/icons/PDF.png'
 
