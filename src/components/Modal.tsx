@@ -12,10 +12,9 @@ interface postProps {
 }
 
 interface commentProps {
-  //onClick: (CommentID: string) => void
   CommentID: string
-  Open: boolean
-  //children: ReactElement<any, any>
+  onClick: (CommentID: string) => void
+  children: ReactElement<any, any>
 }
 
 const ModalFavouriteMenu = observer(({ PostID, onClick }: postProps) => {
@@ -106,42 +105,45 @@ const ModalEditPostMenu = observer(({ PostID, onClick }: postProps) => {
   )
 })
 
-const ModalDisableComment = observer(({ CommentID, Open }: commentProps) => {
-  const [open, setOpen] = useState<boolean>(Open)
-  console.log(open)
+const ModalDisableComment = observer(
+  ({ CommentID, onClick, children }: commentProps) => {
+    const [open, setOpen] = useState<boolean>(false)
+    console.log(open)
 
-  const handleOnDelete = async () => {
-    if (!applicationStore.user) return
-    await disable({}, CommentID, 'Comment')
+    const handleOnDelete = async () => {
+      if (!applicationStore.user) return
+      await disable({}, CommentID, 'Comment')
+      setOpen(false)
+      onClick(CommentID)
+    }
 
-    setOpen(false)
+    return (
+      <Modal
+        onClose={() => setOpen(false)}
+        onOpen={() => setOpen(true)}
+        open={open}
+        trigger={children}
+        size="mini"
+        dimmer="blurring"
+        className="h-auto"
+      >
+        <Modal.Header>Delete Comment</Modal.Header>
+        <Modal.Content>
+          <Modal.Description>
+            <p>คุณต้องการลบความคิดเห็นนี้ ?</p>
+          </Modal.Description>
+        </Modal.Content>
+        <Modal.Actions>
+          <Button color="black" onClick={() => setOpen(false)}>
+            ยกเลิก
+          </Button>
+          <Button onClick={() => handleOnDelete()} negative>
+            ตกลง
+          </Button>
+        </Modal.Actions>
+      </Modal>
+    )
   }
-
-  return (
-    <Modal
-      onClose={() => setOpen(false)}
-      onOpen={() => setOpen(true)}
-      open={open}
-      size="mini"
-      dimmer="blurring"
-      className="h-auto"
-    >
-      <Modal.Header>Delete Comment</Modal.Header>
-      <Modal.Content>
-        <Modal.Description>
-          <p>คุณต้องการลบความคิดเห็นนี้ ?</p>
-        </Modal.Description>
-      </Modal.Content>
-      <Modal.Actions>
-        <Button color="black" onClick={() => setOpen(false)}>
-          ยกเลิก
-        </Button>
-        <Button onClick={() => handleOnDelete()} negative>
-          ตกลง
-        </Button>
-      </Modal.Actions>
-    </Modal>
-  )
-})
+)
 
 export { ModalFavouriteMenu, ModalEditPostMenu, ModalDisableComment }

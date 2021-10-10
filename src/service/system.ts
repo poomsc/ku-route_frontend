@@ -121,11 +121,11 @@ async function get_comment(PostID: string) {
     const q = query(
       collection(db, 'Comment'),
       where('PostID', '==', PostID),
-      orderBy('DateEdited', 'desc')
+      where('Status', '==', true),
+      orderBy('DateCreate', 'asc')
     )
     const querySnapshot = await getDocs(q)
     const Comments = querySnapshot.docs.map((doc) => [doc.id, doc.data()])
-    console.log(Comments)
     return Comments
   } catch (error) {
     console.log('get_comment', error)

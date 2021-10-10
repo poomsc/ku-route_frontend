@@ -214,7 +214,7 @@ const VersatilePost = observer(() => {
         {/* {console.log(topicSelected === postInfo[1]?.SubjectID)} */}
         <SMTDropdown
           placeholder={isNewPost ? 'กรุณาเลือกวิชา' : topicSelected}
-          value={topicSelected}
+          // value={topicSelected}
           fluid
           search
           selection
