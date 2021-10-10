@@ -24,7 +24,7 @@ const FavouriteMenu = () => {
       const likepost = (await get_mylikepost(
         applicationStore.user.uid
       )) as DocumentData
-      // console.log(likepost)
+      console.log(likepost)
 
       setlikepostData(likepost)
     }

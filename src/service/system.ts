@@ -98,9 +98,11 @@ async function get_one_post(PostID: string) {
     const docRef = doc(db, 'Post', PostID)
     const docSnap = await getDoc(docRef)
 
-    if (docSnap.exists()) {
+    // console.log(docSnap.data()?.Status)
+    if (docSnap.exists() && docSnap.data()?.Status) {
       // console.log('Document data:', docSnap.data())
       return [docSnap.id, docSnap.data()]
+      // return {id:docSnap.id, data:docSnap.data()}
     } else {
       // doc.data() will be undefined in this case
       console.log('No such document!')

@@ -41,9 +41,9 @@ const EditPostMenu = () => {
   // console.log(mypostData)
 
   const history = useHistory()
-  const handleOnViewPage = (PostID: string) => {
-    localStorage.setItem('currentViewPost', PostID)
-    history.push('/post')
+  const handleOnEditPost = (PostID: string) => {
+    // localStorage.setItem('currentViewPost', PostID)
+    history.push(`/edit-post/${PostID}`)
   }
 
   const handelOnDelete = async () => {
@@ -134,11 +134,11 @@ const EditPostMenu = () => {
               {mypostData.map((object, idx) => (
                 <tr className="hover-darken bg-white">
                   <td>{object[1]?.SubjectID}</td>
-                  <td className="text-truncate" style={{ maxWidth: '100px' }}>
-                    {object[1]?.Title}
-                  </td>
-                  <td className="text-truncate" style={{ maxWidth: '100px' }}>
-                    {object[1]?.Description}
+                  <td>{object[1]?.Title}</td>
+                  <td>
+                    {object[1]?.Description.length > 40
+                      ? object[1]?.Description.substring(0, 40) + '...'
+                      : object[1]?.Description}
                   </td>
                   <td>
                     <img
@@ -159,7 +159,7 @@ const EditPostMenu = () => {
                   <td>{convertTStoDate(object[1]?.DateEdited)}</td>
                   <td>
                     <div
-                      onClick={() => handleOnViewPage(object[0])}
+                      onClick={() => handleOnEditPost(object[0])}
                       className="fixbutton max-w-content d-inline-block cursor-pointer hover-darken-2"
                     >
                       EDIT

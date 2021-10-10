@@ -60,9 +60,9 @@ const PostPage = () => {
         files.map((file) => getDownloadURL(file))
       )
 
-      console.log(allFiles)
-      console.log(infoComment)
-      console.log(fileUrl)
+      // console.log(allFiles)
+      // console.log(infoComment)
+      // console.log(fileUrl)
 
       if (applicationStore.user) {
         const LikeDoc = await getDocLike(
@@ -71,6 +71,9 @@ const PostPage = () => {
         setLikeData(LikeDoc?.Status)
       }
       // const countLike = await getLikeOfPost(currentViewPost)
+      // console.log(post)
+      // console.log(info)
+
       setPostData(post[1])
       setInfoData(info)
       setCommentData(comment)

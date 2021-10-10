@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button, Dropdown, FormControl, InputGroup } from 'react-bootstrap'
 import { useHistory, useLocation } from 'react-router'
 import { generateRandomColor, removeElementFromArray } from 'utils'
@@ -17,6 +17,9 @@ import { delete_post } from 'service/system'
 import { ISubject } from 'interface/subject.interface'
 import { constTags } from 'constants/index'
 import Subjects from 'constants/subjects.json'
+import { get_one_post } from 'service/system'
+import { edit } from 'service/user'
+import { DocumentData } from '@firebase/firestore'
 
 const contractChannels = [
   { Icon: mail, Placeholder: 'hello@kuroute.com' },
@@ -29,14 +32,30 @@ const pathType = { '/create-post': true, '/edit-post': false }
 
 interface dropdownType {
   text: string
-  value: number
+  value: string
 }
 
 const VersatilePost = observer(() => {
+  const [postInfo, setPostInfo] = useState<DocumentData>([])
+
+  const { pathname } = useLocation()
+  const isNewPost = pathType[pathname]
+  const PostID = pathname.split('/')[2]
+  useEffect(() => {
+    async function fetch() {
+      if (!PostID) return
+      const post = (await get_one_post(PostID)) as DocumentData
+      // console.log(postInfo)
+
+      setPostInfo(post)
+    }
+    fetch()
+  }, [PostID])
+
   const _subjects: dropdownType[] = (Subjects as ISubject[]).map((s, i) => {
     return {
       text: `${s.subjectCode} ${s.subjectNameTh} (${s.subjectNameEn})`,
-      value: i,
+      value: s.subjectCode,
       key: i,
     }
   })
@@ -45,6 +64,7 @@ const VersatilePost = observer(() => {
       return { text }
     })
   )
+
   const [subjects, setSubjects] = useState<dropdownType[]>(
     _subjects.slice(0, 10)
   )
@@ -59,8 +79,25 @@ const VersatilePost = observer(() => {
     allFiles: IFileWithMeta[]
   }>({ status: 'done', allFiles: [] })
 
-  const { pathname } = useLocation()
-  const isNewPost = pathType[pathname]
+  useEffect(() => {
+    if (isNewPost || !postInfo[1]) return
+    console.log(postInfo[1].SubjectID)
+    const includingSubject = _subjects.find(
+      (s) => s.value === postInfo[1].SubjectID
+    )
+    if (includingSubject) setSubjects([...subjects, includingSubject])
+    setTopicSelected(
+      postInfo[1]?.SubjectID +
+        ' ' +
+        postInfo[1]?.SubjectTH +
+        ' (' +
+        postInfo[1]?.SubjectENG +
+        ')'
+    )
+    setTitle(postInfo[1]?.Title)
+    setTagSelected(postInfo[1]?.TagID)
+    setDescription(postInfo[1]?.Description)
+  }, [isNewPost, postInfo])
 
   const history = useHistory()
   const goToMyPost = () => {
@@ -122,6 +159,30 @@ const VersatilePost = observer(() => {
     // delete_post()
   }
 
+  const handelOnEditPost = async () => {
+    console.log('test edit')
+    if (
+      !topicSelected ||
+      filesUpload.status !== 'done' ||
+      !applicationStore.user
+    )
+      return
+    // create_post
+    await edit(
+      {
+        AccountID: applicationStore.user.uid,
+        TagID: tagsSelected,
+        SubjectID: topicSelected.split(' ')[0],
+        SubjectTH: topicSelected.split(' ')[1],
+        SubjectENG: topicSelected.split('(')[1].replace(')', ''),
+        Title: title,
+        Description: description,
+      },
+      postInfo[0],
+      'Post'
+    )
+  }
+
   return (
     <div className="white-bg py-5">
       <h2 className="font-weight-bold text-center mb-5">
@@ -132,14 +193,16 @@ const VersatilePost = observer(() => {
         className="rounded-25 shadow mx-auto mb-4"
         style={{ maxWidth: '70rem' }}
       >
+        {/* {console.log(topicSelected === postInfo[1]?.SubjectID)} */}
         <SMTDropdown
-          placeholder="กรุณาเลือกวิชา"
+          placeholder={isNewPost ? 'กรุณาเลือกวิชา' : topicSelected}
           fluid
           search
           selection
           options={subjects.slice(0, 10)}
           onChange={handleOnSelectSubject}
           onSearchChange={onSearchChange}
+          value={topicSelected}
           // searchQuery={searchQuery}
           className="rounded-10 bg-primary-dark text-white font-weight-bold d-flex"
           icon={
@@ -157,6 +220,7 @@ const VersatilePost = observer(() => {
         <p className="font-weight-bold">หัวเรื่อง</p>
         <InputGroup className="rounded-10 bg-white mb-4">
           <FormControl
+            value={title}
             aria-label="title"
             className="rounded-10 border-0"
             placeholder="หัวข้อโพสต์..."
@@ -179,6 +243,7 @@ const VersatilePost = observer(() => {
         <p className="font-weight-bold">ข้อความ</p>
         <InputGroup>
           <FormControl
+            value={description}
             as="textarea"
             rows={8}
             className="rounded-10 border-0 mb-4"
@@ -287,7 +352,10 @@ const VersatilePost = observer(() => {
             </Button>
           )}
           <div className="mx-2" />
-          <Button style={{ width: '7rem' }} onClick={handelOnCreatePost}>
+          <Button
+            style={{ width: '7rem' }}
+            onClick={isNewPost ? handelOnCreatePost : handelOnEditPost}
+          >
             PUBLISH
           </Button>
         </div>

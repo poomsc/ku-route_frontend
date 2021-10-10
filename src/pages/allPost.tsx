@@ -55,15 +55,14 @@ const AllPostPage = () => {
   const [resultPost, setResultPost] = useState<DocumentData>()
 
   const currentSearch = localStorage.getItem('currentSearch')
+  const tagJSON = localStorage.getItem('tagSearch')
+  const tagSearch = tagJSON ? JSON.parse(tagJSON) : null
   const SubjectIDandTH = currentSearch
     ? currentSearch.split(' ')
     : [' ', 'ชื่อวิชา่']
   const SubjectENG = currentSearch
     ? currentSearch.split('(')[1].replace(')', '')
     : 'SubjectName'
-
-  const tagJSON = localStorage.getItem('tagSearch')
-  const tagSearch = tagJSON ? JSON.parse(tagJSON) : null
 
   const handleOnViewPage = (PostID: string) => {
     localStorage.setItem('currentViewPost', PostID)
@@ -179,13 +178,11 @@ const AllPostPage = () => {
 
   useEffect(() => {
     async function fetch() {
-      if (!currentSearch) return
-
+      if (!currentSearch || !tagSearch) return
       const tagResult = [] as Array<string>
       for (const TagID in tagSearch) {
         if (tagSearch[TagID]) tagResult.push(TagID)
       }
-
       const result = await BasicSearch(SubjectIDandTH[0], tagResult)
       setResultPost(result)
     }
