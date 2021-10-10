@@ -34,6 +34,7 @@
     "react-images-upload": "^1.2.8",
     "react-native-rounded-checkbox": "^0.1.4",
     "react-pdf": "^5.4.0",
+    "react-phone-input-2": "^2.14.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "react-scrollbars-custom": "^4.0.27",

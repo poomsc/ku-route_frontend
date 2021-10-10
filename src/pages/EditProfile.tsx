@@ -1,5 +1,11 @@
 import React, { SyntheticEvent, useState, useEffect } from 'react'
-import { Alert, Button, FormControl, InputGroup } from 'react-bootstrap'
+import {
+  Alert,
+  Button,
+  Container,
+  FormControl,
+  InputGroup,
+} from 'react-bootstrap'
 import defaultUserProfile from 'assets/icons/user-icon.png'
 import { Dropdown as SMTDropdown } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
@@ -14,14 +20,27 @@ import { useHistory } from 'react-router'
 import { observer } from 'mobx-react'
 import { BasicSearch } from 'service/search'
 import { border } from '@mui/system'
+import facebook from 'assets/icons/facebook.png'
+import instagram from 'assets/icons/instagram.png'
+import mail from 'assets/icons/mail.png'
+import phone from 'assets/icons/phone.png'
+import PhoneInput from 'react-phone-input-2'
+import 'react-phone-input-2/lib/style.css'
 
 const facultyList = [] as any
 let facultyLoader = 0
 let currentFaculty, newFacultySelected
-let sectionChangeStatus = [false, false, false]
+let sectionChangeStatus = [false, false, false, false, false, false, false]
 
 let databaseTarget = 'Account'
 let UUID = 'Account01'
+
+const contractChannels = [
+  { Icon: mail, Placeholder: 'E-mail' },
+  { Icon: phone, Placeholder: 'เบอร์โทร' },
+  { Icon: facebook, Placeholder: 'Facebok URL' },
+  { Icon: instagram, Placeholder: 'Instagram URL' },
+]
 
 function loadFaculty(components) {
   for (const e of components) {
@@ -56,6 +75,10 @@ const EditProfilePage = observer(() => {
   const [title, setTitle] = useState<string>()
   const [userFaculty, setUserFaculty] = useState<string>()
   const [about, setAbout] = useState<string>()
+  const [mail, setMail] = useState<string>()
+  const [phone, setPhone] = useState<string>()
+  const [facebook, setFacebook] = useState<string>()
+  const [instagram, setInstagram] = useState<string>()
 
   const [successAlertHidden, setSuccessAlertHidden] = useState(true)
   const [failAlertHidden, setFailAlertHidden] = useState(true)
@@ -129,6 +152,18 @@ const EditProfilePage = observer(() => {
     if (sectionChangeStatus[2]) {
       changedInfo['About'] = about
     }
+    if (sectionChangeStatus[3]) {
+      changedInfo['Mail'] = mail
+    }
+    if (sectionChangeStatus[4]) {
+      changedInfo['Phone'] = phone
+    }
+    if (sectionChangeStatus[5]) {
+      changedInfo['Facebook'] = facebook
+    }
+    if (sectionChangeStatus[6]) {
+      changedInfo['Instagram'] = instagram
+    }
     changedInfo['DateEdited'] = serverTimestamp()
     // sent new changes to database
     uploadInfo(changedInfo)
@@ -141,26 +176,49 @@ const EditProfilePage = observer(() => {
 
   const handleOnDisplayNameChange = (event: any) => {
     setTitle(event.target.value)
-    checkChangeData(userInfo?.DisplayName, event, 0)
+    checkChangeData(userInfo?.DisplayName, event.target.value, 0)
   }
 
   const handleOnSelectFaculty = (event: any) => {
     setUserFaculty(event.target.innerText)
     newFacultySelected = findFacultyKey(faculty, event.target.innerText)
-    checkChangeData(userInfo?.Faculty, event, 1)
+    checkChangeData(userInfo?.Faculty, event.target.value, 1)
   }
 
   const handleOnAboutChange = (event: any) => {
     setAbout(event.target.value)
-    checkChangeData(userInfo?.About, event, 2)
+    checkChangeData(userInfo?.About, event.target.value, 2)
   }
 
-  const checkChangeData = (attr, event, index: number) => {
+  const handleOnContactChange = (event: any, slot: number) => {
+    let contactChecker = null
+    let message = event
+    switch (slot) {
+      case 0:
+        contactChecker = userInfo?.Mail
+        setMail(message)
+        break
+      case 1:
+        contactChecker = userInfo?.Phone
+        setPhone(message)
+        break
+      case 2:
+        contactChecker = userInfo?.Facebook
+        setFacebook(message)
+        break
+      case 3:
+        contactChecker = userInfo?.Instagram
+        setInstagram(message)
+    }
+    checkChangeData(contactChecker, message, slot + 3)
+  }
+
+  const checkChangeData = (attr, value, index: number) => {
     // Check equal of two string
     if (index != 1) {
-      if (attr && !(event.target.value === attr)) {
+      if (attr && !(value === attr)) {
         sectionChangeStatus[index] = true
-      } else if (!attr) {
+      } else if (!attr && value != '') {
         sectionChangeStatus[index] = true
       } else {
         sectionChangeStatus[index] = false
@@ -175,7 +233,11 @@ const EditProfilePage = observer(() => {
     if (
       !sectionChangeStatus[0] &&
       !sectionChangeStatus[1] &&
-      !sectionChangeStatus[2]
+      !sectionChangeStatus[2] &&
+      !sectionChangeStatus[3] &&
+      !sectionChangeStatus[4] &&
+      !sectionChangeStatus[5] &&
+      !sectionChangeStatus[6]
     ) {
       setSaveButtonClickable(false)
     } else {
@@ -203,6 +265,7 @@ const EditProfilePage = observer(() => {
             }}
           />
         </div>
+        <h5 className="font-weight-bold mb-4">ประวัติส่วนตัว</h5>
         <div className="edit-profile-name-section" style={{ display: 'flex' }}>
           <div style={{ width: '48%' }}>
             <p className="font-weight-bold">ชื่อจริง</p>
@@ -305,36 +368,94 @@ const EditProfilePage = observer(() => {
           />
         </div>
 
-        <p className="font-weight-bold">เกี่ยวกับตัวฉัน</p>
-        <InputGroup className="rounded-10 bg-white shadow mb-4">
-          <FormControl
-            as="textarea"
-            defaultValue={userInfo?.About}
-            aria-label="title"
-            className="rounded-10 border-0"
-            placeholder="คำอธิบายของตัวท่าน"
-            onChange={handleOnAboutChange}
-            rows={6}
-            maxLength={1000}
-            style={{ minHeight: '10rem' }}
-          />
-          <div
-            style={{
-              position: 'absolute',
-              top: -25,
-              right: 0,
-              fontSize: 14,
-              opacity: 0.5,
-            }}
-          >
-            {about
-              ? about?.length
-              : sectionChangeStatus[2]
-              ? 0
-              : userInfo?.About.length}
-            /1000
-          </div>
-        </InputGroup>
+        <div className="pt-3">
+          <h5 className="font-weight-bold mb-3">เกี่ยวกับตัวฉัน</h5>
+          <InputGroup className="rounded-10 bg-white shadow mb-4">
+            <FormControl
+              as="textarea"
+              defaultValue={userInfo?.About}
+              aria-label="title"
+              className="rounded-10 border-0"
+              placeholder="คำอธิบายของตัวท่าน"
+              onChange={handleOnAboutChange}
+              rows={6}
+              maxLength={1000}
+              style={{ minHeight: '10rem' }}
+            />
+            <div
+              style={{
+                position: 'absolute',
+                top: -25,
+                right: 0,
+                fontSize: 14,
+                opacity: 0.5,
+              }}
+            >
+              {about
+                ? about?.length
+                : sectionChangeStatus[2]
+                ? 0
+                : userInfo?.About.length}
+              /1000
+            </div>
+          </InputGroup>
+        </div>
+
+        <div className="pt-3 pb-4">
+          <h5 className="font-weight-bold mb-3">ช่องทางติดต่อ</h5>
+          {contractChannels.map(({ Icon, Placeholder }, idx) => (
+            <InputGroup
+              className="mb-3 shadow bg-white rounded-10 d-flex justify-content-start"
+              style={{ height: '50px' }}
+              key={idx}
+            >
+              <InputGroup.Text
+                className="border-0 h-100"
+                style={{
+                  borderRadius: '10px 0 0 10px',
+                  backgroundColor: '#E1E1E1',
+                  width: '70px',
+                }}
+              >
+                <img src={Icon} alt="icon" className="h-75" />
+              </InputGroup.Text>
+
+              {idx != 1 ? (
+                <FormControl
+                  className="border-0 h-100"
+                  placeholder={Placeholder}
+                  aria-label={Placeholder}
+                  defaultValue={
+                    idx == 0
+                      ? userInfo?.Mail
+                      : idx == 2
+                      ? userInfo?.Facebook
+                      : userInfo?.Instagram
+                  }
+                  onChange={(e) => handleOnContactChange(e.target.value, idx)}
+                />
+              ) : (
+                <div
+                  className="d-flex p-0 m-0 w-50"
+                  style={{
+                    // overflow: 'hidden',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  <PhoneInput
+                    placeholder={Placeholder}
+                    value={userInfo?.Phone}
+                    onChange={(phone) => handleOnContactChange(phone, 1)}
+                    autoFormat={true}
+                    enableSearch={true}
+                    containerClass="d-flex w-100"
+                    inputClass="d-flex w-100 h-100 m-0 border-0"
+                  />
+                </div>
+              )}
+            </InputGroup>
+          ))}
+        </div>
 
         <div className="d-flex justify-content-end">
           <div className="mx-2"></div>

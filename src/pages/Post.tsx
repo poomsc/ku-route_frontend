@@ -205,11 +205,47 @@ const PostPage = () => {
           <PopoverBody>
             <div className="d-inline-flex">
               <img className="style23 mr-3" src={userIcon} />
-              <div className="style25 font-weight-light d-flex-block">
-                <p className="p-0 m-0">
+              <div className="style25 d-flex-block">
+                <p className="p-0 m-0 font-weight-light">
                   {item.text?.Name + ' ' + item.text?.Surname}
                 </p>
-                <p className="p-0 m-0">{item.text?.Faculty}</p>
+                <p className="p-0 m-0 font-weight-light">
+                  {' '}
+                  {item.text?.Faculty}
+                </p>
+                <div className="mt-2"></div>
+                <div className="max-h-content p-0 m-0 d-flex">
+                  <p className="p-0 m-0 font-weight-bolder d-inline-flex mr-2">
+                    E-mail:{' '}
+                  </p>
+                  <p className="p-0 m-0 d-inline-flex font-weight-light">
+                    {item.text?.Mail}
+                  </p>
+                </div>
+                <div className="max-h-content p-0 m-0 d-flex">
+                  <p className="p-0 m-0 font-weight-bolder d-inline-flex mr-2">
+                    Phone:{' '}
+                  </p>
+                  <p className="p-0 m-0 d-inline-flex font-weight-light">
+                    {item.text?.Phone}
+                  </p>
+                </div>
+                <div className="max-h-content p-0 m-0 d-flex">
+                  <p className="p-0 m-0 font-weight-bolder d-inline-flex mr-2">
+                    Facebook:{' '}
+                  </p>
+                  <p className="p-0 m-0 d-inline-flex font-weight-light">
+                    {item.text?.Facebook}
+                  </p>
+                </div>
+                <div className="max-h-content p-0 m-0 d-flex">
+                  <p className="p-0 m-0 font-weight-bolder d-inline-flex mr-2">
+                    Instagram:{' '}
+                  </p>
+                  <p className="p-0 m-0 d-inline-flex font-weight-light">
+                    {item.text?.Instagram}
+                  </p>
+                </div>
               </div>
             </div>
           </PopoverBody>
