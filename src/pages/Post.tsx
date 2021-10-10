@@ -447,7 +447,7 @@ const PostPage = () => {
                       </div>
                       .{extFile.toUpperCase()}
                     </div>
-                    <Button
+                    {/* <Button
                       className="p-0 m-0"
                       style={{
                         zIndex: 100,
@@ -457,7 +457,7 @@ const PostPage = () => {
                       }}
                     >
                       <CloseLabel />
-                    </Button>
+                    </Button> */}
                   </div>
                 </a>
               )

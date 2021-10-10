@@ -23,6 +23,7 @@ import { DocumentData } from '@firebase/firestore'
 import { getDownloadURL, StorageReference } from '@firebase/storage'
 import pdf from './../assets/icons/PDF.png'
 import jpg from './../assets/icons/JPG.png'
+import CloseLabel from '@material-ui/icons/Close'
 
 const contractChannels = [
   { Icon: mail, Placeholder: 'hello@kuroute.com' },
@@ -42,7 +43,7 @@ const VersatilePost = observer(() => {
   const [postInfo, setPostInfo] = useState<DocumentData>([])
   const [allFiles, setAllFiles] = useState<StorageReference[]>()
   const [linkFiles, setLinkFiles] = useState<string[]>()
-  const [deletedFile, setDeletedFile] = useState<string[]>()
+  const [deletedFile, setDeletedFile] = useState<string[]>([])
 
   const { pathname } = useLocation()
   const isNewPost = pathType[pathname]
@@ -183,7 +184,6 @@ const VersatilePost = observer(() => {
       !applicationStore.user
     )
       return
-    // delete_file
 
     // edit_post
     await editPost(
@@ -200,6 +200,16 @@ const VersatilePost = observer(() => {
       filesUpload.allFiles,
       goToMyPost
     )
+    //delete file when publish(edit)
+    deletedFile?.map((file) => {
+      delete_file(file)
+    })
+  }
+
+  const handelOnDeletedFile = async (filepath: any) => {
+    // console.log("path: " + filepath)
+    if (!deletedFile.includes(filepath)) deletedFile.push(filepath)
+    console.log(deletedFile)
   }
 
   return (
@@ -336,32 +346,59 @@ const VersatilePost = observer(() => {
             allFiles.map((file, index) => {
               const fileSP = file.name.split('.')
               const extFile = fileSP[fileSP.length - 1]
+
               return (
-                <a
-                  className="style13 mr-4 mb-4 cursor-pointer hover-darken"
-                  key={file.name}
-                  href={linkFiles[index]}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <div
+                  className="d-flex flex-column mr-4 mb-4"
+                  style={{
+                    opacity: deletedFile?.includes(allFiles[index]?.fullPath)
+                      ? 0.5
+                      : 1,
+                  }}
                 >
-                  <div className="style14 d-flex flex-column pb-3">
-                    <div className="d-block mx-auto">
-                      <img
-                        src={extFile == 'pdf' ? pdf : jpg}
-                        style={{ width: '125px', height: '125px' }}
-                      />
-                    </div>
-                    <div className="style15 d-block mx-auto mb-0">
-                      <div
-                        className="text-truncate mb-3 px-3"
-                        style={{ maxWidth: '125px' }}
-                      >
-                        {fileSP[0]}
+                  {console.log(
+                    deletedFile?.includes(allFiles[index]?.fullPath)
+                  )}
+                  <a
+                    className="style13 cursor-pointer hover-darken"
+                    key={file.name}
+                    href={linkFiles[index]}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <div className="style14 d-flex flex-column pb-3">
+                      <div className="d-block mx-auto">
+                        <img
+                          src={extFile == 'pdf' ? pdf : jpg}
+                          style={{ width: '125px', height: '125px' }}
+                        />
                       </div>
-                      .{extFile.toUpperCase()}
+                      <div className="style15 d-block mx-auto mb-0">
+                        <div
+                          className="text-truncate mb-3 px-3"
+                          style={{ maxWidth: '125px' }}
+                        >
+                          {fileSP[0]}
+                        </div>
+                        .{extFile.toUpperCase()}
+                      </div>
                     </div>
-                  </div>
-                </a>
+                  </a>
+                  <Button
+                    className="p-0 m-0 bg-danger"
+                    onClick={() =>
+                      handelOnDeletedFile(allFiles[index]?.fullPath)
+                    }
+                    // style={{
+                    //   zIndex: 100,
+                    //   position: 'absolute',
+                    //   left: '100px',
+                    //   top: '5px',
+                    // }}
+                  >
+                    <CloseLabel />
+                  </Button>
+                </div>
               )
             })}
         </div>
