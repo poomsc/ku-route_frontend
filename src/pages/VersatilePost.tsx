@@ -17,9 +17,12 @@ import { delete_post } from 'service/system'
 import { ISubject } from 'interface/subject.interface'
 import { constTags } from 'constants/index'
 import Subjects from 'constants/subjects.json'
-import { get_one_post } from 'service/system'
-import { edit } from 'service/user'
+import { get_one_post, get_file, delete_file } from 'service/system'
+import { edit, editPost } from 'service/user'
 import { DocumentData } from '@firebase/firestore'
+import { getDownloadURL, StorageReference } from '@firebase/storage'
+import pdf from './../assets/icons/PDF.png'
+import jpg from './../assets/icons/JPG.png'
 
 const contractChannels = [
   { Icon: mail, Placeholder: 'hello@kuroute.com' },
@@ -37,6 +40,8 @@ interface dropdownType {
 
 const VersatilePost = observer(() => {
   const [postInfo, setPostInfo] = useState<DocumentData>([])
+  const [allFiles, setAllFiles] = useState<StorageReference[]>()
+  const [linkFiles, setLinkFiles] = useState<string[]>()
 
   const { pathname } = useLocation()
   const isNewPost = pathType[pathname]
@@ -45,12 +50,22 @@ const VersatilePost = observer(() => {
     async function fetch() {
       if (!PostID) return
       const post = (await get_one_post(PostID)) as DocumentData
-      // console.log(postInfo)
+      const files = (await get_file(PostID)) as StorageReference[]
+      const fileUrl = await Promise.all(
+        files.map((file) => getDownloadURL(file))
+      )
 
+      setAllFiles(files)
+      setLinkFiles(fileUrl)
       setPostInfo(post)
     }
     fetch()
   }, [PostID])
+
+  // if(allFiles){
+  //   console.log(allFiles[0].fullPath)
+  //   // delete_file(allFiles[0].fullPath)
+  // }
 
   const _subjects: dropdownType[] = (Subjects as ISubject[]).map((s, i) => {
     return {
@@ -82,7 +97,6 @@ const VersatilePost = observer(() => {
 
   useEffect(() => {
     if (isNewPost || !postInfo[1]) return
-    // console.log(postInfo[1].SubjectID)
     const includingSubject = _subjects.find(
       (s) => s.value === postInfo[1].SubjectID
     )
@@ -99,8 +113,6 @@ const VersatilePost = observer(() => {
     setTagSelected(postInfo[1]?.TagID)
     setDescription(postInfo[1]?.Description)
   }, [isNewPost, postInfo])
-
-  // console.log(topicSelected?.split(' ')[0])
 
   const history = useHistory()
   const goToMyPost = () => {
@@ -163,15 +175,17 @@ const VersatilePost = observer(() => {
   }
 
   const handelOnEditPost = async () => {
-    console.log('test edit')
+    // console.log('test edit')
     if (
       !topicSelected ||
       filesUpload.status !== 'done' ||
       !applicationStore.user
     )
       return
-    // create_post
-    await edit(
+    // delete_file
+
+    // edit_post
+    await editPost(
       {
         AccountID: applicationStore.user.uid,
         TagID: tagsSelected,
@@ -182,7 +196,8 @@ const VersatilePost = observer(() => {
         Description: description,
       },
       postInfo[0],
-      'Post'
+      filesUpload.allFiles,
+      goToMyPost
     )
   }
 
@@ -199,7 +214,7 @@ const VersatilePost = observer(() => {
         {/* {console.log(topicSelected === postInfo[1]?.SubjectID)} */}
         <SMTDropdown
           placeholder={isNewPost ? 'กรุณาเลือกวิชา' : topicSelected}
-          // value={topicSelected}
+          value={topicSelected}
           fluid
           search
           selection
@@ -314,6 +329,41 @@ const VersatilePost = observer(() => {
         style={{ maxWidth: '70rem' }}
       >
         <h5 className="font-weight-bold mb-3">แนบไฟล์เพิ่มเติม</h5>
+        <div className="max-w-content d-flex align-items-center flex-wrap">
+          {allFiles &&
+            linkFiles &&
+            allFiles.map((file, index) => {
+              const fileSP = file.name.split('.')
+              const extFile = fileSP[fileSP.length - 1]
+              return (
+                <a
+                  className="style13 mr-4 mb-4 cursor-pointer hover-darken"
+                  key={file.name}
+                  href={linkFiles[index]}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <div className="style14 d-flex flex-column pb-3">
+                    <div className="d-block mx-auto">
+                      <img
+                        src={extFile == 'pdf' ? pdf : jpg}
+                        style={{ width: '125px', height: '125px' }}
+                      />
+                    </div>
+                    <div className="style15 d-block mx-auto mb-0">
+                      <div
+                        className="text-truncate mb-3 px-3"
+                        style={{ maxWidth: '125px' }}
+                      >
+                        {fileSP[0]}
+                      </div>
+                      .{extFile.toUpperCase()}
+                    </div>
+                  </div>
+                </a>
+              )
+            })}
+        </div>
         <DropFileZone onChange={onFileChange} />
       </div>
       <div

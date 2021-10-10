@@ -85,6 +85,9 @@ const PostPage = () => {
     fetch()
   }, [])
 
+  // console.log(allFiles)
+  // console.log(linkFiles)
+
   const handleOnLike = async () => {
     const currentViewPost = localStorage.getItem('currentViewPost')
     if (!applicationStore.user || !currentViewPost) return

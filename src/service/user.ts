@@ -9,7 +9,6 @@ import {
 } from 'firebase/firestore'
 import { IFileWithMeta } from 'react-dropzone-uploader'
 import { upload_file } from './file'
-
 interface registerProps {
   UID: string
   Name: string
@@ -153,6 +152,25 @@ async function edit(props: any, ID, col) {
   }
 }
 
+async function editPost(
+  props: any,
+  ID,
+  allFiles: IFileWithMeta[],
+  callBack?: () => void
+) {
+  //edit_post, edit_comment, edit_info
+  try {
+    const docRef = await updateDoc(doc(firestore, 'Post', ID), {
+      ...props,
+    })
+    await Promise.all(allFiles.map((file) => upload_file(file.file, ID))) //new file upload
+    callBack && callBack()
+    return 'Successful'
+  } catch (error) {
+    // alert(error)
+  }
+}
+
 async function disable(props: any, ID, col) {
   //unlike, disable_post, disable_comment
   try {
@@ -166,4 +184,4 @@ async function disable(props: any, ID, col) {
   }
 }
 
-export { register, create_post, create_comment, like, edit, disable }
+export { register, create_post, create_comment, like, edit, editPost, disable }
