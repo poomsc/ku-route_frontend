@@ -1,17 +1,24 @@
 import { observer } from 'mobx-react'
-import { useState } from 'react'
+import { useState, ReactElement } from 'react'
 import { Button, Modal } from 'semantic-ui-react'
 import applicationStore from 'stores/applicationStore'
 import { disable } from 'service/user'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import logo_delete from '../assets/icons/Vector.png'
 
-interface Props {
+interface postProps {
   onClick: (PostID: string) => void
   PostID: string
 }
 
-const ModalFavouriteMenu = observer(({ PostID, onClick }: Props) => {
+interface commentProps {
+  //onClick: (CommentID: string) => void
+  CommentID: string
+  Open: boolean
+  //children: ReactElement<any, any>
+}
+
+const ModalFavouriteMenu = observer(({ PostID, onClick }: postProps) => {
   const [open, setOpen] = useState<boolean>(false)
 
   const handleOnDelete = async () => {
@@ -57,7 +64,7 @@ const ModalFavouriteMenu = observer(({ PostID, onClick }: Props) => {
   )
 })
 
-const ModalEditPostMenu = observer(({ PostID, onClick }: Props) => {
+const ModalEditPostMenu = observer(({ PostID, onClick }: postProps) => {
   const [open, setOpen] = useState<boolean>(false)
 
   const handleOnDelete = async () => {
@@ -99,4 +106,42 @@ const ModalEditPostMenu = observer(({ PostID, onClick }: Props) => {
   )
 })
 
-export { ModalFavouriteMenu, ModalEditPostMenu }
+const ModalDisableComment = observer(({ CommentID, Open }: commentProps) => {
+  const [open, setOpen] = useState<boolean>(Open)
+  console.log(open)
+
+  const handleOnDelete = async () => {
+    if (!applicationStore.user) return
+    await disable({}, CommentID, 'Comment')
+
+    setOpen(false)
+  }
+
+  return (
+    <Modal
+      onClose={() => setOpen(false)}
+      onOpen={() => setOpen(true)}
+      open={open}
+      size="mini"
+      dimmer="blurring"
+      className="h-auto"
+    >
+      <Modal.Header>Delete Comment</Modal.Header>
+      <Modal.Content>
+        <Modal.Description>
+          <p>คุณต้องการลบความคิดเห็นนี้ ?</p>
+        </Modal.Description>
+      </Modal.Content>
+      <Modal.Actions>
+        <Button color="black" onClick={() => setOpen(false)}>
+          ยกเลิก
+        </Button>
+        <Button onClick={() => handleOnDelete()} negative>
+          ตกลง
+        </Button>
+      </Modal.Actions>
+    </Modal>
+  )
+})
+
+export { ModalFavouriteMenu, ModalEditPostMenu, ModalDisableComment }

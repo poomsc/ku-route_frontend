@@ -124,7 +124,8 @@ async function get_comment(PostID: string) {
       orderBy('DateEdited', 'desc')
     )
     const querySnapshot = await getDocs(q)
-    const Comments = querySnapshot.docs.map((doc) => doc.data())
+    const Comments = querySnapshot.docs.map((doc) => [doc.id, doc.data()])
+    console.log(Comments)
     return Comments
   } catch (error) {
     console.log('get_comment', error)
@@ -136,7 +137,7 @@ async function get_info_comment(comment: DocumentData) {
   try {
     console.log('get_info_comment')
     const infoComments = await Promise.all(
-      comment.map((cm) => get_info(cm.AccountID))
+      comment.map((cm) => get_info(cm[1].AccountID))
     )
     return infoComments
   } catch (error) {

@@ -37,6 +37,8 @@ import {
 } from 'reactstrap'
 import { useLocation } from 'react-router'
 import { modalClasses } from '@mui/material'
+import { Modal, Button as ButtonB } from 'semantic-ui-react'
+import { ModalDisableComment } from 'components/Modal'
 
 const PostPage = () => {
   const [postData, setPostData] = useState<DocumentData>()
@@ -49,6 +51,7 @@ const PostPage = () => {
   const [allFiles, setAllFiles] = useState<StorageReference[]>()
   const [linkFiles, setLinkFiles] = useState<string[]>()
   const [postOwnerUID, setPostOwnerUID] = useState('')
+  const [open, setOpen] = useState(false)
 
   const { pathname } = useLocation()
   const PostID = pathname.split('/')[2]
@@ -140,8 +143,9 @@ const PostPage = () => {
     // }
   }
 
-  const handleOnDeleteComment = async () => {
-    // doSomething;
+  const handleOnDeleteComment = (CommentID: string) => {
+    applicationStore.setModalDeleteComment(true)
+    console.log(applicationStore.ModalDeleteComment)
   }
 
   const handleOnReport = () => {
@@ -197,31 +201,31 @@ const PostPage = () => {
           target={'Popover-' + id}
           trigger="focus"
         >
-          <PopoverBody className="px-2 pt-2 py-0">
+          <PopoverBody className="px-2 pt-2 py-1">
             <div className="style25 font-weight-light d-flex-block">
               <Button
                 className={className}
                 onClick={handleOnEditComment}
-                hidden={applicationStore.user?.uid != item.data.AccountID}
+                hidden={applicationStore.user?.uid != item.data[1].AccountID}
               >
-                แก้ไข...
+                แก้ไข
               </Button>
+
               <Button
+                variant="primary"
                 className={className}
-                onClick={handleOnDeleteComment}
-                hidden={
-                  applicationStore.user?.uid != postOwnerUID &&
-                  applicationStore.user?.uid != item.data.AccountID
-                }
+                onClick={() => handleOnDeleteComment(item.data[0])}
+                hidden={applicationStore.user?.uid != item.data[1].AccountID}
               >
                 ลบความคิดเห็น
+                <ModalDisableComment
+                  CommentID={item.data[0]}
+                  Open={applicationStore.ModalDeleteComment}
+                />
               </Button>
+
               <Button className={className} onClick={handleOnReport}>
                 รายงานความไม่เหมาะสม
-              </Button>
-              {/* ลบทิ้งได้เลย  */}
-              <Button className={className}>
-                เอาขนมถ้วยไปฝากเจ้าของคอมเมนต์นี้
               </Button>
             </div>
           </PopoverBody>
@@ -418,7 +422,7 @@ const PostPage = () => {
                       style={{ width: '72.5%' }}
                     >
                       <p className="style22 text-break pl-3" hidden={false}>
-                        {commentData[index]?.Description}
+                        {commentData[index][1]?.Description}
                       </p>
 
                       {/* {applicationStore.user?.uid == commentData[index].AccountID ?
@@ -501,7 +505,7 @@ const PostPage = () => {
                         />
 
                         <div className="style24 d-block text-truncate">
-                          {convertTStoDate(commentData[index]?.DateEdited)}
+                          {convertTStoDate(commentData[index][1]?.DateEdited)}
                         </div>
                       </div>
                     </div>
