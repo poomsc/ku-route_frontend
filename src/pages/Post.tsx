@@ -1,12 +1,13 @@
 import React from 'react'
 import '../PostStyles.css'
-import { Container, Card } from 'react-bootstrap'
+import { Container, Card, FormControl, InputGroup } from 'react-bootstrap'
 import { useState, useEffect } from 'react'
 import user_icon from './../assets/icons/user-icon.png'
 import { url } from 'inspector'
 import pdf from './../assets/icons/PDF.png'
 import jpg from './../assets/icons/JPG.png'
 import userIcon from './../assets/icons/user-icon.png'
+import MoreLabel from '@material-ui/icons/MoreHoriz'
 import sendArrow from './../assets/icons/sendArrow.png'
 import Comment from './../assets/icons/Comment.png'
 import Like from './../assets/icons/Like.png'
@@ -32,8 +33,10 @@ import {
   PopoverHeader,
   PopoverBody,
   Tooltip,
+  UncontrolledPopover,
 } from 'reactstrap'
 import { useLocation } from 'react-router'
+import { modalClasses } from '@mui/material'
 
 const PostPage = () => {
   const [postData, setPostData] = useState<DocumentData>()
@@ -45,6 +48,7 @@ const PostPage = () => {
   const [commentDescription, setCommentDescription] = useState<string>('')
   const [allFiles, setAllFiles] = useState<StorageReference[]>()
   const [linkFiles, setLinkFiles] = useState<string[]>()
+  const [postOwnerUID, setPostOwnerUID] = useState('')
 
   const { pathname } = useLocation()
   const PostID = pathname.split('/')[2]
@@ -76,6 +80,7 @@ const PostPage = () => {
       // console.log(info)
 
       setPostData(post[1])
+      setPostOwnerUID(post[1]?.AccountID)
       setInfoData(info)
       setCommentData(comment)
       setInfoCommentData(infoComment)
@@ -123,6 +128,24 @@ const PostPage = () => {
       console.log(commentData)
       setInfoCommentData(infoComment)
     }
+    // reset comment message
+    setCommentDescription('')
+  }
+
+  const handleOnEditComment = () => {
+    // doSomething;
+    // var like = document.getElementsByClassName("dork");
+    // for (let index = 0; index < like.length; ++index) {
+    //     like[index].style.display = "none"
+    // }
+  }
+
+  const handleOnDeleteComment = async () => {
+    // doSomething;
+  }
+
+  const handleOnReport = () => {
+    // doSomething;
   }
 
   const PopoverItem = (props) => {
@@ -156,6 +179,53 @@ const PostPage = () => {
             </div>
           </PopoverBody>
         </Popover>
+      </span>
+    )
+  }
+
+  const MoreItem = (props) => {
+    const { id, item } = props
+    const className =
+      'h6 w-100 bg-white hover-darken py-1 px-2 text-left rounded-lg'
+
+    return (
+      <span>
+        <UncontrolledPopover
+          className="rounded-25"
+          style={{ minWidth: '225px' }}
+          placement={item.placement}
+          target={'Popover-' + id}
+          trigger="focus"
+        >
+          <PopoverBody className="px-2 pt-2 py-0">
+            <div className="style25 font-weight-light d-flex-block">
+              <Button
+                className={className}
+                onClick={handleOnEditComment}
+                hidden={applicationStore.user?.uid != item.data.AccountID}
+              >
+                แก้ไข...
+              </Button>
+              <Button
+                className={className}
+                onClick={handleOnDeleteComment}
+                hidden={
+                  applicationStore.user?.uid != postOwnerUID &&
+                  applicationStore.user?.uid != item.data.AccountID
+                }
+              >
+                ลบความคิดเห็น
+              </Button>
+              <Button className={className} onClick={handleOnReport}>
+                รายงานความไม่เหมาะสม
+              </Button>
+              {/* ลบทิ้งได้เลย  */}
+              <Button className={className}>
+                เอาขนมถ้วยไปฝากเจ้าของคอมเมนต์นี้
+              </Button>
+            </div>
+          </PopoverBody>
+        </UncontrolledPopover>
       </span>
     )
   }
@@ -338,20 +408,66 @@ const PostPage = () => {
             </div>
           </div>
           <div>
+            {/* load comment */}
             {infocommentData && commentData && commentData?.length ? (
               infocommentData.map((infoComment, index) => (
                 <div className="style21 d-block bg-white mx-auto w-100 p-4 mb-3">
                   <div className="w-content d-flex justify-content-between">
                     <div
                       className="d-flex align-items-center"
-                      style={{ width: '76%' }}
+                      style={{ width: '72.5%' }}
                     >
-                      <p className="style22 text-break pl-3">
+                      <p className="style22 text-break pl-3" hidden={false}>
                         {commentData[index]?.Description}
                       </p>
+
+                      {/* {applicationStore.user?.uid == commentData[index].AccountID ?
+                        <Container className="dork d-block w-100"
+                                 hidden={true}
+                      >
+                        <InputGroup className="rounded-สเ bg-white shadow mb-4">
+                          <FormControl
+                            as="textarea"
+                            defaultValue={commentData[index]?.Description}
+                            aria-label="title"
+                            className="rounded-10 border-0"
+                            placeholder="คำอธิบายของตัวท่าน"
+                            // onChange={handleOnAboutChange}
+                            rows={3}
+                            style={{ minHeight: '5rem' }}
+                          />
+                        </InputGroup>
+
+                        <div className="d-flex justify-content-end">
+                          <div className="mx-2"></div>
+                          <Button
+                            className="bg-dark text-white mr-3"
+                            style={{ width: '7rem' }}
+                            type="submit"
+                            onClick={(e) => {
+                              // saveCurrentState(title, about, userFaculty)
+                            }}
+                          >
+                            ยกเลิก
+                          </Button>
+                          <Button
+                            className="bg-primary text-white"
+                            // disabled={!saveButtonClickable}
+                            style={{ width: '7rem' }}
+                            type="submit"
+                            onClick={(e) => {
+                              // saveCurrentState(title, about, userFaculty)
+                            }}
+                          >
+                            บันทึก
+                          </Button>
+                        </div>
+                      </Container>
+                      : <></>
+                      } */}
                     </div>
 
-                    <div className="d-flex pl-4" style={{ width: '24%' }}>
+                    <div className="d-flex pl-4" style={{ width: '22.5%' }}>
                       <div
                         className=" d-inline-block"
                         style={{ verticalAlign: 'top' }}
@@ -362,6 +478,12 @@ const PostPage = () => {
                         <p className="h6 d-inline-block mr-1 my-0">by</p>
                         <p
                           className="style25 d-inline-flex text-truncate my-0 cursor-pointer"
+                          ata-toggle="tooltip"
+                          data-placement="left"
+                          title={
+                            infoComment?.DisplayName +
+                            ' (Click for more details)'
+                          }
                           id={'Popover-' + labelCount}
                           style={{ width: '80%', maxWidth: '120px' }}
                         >
@@ -382,6 +504,29 @@ const PostPage = () => {
                           {convertTStoDate(commentData[index]?.DateEdited)}
                         </div>
                       </div>
+                    </div>
+
+                    <div
+                      className="p-0 m-0 max-w-content"
+                      style={{ width: '5%' }}
+                    >
+                      <Button
+                        className="rounded-circle m-0 p-2 hover-darken"
+                        id={'Popover-' + labelCount}
+                      >
+                        <MoreLabel />
+                      </Button>
+                      <MoreItem
+                        key={labelCount}
+                        item={{
+                          placement: 'top',
+                          user: infoComment,
+                          data: commentData[index],
+                          className:
+                            'style25 d-inline-flex text-truncate font-weight-bold my-0 cursor-pointer p-0',
+                        }}
+                        id={genLoadLabel()}
+                      />
                     </div>
                   </div>
                 </div>
