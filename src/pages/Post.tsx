@@ -33,6 +33,7 @@ import {
   PopoverBody,
   Tooltip,
 } from 'reactstrap'
+import { useLocation } from 'react-router'
 
 const PostPage = () => {
   const [postData, setPostData] = useState<DocumentData>()
@@ -45,17 +46,17 @@ const PostPage = () => {
   const [allFiles, setAllFiles] = useState<StorageReference[]>()
   const [linkFiles, setLinkFiles] = useState<string[]>()
 
-  const currentViewPost = localStorage.getItem('currentViewPost')
+  const { pathname } = useLocation()
+  const PostID = pathname.split('/')[2]
 
   useEffect(() => {
     async function fetch() {
-      if (!currentViewPost) return
-      const post = (await get_one_post(currentViewPost)) as DocumentData
+      const post = (await get_one_post(PostID)) as DocumentData
       const info = (await get_info(post[1]?.AccountID)) as DocumentData
-      const comment = (await get_comment(currentViewPost)) as DocumentData
+      const comment = (await get_comment(PostID)) as DocumentData
       const infoComment = await get_info_comment(comment)
-      const countLike = (await getLikeOfPost(currentViewPost)) as number
-      const files = (await get_file(currentViewPost)) as StorageReference[]
+      const countLike = (await getLikeOfPost(PostID)) as number
+      const files = (await get_file(PostID)) as StorageReference[]
       const fileUrl = await Promise.all(
         files.map((file) => getDownloadURL(file))
       )
@@ -66,7 +67,7 @@ const PostPage = () => {
 
       if (applicationStore.user) {
         const LikeDoc = await getDocLike(
-          'Like:' + applicationStore.user.uid + '_' + currentViewPost
+          'Like:' + applicationStore.user.uid + '_' + PostID
         )
         setLikeData(LikeDoc?.Status)
       }
@@ -86,37 +87,33 @@ const PostPage = () => {
   }, [])
 
   const handleOnLike = async () => {
-    const currentViewPost = localStorage.getItem('currentViewPost')
-    if (!applicationStore.user || !currentViewPost) return
-    await like(applicationStore.user.uid, currentViewPost)
+    if (!applicationStore.user) return
+    await like(applicationStore.user.uid, PostID)
 
     setLikeData(!likeData)
-    const countLike = await getLikeOfPost(currentViewPost)
+    const countLike = await getLikeOfPost(PostID)
     setAmountLike(countLike)
   }
 
   const handleOnUnlike = async () => {
-    const currentViewPost = localStorage.getItem('currentViewPost')
-    if (!applicationStore.user || !currentViewPost) return
-    const likeID = 'Like:' + applicationStore.user.uid + '_' + currentViewPost
+    if (!applicationStore.user) return
+    const likeID = 'Like:' + applicationStore.user.uid + '_' + PostID
     await disable({}, likeID, 'Like')
 
     setLikeData(!likeData)
-    const countLike = await getLikeOfPost(currentViewPost)
+    const countLike = await getLikeOfPost(PostID)
     setAmountLike(countLike)
   }
 
   const handleOnAddComment = async () => {
-    const currentViewPost = localStorage.getItem('currentViewPost')
-    if (!applicationStore.user || !currentViewPost || commentDescription == '')
-      return
+    if (!applicationStore.user || commentDescription == '') return
     console.log(commentDescription)
     create_comment({
       AccountID: applicationStore.user.uid,
-      PostID: currentViewPost,
+      PostID: PostID,
       Description: commentDescription,
     })
-    const comment = (await get_comment(currentViewPost)) as DocumentData
+    const comment = (await get_comment(PostID)) as DocumentData
     const infoComment = await get_info_comment(comment)
     if (comment?.length && infoComment?.length) {
       setCommentData(comment)
@@ -173,7 +170,6 @@ const PostPage = () => {
   let labelCount = 0
 
   const mockTags = postData?.TagID ? postData?.TagID : ['']
-  console.log(postData?.SubjectID, postData?.SubjectENG)
   const SubjectID = postData?.SubjectID ? postData?.SubjectID : 'รหัสวิชา'
   const SubjectENG = postData?.SubjectENG ? postData?.SubjectENG : 'SubjectName'
 

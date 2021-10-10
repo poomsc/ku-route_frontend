@@ -24,7 +24,6 @@ const FavouriteMenu = () => {
       const likepost = (await get_mylikepost(
         applicationStore.user.uid
       )) as DocumentData
-      console.log(likepost)
 
       setlikepostData(likepost)
     }
@@ -33,8 +32,8 @@ const FavouriteMenu = () => {
 
   const history = useHistory()
   const handleOnViewPage = (PostID: string) => {
-    localStorage.setItem('currentViewPost', PostID)
-    history.push('/post')
+    //localStorage.setItem('currentViewPost', PostID)
+    history.push(`post/${PostID}`)
   }
 
   const handleOnDelete = async (PostID: string) => {

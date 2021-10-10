@@ -65,8 +65,7 @@ const AllPostPage = () => {
     : 'SubjectName'
 
   const handleOnViewPage = (PostID: string) => {
-    localStorage.setItem('currentViewPost', PostID)
-    history.push('/post')
+    history.push(`post/${PostID}`)
   }
 
   function renderPost(menu, index, col) {
