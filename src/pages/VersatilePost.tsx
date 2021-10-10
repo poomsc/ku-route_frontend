@@ -52,8 +52,6 @@ const VersatilePost = observer(() => {
     fetch()
   }, [PostID])
 
-  // console.log(postInfo)
-
   const _subjects: dropdownType[] = (Subjects as ISubject[]).map((s, i) => {
     return {
       text: `${s.subjectCode} ${s.subjectNameTh} (${s.subjectNameEn})`,
@@ -66,15 +64,9 @@ const VersatilePost = observer(() => {
       return { text }
     })
   )
+
   const [subjects, setSubjects] = useState<dropdownType[]>(
-    postInfo[1] && _subjects.find((s) => s.value === postInfo[1]?.SubjectID)
-      ? [
-          ..._subjects.slice(0, 10),
-          _subjects.find(
-            (s) => s.value === postInfo[1].SubjectID
-          ) as dropdownType,
-        ]
-      : _subjects.slice(0, 10)
+    _subjects.slice(0, 10)
   )
 
   const [topicSelected, setTopicSelected] = useState<string>()
@@ -90,12 +82,19 @@ const VersatilePost = observer(() => {
 
   useEffect(() => {
     if (isNewPost || !postInfo[1]) return
-    console.log(postInfo[1].SubjectID)
-    setTopicSelected(postInfo[1]?.SubjectID)
+    // console.log(postInfo[1].SubjectID)
+    const includingSubject = _subjects.find(
+      (s) => s.value === postInfo[1].SubjectID
+    )
+    if (includingSubject) setSubjects([...subjects, includingSubject])
+
+    setTopicSelected(includingSubject?.text)
     setTitle(postInfo[1]?.Title)
     setTagSelected(postInfo[1]?.TagID)
     setDescription(postInfo[1]?.Description)
   }, [isNewPost, postInfo])
+
+  console.log(topicSelected?.split(' ')[0])
 
   const history = useHistory()
   const goToMyPost = () => {
@@ -184,14 +183,14 @@ const VersatilePost = observer(() => {
       >
         {/* {console.log(topicSelected === postInfo[1]?.SubjectID)} */}
         <SMTDropdown
-          placeholder="กรุณาเลือกวิชา"
+          placeholder={isNewPost ? 'กรุณาเลือกวิชา' : topicSelected}
+          value={topicSelected}
           fluid
           search
           selection
           options={subjects.slice(0, 10)}
           onChange={handleOnSelectSubject}
           onSearchChange={onSearchChange}
-          value={topicSelected}
           // searchQuery={searchQuery}
           className="rounded-10 bg-primary-dark text-white font-weight-bold d-flex"
           icon={
