@@ -208,7 +208,13 @@ const VersatilePost = observer(() => {
 
   const handelOnDeletedFile = async (filepath: any) => {
     // console.log("path: " + filepath)
-    if (!deletedFile.includes(filepath)) deletedFile.push(filepath)
+    if (!deletedFile.includes(filepath)) {
+      // deletedFile.push(filepath) //wrong
+      setDeletedFile([...deletedFile, filepath])
+    } else {
+      const index = deletedFile.indexOf(filepath)
+      setDeletedFile(deletedFile.splice(index - 1, index))
+    }
     console.log(deletedFile)
   }
 
@@ -356,9 +362,9 @@ const VersatilePost = observer(() => {
                       : 1,
                   }}
                 >
-                  {console.log(
+                  {/* {console.log(
                     deletedFile?.includes(allFiles[index]?.fullPath)
-                  )}
+                  )} */}
                   <a
                     className="style13 cursor-pointer hover-darken"
                     key={file.name}
@@ -403,6 +409,9 @@ const VersatilePost = observer(() => {
             })}
         </div>
         <DropFileZone onChange={onFileChange} />
+        <p className="text-right w-100 mt-4" style={{ fontSize: '18px' }}>
+          {filesUpload.status === 'done' ? 'Ready to publish' : 'Waiting...'}
+        </p>
       </div>
       <div
         className="bg-secondary p-5 rounded-25 shadow mx-auto"
