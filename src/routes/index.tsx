@@ -27,7 +27,7 @@ const Routes: React.FC = (): JSX.Element => {
           path={['/', '/home']}
           component={HomePage}
         />
-        <PublicRoute exact path="/post" component={PostPage} />
+        <PublicRoute path="/post" component={PostPage} />
         <PublicRoute restricted={true} path="/signin" component={SignPage} />
         <PublicRoute restricted={false} path="/signup" component={SignPage} />
         <PublicRoute path="/all-post" component={AllPostPage} />

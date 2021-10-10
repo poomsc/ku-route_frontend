@@ -83,6 +83,7 @@ const HomePage = () => {
 
   const handleOnSelectSubject = (event: any) => {
     setSubjectSelected(event.target.innerText)
+    console.log(subjectSelected)
   }
 
   const handleOnSearch = () => {
@@ -161,6 +162,7 @@ const HomePage = () => {
                   options={subjects.slice(0, 10)}
                   onChange={handleOnSelectSubject}
                   onSearchChange={onSearchChange}
+                  //onKeyPress={handleOnSearch}
                   type="text"
                   className="form-control text-black d-flex border-0 pr-3"
                   style={{
