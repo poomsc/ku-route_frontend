@@ -44,7 +44,7 @@ const PostPage = () => {
     async function fetch() {
       if (!currentViewPost) return
       const post = (await get_one_post(currentViewPost)) as DocumentData
-      const info = (await get_info(post?.AccountID)) as DocumentData
+      const info = (await get_info(post[1]?.AccountID)) as DocumentData
       const comment = (await get_comment(currentViewPost)) as DocumentData
       const infoComment = await get_info_comment(comment)
       const countLike = (await getLikeOfPost(currentViewPost)) as number
@@ -122,13 +122,9 @@ const PostPage = () => {
   let title = postData?.Title ? postData?.Title : ''
   let descript = postData?.Description ? postData?.Description : ''
   const mockTags = postData?.TagID ? postData?.TagID : ['']
-  const currentSearch = localStorage.getItem('currentSearch')
-  const mockSubjectName = currentSearch
-    ? [
-        currentSearch.split(' ')[0],
-        currentSearch.split('(')[1].replace(')', ''),
-      ]
-    : 'รหัสวิชา | SubjectName'
+  console.log(postData?.SubjectID, postData?.SubjectENG)
+  const SubjectID = postData?.SubjectID ? postData?.SubjectID : 'รหัสวิชา'
+  const SubjectENG = postData?.SubjectENG ? postData?.SubjectENG : 'SubjectName'
 
   const colors = [
     '#5697C4',
@@ -173,7 +169,7 @@ const PostPage = () => {
               className="style5 d-inline-block py-2 m-0 text-right cursor-pointer"
               style={{ maxWidth: '35%' }}
             >
-              {mockSubjectName[0]} | {mockSubjectName[1]}
+              {SubjectID} | {SubjectENG}
             </div>
           </div>
         </div>
@@ -208,33 +204,37 @@ const PostPage = () => {
         <div className="max-w-content d-flex align-items-center flex-wrap">
           {allFiles &&
             linkFiles &&
-            allFiles.map((file, index) => (
-              <a
-                className="style13 mr-4 mb-4 cursor-pointer"
-                key={file.name}
-                href={linkFiles[index]}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <div className="style14 d-flex flex-column pb-3">
-                  <div className="d-block mx-auto">
-                    <img
-                      src={file.name.split('.')[1] == 'pdf' ? pdf : jpg}
-                      style={{ width: '125px', height: '125px' }}
-                    />
-                  </div>
-                  <div className="style15 d-block mx-auto mb-0">
-                    <div
-                      className="text-truncate mb-3 px-3"
-                      style={{ maxWidth: '125px' }}
-                    >
-                      {file.name.split('.')[0]}
+            allFiles.map((file, index) => {
+              const fileSP = file.name.split('.')
+              const extFile = fileSP[fileSP.length - 1]
+              return (
+                <a
+                  className="style13 mr-4 mb-4 cursor-pointer"
+                  key={file.name}
+                  href={linkFiles[index]}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <div className="style14 d-flex flex-column pb-3">
+                    <div className="d-block mx-auto">
+                      <img
+                        src={extFile == 'pdf' ? pdf : jpg}
+                        style={{ width: '125px', height: '125px' }}
+                      />
                     </div>
-                    {file.name.split('.')[1].toUpperCase()}
+                    <div className="style15 d-block mx-auto mb-0">
+                      <div
+                        className="text-truncate mb-3 px-3"
+                        style={{ maxWidth: '125px' }}
+                      >
+                        {fileSP[0]}
+                      </div>
+                      .{extFile.toUpperCase()}
+                    </div>
                   </div>
-                </div>
-              </a>
-            ))}
+                </a>
+              )
+            })}
         </div>
       </Container>
 

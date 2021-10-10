@@ -96,10 +96,10 @@ const Signin = ({
             <Link to='/'>Forgot password?</Link>
           </p> */}
           <p id="caption">
-            New to KU-ROUTE? {''}
-            <Link to="/signup" id="signup">
+            เข้าสู่ระบบด้วย Email KU (@ku.th) {''}
+            {/* <Link to="/signup" id="signup">
               Sign up
-            </Link>
+            </Link> */}
           </p>
         </div>
       </Form>

@@ -62,6 +62,9 @@ const AllPostPage = () => {
     ? currentSearch.split('(')[1].replace(')', '')
     : 'SubjectName'
 
+  const tagJSON = localStorage.getItem('tagSearch')
+  const tagSearch = tagJSON ? JSON.parse(tagJSON) : null
+
   const handleOnViewPage = (PostID: string) => {
     localStorage.setItem('currentViewPost', PostID)
     history.push('/post')
@@ -76,7 +79,10 @@ const AllPostPage = () => {
         <div className="w-content d-flex mb-4" key={index}>
           <Container className="w-content d-inline-block p-0">
             <div className="row m-0 p-0 d-inline w-25">
-              <div className="form py-4">
+              <div
+                className="form py-4 cursor-pointer"
+                onClick={() => handleOnViewPage(PostID)}
+              >
                 <tr className="TAG d-block w-content my-1 mx-2 mb-3">
                   {menu[1].TagID.map((tag, idx) => (
                     <div
@@ -105,8 +111,9 @@ const AllPostPage = () => {
                   style={{ height: '41px' }}
                 >
                   {menu[1].Description}
-                  <p className="font-weight-bold cursor-pointer"
-                     onClick={() => handleOnViewPage(PostID)}
+                  <p
+                    className="font-weight-bold cursor-pointer"
+                    onClick={() => handleOnViewPage(PostID)}
                   >
                     {menu[1].Description.length > 40 ? 'ดูเพิ่มเติม...' : null}
                   </p>
@@ -156,9 +163,7 @@ const AllPostPage = () => {
                 </tr>
               </div>
             </div>
-            <div className="Time text-center"
-                 style={{marginTop: "-32px"}}
-            >
+            <div className="Time text-center" style={{ marginTop: '-32px' }}>
               {'Posted ' + convertTStoDate(menu[1].DateEdited)}
             </div>
           </Container>
@@ -170,7 +175,13 @@ const AllPostPage = () => {
   useEffect(() => {
     async function fetch() {
       if (!currentSearch) return
-      const result = await BasicSearch(SubjectIDandTH[0], [])
+
+      const tagResult = [] as Array<string>
+      for (const TagID in tagSearch) {
+        if (tagSearch[TagID]) tagResult.push(TagID)
+      }
+
+      const result = await BasicSearch(SubjectIDandTH[0], tagResult)
       setResultPost(result)
     }
     fetch()

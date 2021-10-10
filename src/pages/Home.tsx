@@ -87,6 +87,7 @@ const HomePage = () => {
 
   const handleOnSearch = () => {
     if (!subjectSelected) return
+    console.log(subjectSelected)
     const SubjectIDandTH = subjectSelected.split(' ')
     const SubjectENG = subjectSelected.split('(')
 

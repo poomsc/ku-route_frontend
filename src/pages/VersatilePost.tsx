@@ -79,8 +79,7 @@ const VersatilePost = observer(() => {
 
   const handleOnSelectSubject = (event: any) => {
     console.log(event.target.innerText.split(' ')[0])
-
-    setTopicSelected(event.target.innerText.split(' ')[0])
+    setTopicSelected(event.target.innerText)
   }
 
   const onFileChange = (status: StatusValue, allFiles: IFileWithMeta[]) => {
@@ -96,6 +95,7 @@ const VersatilePost = observer(() => {
   }
 
   const handelOnCreatePost = async () => {
+    console.log(topicSelected, filesUpload.status, applicationStore.user)
     if (
       !topicSelected ||
       filesUpload.status !== 'done' ||
@@ -107,7 +107,9 @@ const VersatilePost = observer(() => {
       {
         AccountID: applicationStore.user.uid,
         TagID: tagsSelected,
-        SubjectID: topicSelected,
+        SubjectID: topicSelected.split(' ')[0],
+        SubjectTH: topicSelected.split(' ')[1],
+        SubjectENG: topicSelected.split('(')[1].replace(')', ''),
         Title: title,
         Description: description,
       },
