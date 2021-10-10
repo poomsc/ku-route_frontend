@@ -76,8 +76,13 @@ const AllPostPage = () => {
 
     if (countPostColumn[col] % 2 == col) {
       return (
-        <div className="w-content d-flex mb-4" key={index}>
-          <Container className="w-content d-inline-block p-0">
+        <div
+          className="w-content d-flex mb-4"
+          key={index}
+          //  onMouseEnter={"d"}
+          //  onMouseLeave={}
+        >
+          <Container className="w-content d-inline-block p-0 zoom-1 hover-brighten">
             <div className="row m-0 p-0 d-inline w-25">
               <div
                 className="form py-4 cursor-pointer"
@@ -86,7 +91,7 @@ const AllPostPage = () => {
                 <tr className="TAG d-block w-content my-1 mx-2 mb-3">
                   {menu[1].TagID.map((tag, idx) => (
                     <div
-                      className="max-w-content d-inline-block rounded cursor-pointer px-2 py-1 ml-3 mb-2"
+                      className="hover-darken-2 max-w-content d-inline-block rounded cursor-pointer px-2 py-1 ml-3 mb-2"
                       key={tag}
                       style={{
                         backgroundColor:
@@ -216,27 +221,24 @@ const AllPostPage = () => {
               <div className="SubjectENG max-w-content">{SubjectENG}</div>
               <div className="SubjectTH max-w-content">{SubjectIDandTH[1]}</div>
             </div>
-            {/* <tr className="post-picture">
-                <th>
-                  <img className="pic" src={write_pic} />
-                  <span className="count">{resultPost?.length}</span>
-                </th>
-              </tr> */}
             <div
               className="Subjectnum d-inline-block"
               style={{ width: '35%', maxWidth: '350px', verticalAlign: 'top' }}
             >
               <div className="d-flex justify-content-end pb-1">
-                {/* <div>
+                <div>
                   <div className="d-flex flex-row-reverse align-items-end mt-5 pt-2 mr-4">
-                    <div className=""> ลุงพล1</div>
-                    <div className=""> ลุงพล2</div>
-                    <div className=""> ลุงพล3</div>
+                    <div className="">
+                      <img className="pic" src={write_pic} />
+                      <span className="count">{resultPost?.length}</span>
+                    </div>
+                    <div className=""></div>
+                    <div className=""></div>
                   </div>
                   <div className="d-flex justify-content-end mr-4">
-                    กินข้าว
+                    {/* กินข้าว */}
                   </div>
-                </div> */}
+                </div>
                 <div className="mt-3 pb-1">
                   <div className="textnum d-block font-weight-bold pt-1">
                     รหัสวิชา

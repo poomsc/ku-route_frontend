@@ -31,8 +31,6 @@ const FavouriteMenu = () => {
     fetch()
   }, [])
 
-  console.log(likepostData)
-
   const history = useHistory()
   const handleOnViewPage = (PostID: string) => {
     localStorage.setItem('currentViewPost', PostID)

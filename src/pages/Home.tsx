@@ -150,96 +150,98 @@ const HomePage = () => {
             {' '}
             ค้นหาชื่อวิชา / รหัสวิชาที่อยากรู้
           </p>
-          <Form style={{ paddingLeft: '7vw', paddingRight: '7vw' }}>
-            <div className="form-group shadow d-flex w-100 rounded-lg">
-              <SMTDropdown
-                id="home-search-block"
-                fluid
-                search
-                selection
-                options={subjects.slice(0, 10)}
-                onChange={handleOnSelectSubject}
-                onSearchChange={onSearchChange}
-                type="text"
-                className="form-control text-black d-flex border-0 pr-3"
-                style={{
-                  borderRadius: '5px 0rem 0rem 5px',
-                  border: 'none',
-                  color: 'black',
-                }}
-                icon={
-                  <div className="ml-auto">
-                    <BsFillCaretDownFill />
-                  </div>
-                }
-                placeholder="พิมพ์ชื่อวิชา / รหัสวิชา..."
-              />
-              <Dropdown show={dropdown}>
-                <Dropdown.Toggle
-                  variant="success"
-                  id="dropdown-basic"
-                  className="h-100"
+          <div className="d-flex justify-content-center">
+            <Form className="w-75">
+              <div className="form-group shadow d-flex w-100 rounded-lg">
+                <SMTDropdown
+                  id="home-search-block"
+                  fluid
+                  search
+                  selection
+                  options={subjects.slice(0, 10)}
+                  onChange={handleOnSelectSubject}
+                  onSearchChange={onSearchChange}
+                  type="text"
+                  className="form-control text-black d-flex border-0 pr-3"
                   style={{
-                    backgroundColor: '#FFFFFF',
+                    borderRadius: '5px 0rem 0rem 5px',
                     border: 'none',
-                    borderRadius: '0rem 5px 5px 0rem',
+                    color: 'black',
                   }}
-                >
-                  <div onClick={() => setDropdrown(!dropdown)}>
-                    <img
-                      src={dropdown_arrow}
-                      className="p-1"
-                      width="18px"
-                      height="14px"
-                    />
-                  </div>
-                  <Dropdown.Menu>
-                    <Dropdown.Item
-                      style={{
-                        color: '#02353C',
-                        fontWeight: 'bold',
-                        fontSize: '12px',
-                      }}
-                    >
-                      FILTER BY
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      style={{ color: '#02353C', fontSize: '11px' }}
-                    >
-                      ประเภท
-                    </Dropdown.Item>
-                    {filter.map((filter) => (
+                  icon={
+                    <div className="ml-auto">
+                      <BsFillCaretDownFill />
+                    </div>
+                  }
+                  placeholder="พิมพ์ชื่อวิชา / รหัสวิชา..."
+                />
+                <Dropdown show={dropdown}>
+                  <Dropdown.Toggle
+                    variant="success"
+                    id="dropdown-basic"
+                    className="h-100"
+                    style={{
+                      backgroundColor: '#FFFFFF',
+                      border: 'none',
+                      borderRadius: '0rem 5px 5px 0rem',
+                    }}
+                  >
+                    <div onClick={() => setDropdrown(!dropdown)}>
+                      <img
+                        src={dropdown_arrow}
+                        className="p-1"
+                        width="18px"
+                        height="14px"
+                      />
+                    </div>
+                    <Dropdown.Menu>
                       <Dropdown.Item
-                        href="#/action-3"
+                        style={{
+                          color: '#02353C',
+                          fontWeight: 'bold',
+                          fontSize: '12px',
+                        }}
+                      >
+                        FILTER BY
+                      </Dropdown.Item>
+                      <Dropdown.Item
                         style={{ color: '#02353C', fontSize: '11px' }}
                       >
-                        <form>
-                          <input
-                            type="checkbox"
-                            className="checkbox-round"
-                            style={{
-                              boxSizing: 'border-box',
-                            }}
-                            onClick={() => changeStatus(filter)}
-                          />
-                          <label>&nbsp;&nbsp;{filter}</label>
-                        </form>
+                        ประเภท
                       </Dropdown.Item>
-                    ))}
-                  </Dropdown.Menu>
-                </Dropdown.Toggle>
-              </Dropdown>
-            </div>
-            <br />
-            <button
-              type="submit"
-              className="btn btn-primary btn-sm px-3 py-2 mt-2 rounded-lg"
-              style={{ backgroundColor: '#02353C', borderWidth: '0px' }}
-              onClick={handleOnSearch}
-            >
-              SEARCH
-            </button>
-          </Form>
+                      {filter.map((filter) => (
+                        <Dropdown.Item
+                          href="#/action-3"
+                          style={{ color: '#02353C', fontSize: '11px' }}
+                        >
+                          <form>
+                            <input
+                              type="checkbox"
+                              className="checkbox-round"
+                              style={{
+                                boxSizing: 'border-box',
+                              }}
+                              onClick={() => changeStatus(filter)}
+                            />
+                            <label>&nbsp;&nbsp;{filter}</label>
+                          </form>
+                        </Dropdown.Item>
+                      ))}
+                    </Dropdown.Menu>
+                  </Dropdown.Toggle>
+                </Dropdown>
+              </div>
+              <br />
+              <button
+                type="submit"
+                className="btn btn-primary btn-sm px-3 py-2 mt-2 rounded-lg"
+                style={{ backgroundColor: '#02353C', borderWidth: '0px' }}
+                onClick={handleOnSearch}
+              >
+                SEARCH
+              </button>
+            </Form>
+          </div>
         </Container>
       </Jumbotron>
       {/* <div>
