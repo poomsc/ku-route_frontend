@@ -189,15 +189,20 @@ const PostPage = () => {
 
   const PopoverItem = (props) => {
     const { id, item } = props
+    const [popoverOpen, setPopoverOpen] = useState(false)
+
+    const toggle = () => setPopoverOpen(!popoverOpen)
 
     return (
       <span>
-        <Popover
+        <UncontrolledPopover
           className="rounded-25"
           style={{ minWidth: '225px' }}
           placement={item.placement}
           target={'Popover-' + id}
-          trigger="focus"
+          // isOpen={popoverOpen}
+          // toggle={toggle}
+          trigger="legacy"
         >
           <PopoverHeader className="font-weight-bold py-2">
             <p className="style25 p-0 m-0">{item.text?.DisplayName}</p>
@@ -249,7 +254,7 @@ const PostPage = () => {
               </div>
             </div>
           </PopoverBody>
-        </Popover>
+        </UncontrolledPopover>
       </span>
     )
   }

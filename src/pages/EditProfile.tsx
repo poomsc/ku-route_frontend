@@ -38,8 +38,8 @@ let UUID = 'Account01'
 const contractChannels = [
   { Icon: mail, Placeholder: 'E-mail' },
   { Icon: phone, Placeholder: 'เบอร์โทร' },
-  { Icon: facebook, Placeholder: 'Facebok URL' },
-  { Icon: instagram, Placeholder: 'Instagram URL' },
+  { Icon: facebook, Placeholder: 'Facebok' },
+  { Icon: instagram, Placeholder: 'Instagram' },
 ]
 
 function loadFaculty(components) {

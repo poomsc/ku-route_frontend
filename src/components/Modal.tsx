@@ -108,7 +108,6 @@ const ModalEditPostMenu = observer(({ PostID, onClick }: postProps) => {
 const ModalDisableComment = observer(
   ({ CommentID, onClick, children }: commentProps) => {
     const [open, setOpen] = useState<boolean>(false)
-    console.log(open)
 
     const handleOnDelete = async () => {
       if (!applicationStore.user) return
