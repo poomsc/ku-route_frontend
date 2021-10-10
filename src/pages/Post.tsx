@@ -604,6 +604,7 @@ const PostPage = () => {
               className="form-control pl-3 border-0"
               style={{ height: '40px', borderRadius: '10px 0px 0px 10px' }}
               placeholder="ตอบกลับโพสต์นี้..."
+              value={commentDescription}
               onChange={(e) => setCommentDescription(e.target.value)}
             />
             <button
