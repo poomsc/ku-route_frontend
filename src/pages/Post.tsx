@@ -177,7 +177,14 @@ const PostPage = () => {
     changedInfo['Description'] = text
     changedInfo['DateEdited'] = serverTimestamp()
     edit(changedInfo, targetUUID, databaseTarget)
+    const comment = (await get_comment(PostID)) as DocumentData
+    const infoComment = await get_info_comment(comment)
+    if (comment?.length && infoComment?.length) {
+      setCommentData(comment)
+      setInfoCommentData(infoComment)
+    }
     setSaveCommentEnable(false)
+    setEditCommentBlock(-1)
     setNewCommentEdited('')
   }
 
@@ -264,18 +271,19 @@ const PostPage = () => {
   }
 
   const renderEditBlock = (commentBlock) => {
+    let content = commentBlock[1]
+    targetUUID = commentBlock[0]
+
     return (
       <Container className="d-block w-100 pl-0">
         <InputGroup className="rounded-สเ bg-white shadow mb-4">
           <FormControl
             as="textarea"
-            defaultValue={commentBlock?.Description}
+            defaultValue={content?.Description}
             aria-label="title"
             className="rounded-10 border-0"
             placeholder="แก้ไขความคิดเห็น..."
-            onChange={(e) =>
-              handleOnEditCommentChange(commentBlock?.Description, e)
-            }
+            onChange={(e) => handleOnEditCommentChange(content?.Description, e)}
             rows={3}
             style={{ minHeight: '5rem' }}
           />
@@ -447,17 +455,6 @@ const PostPage = () => {
                       </div>
                       .{extFile.toUpperCase()}
                     </div>
-                    <Button
-                      className="p-0 m-0"
-                      style={{
-                        zIndex: 100,
-                        position: 'absolute',
-                        left: '100px',
-                        top: '5px',
-                      }}
-                    >
-                      <CloseLabel />
-                    </Button>
                   </div>
                 </a>
               )
@@ -520,7 +517,7 @@ const PostPage = () => {
                       </p>
 
                       {editCommentBlock == index ? (
-                        renderEditBlock(commentData[index][1])
+                        renderEditBlock(commentData[index])
                       ) : (
                         <></>
                       )}
