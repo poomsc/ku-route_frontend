@@ -3,10 +3,6 @@ import { Button, Dropdown, FormControl, InputGroup } from 'react-bootstrap'
 import { useHistory, useLocation } from 'react-router'
 import { generateRandomColor, removeElementFromArray } from 'utils'
 import { BsFillCaretDownFill } from 'react-icons/bs'
-import facebook from 'assets/icons/facebook.png'
-import instagram from 'assets/icons/instagram.png'
-import mail from 'assets/icons/mail.png'
-import phone from 'assets/icons/phone.png'
 import { Dropdown as SMTDropdown } from 'semantic-ui-react'
 import DropFileZone from 'components/DropFileZone'
 import applicationStore from 'stores/applicationStore'
@@ -23,13 +19,6 @@ import { DocumentData } from '@firebase/firestore'
 import { getDownloadURL, StorageReference } from '@firebase/storage'
 import pdf from './../assets/icons/PDF.png'
 import jpg from './../assets/icons/JPG.png'
-
-const contractChannels = [
-  { Icon: mail, Placeholder: 'hello@kuroute.com' },
-  { Icon: phone, Placeholder: '09-234-5678' },
-  { Icon: facebook, Placeholder: 'https://www.facebook.com/kuroute' },
-  { Icon: instagram, Placeholder: 'https://www.instagram.com/kuroute' },
-]
 
 const pathType = { '/create-post': true, '/edit-post': false }
 
@@ -366,33 +355,7 @@ const VersatilePost = observer(() => {
         </div>
         <DropFileZone onChange={onFileChange} />
       </div>
-      <div
-        className="bg-secondary p-5 rounded-25 shadow mx-auto"
-        style={{ maxWidth: '70rem' }}
-      >
-        <h5 className="font-weight-bold mb-3">ช่องทางติดต่อ</h5>
-        {contractChannels.map(({ Icon, Placeholder }, idx) => (
-          <InputGroup className="mb-3" style={{ height: '50px' }} key={idx}>
-            <>
-              <InputGroup.Text
-                className="border-0 h-100"
-                style={{
-                  borderRadius: '10px 0 0 10px',
-                  backgroundColor: '#E1E1E1',
-                  width: '70px',
-                }}
-              >
-                <img src={Icon} alt="icon" className="h-75" />
-              </InputGroup.Text>
-              <FormControl
-                className="border-0 h-100"
-                placeholder={Placeholder}
-                aria-label={Placeholder}
-              />
-            </>
-          </InputGroup>
-        ))}
-      </div>
+
       <div className="mx-auto my-5" style={{ maxWidth: '70rem' }}>
         <div className="d-flex justify-content-end">
           {!isNewPost && (

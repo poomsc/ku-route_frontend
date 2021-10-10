@@ -76,7 +76,7 @@ const EditPostMenu = () => {
   }
 
   return (
-    <div className="blue-bg">
+    <div className="blue-bg hxladpasdsaipaspiapsdiaspdpiasdipasdpiasdpiasdipasdpid">
       <Container className="rounded-10 bg-primary-dark text-white font-weight-bold d-flex h-auto">
         <div className="Menutab">
           <Link to="/edit-profile" style={{ color: 'white' }}>
@@ -108,7 +108,7 @@ const EditPostMenu = () => {
             </Link>
           </div>
         </div>
-        <Container className="white-bg">
+        <Container className="white-bg e0igjegewrer9-grewgerggwiwjf9-qweff">
           <div className="Info">
             <h1 style={{ color: 'black' }}>ประวัติการอัพโหลด </h1>
             <div className="table max-w-content">

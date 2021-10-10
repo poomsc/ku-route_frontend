@@ -58,6 +58,10 @@
   max-width: max-content;
 }
 
+.max-h-content {
+  max-height: max-content;
+}
+
 .dropdown-toggle::after {
   display: none !important;
 }
