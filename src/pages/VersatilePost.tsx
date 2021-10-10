@@ -94,7 +94,7 @@ const VersatilePost = observer(() => {
     setDescription(postInfo[1]?.Description)
   }, [isNewPost, postInfo])
 
-  console.log(topicSelected?.split(' ')[0])
+  // console.log(topicSelected?.split(' ')[0])
 
   const history = useHistory()
   const goToMyPost = () => {
