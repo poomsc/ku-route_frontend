@@ -42,6 +42,7 @@ const VersatilePost = observer(() => {
   const [postInfo, setPostInfo] = useState<DocumentData>([])
   const [allFiles, setAllFiles] = useState<StorageReference[]>()
   const [linkFiles, setLinkFiles] = useState<string[]>()
+  const [deletedFile, setDeletedFile] = useState<string[]>()
 
   const { pathname } = useLocation()
   const isNewPost = pathType[pathname]
@@ -214,7 +215,7 @@ const VersatilePost = observer(() => {
         {/* {console.log(topicSelected === postInfo[1]?.SubjectID)} */}
         <SMTDropdown
           placeholder={isNewPost ? 'กรุณาเลือกวิชา' : topicSelected}
-          value={topicSelected}
+          // value={topicSelected}
           fluid
           search
           selection
