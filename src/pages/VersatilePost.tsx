@@ -196,13 +196,15 @@ const VersatilePost = observer(() => {
   }
 
   const handelOnDeletedFile = async (filepath: any) => {
-    // console.log("path: " + filepath)
+    console.log('path: ' + filepath)
     if (!deletedFile.includes(filepath)) {
-      // deletedFile.push(filepath) //wrong
       setDeletedFile([...deletedFile, filepath])
     } else {
       const index = deletedFile.indexOf(filepath)
+      // console.log(index)
+      // deletedFile.splice(index, 1)
       setDeletedFile(deletedFile.splice(index - 1, index))
+      // setDeletedFile(deletedFile)
     }
     console.log(deletedFile)
   }
@@ -371,7 +373,7 @@ const VersatilePost = observer(() => {
                       <div className="style15 d-block mx-auto mb-0">
                         <div
                           className="text-truncate mb-3 px-3"
-                          style={{ maxWidth: '125px' }}
+                          style={{ maxWidth: '130px' }}
                         >
                           {fileSP[0]}
                         </div>

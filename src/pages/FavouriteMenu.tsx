@@ -81,7 +81,7 @@ const FavouriteMenu = () => {
           <Link to="/favourite-post" style={{ color: 'white' }}>
             Favourite
           </Link>
-          <div className="Menu2">
+          {/* <div className="Menu2">
             <Link to="/" style={{ color: 'white' }}>
               About us
             </Link>{' '}
@@ -97,7 +97,7 @@ const FavouriteMenu = () => {
             <Link to="/" style={{ color: 'white' }}>
               FAQs
             </Link>
-          </div>
+          </div> */}
         </div>
         <Container className="white-bg d-flex">
           <div className="Info">
