@@ -103,6 +103,7 @@ const VersatilePost = observer(() => {
     setTitle(postInfo[1]?.Title)
     setTagSelected(postInfo[1]?.TagID)
     setDescription(postInfo[1]?.Description)
+    setUnselectedTagCount(postInfo[1]?.TagID.length)
   }, [isNewPost, postInfo])
 
   const history = useHistory()
@@ -200,11 +201,7 @@ const VersatilePost = observer(() => {
     if (!deletedFile.includes(filepath)) {
       setDeletedFile([...deletedFile, filepath])
     } else {
-      const index = deletedFile.indexOf(filepath)
-      // console.log(index)
-      // deletedFile.splice(index, 1)
-      setDeletedFile(deletedFile.splice(index - 1, index))
-      // setDeletedFile(deletedFile)
+      setDeletedFile(deletedFile.filter((item) => item !== filepath))
     }
     console.log(deletedFile)
   }
@@ -273,6 +270,7 @@ const VersatilePost = observer(() => {
             as="textarea"
             rows={8}
             className="rounded-10 border-0 mb-4"
+            style={{ minHeight: '15rem' }}
             placeholder="รายละเอียดเกี่ยวกับโพสต์..."
             onChange={(e) => setDescription(e.target.value)}
             maxLength={500}
@@ -382,7 +380,7 @@ const VersatilePost = observer(() => {
                     </div>
                   </a>
                   <Button
-                    className="p-0 m-0 bg-danger"
+                    className="p-0 m-0 bg-danger border-0"
                     onClick={() =>
                       handelOnDeletedFile(allFiles[index]?.fullPath)
                     }
@@ -420,6 +418,7 @@ const VersatilePost = observer(() => {
           <Button
             style={{ width: '7rem' }}
             onClick={isNewPost ? handelOnCreatePost : handelOnEditPost}
+            disabled={filesUpload.status !== 'done'}
           >
             PUBLISH
           </Button>
