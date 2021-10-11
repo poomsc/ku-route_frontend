@@ -10,6 +10,8 @@ import { observer } from 'mobx-react-lite'
 import { IFileWithMeta, StatusValue } from 'react-dropzone-uploader'
 import { create_post } from 'service/user'
 import { delete_post } from 'service/system'
+import FileUploadIcon from '@mui/icons-material/FileUpload'
+import DeleteIcon from '@mui/icons-material/Delete'
 import { ISubject } from 'interface/subject.interface'
 import { constTags } from 'constants/index'
 import Subjects from 'constants/subjects.json'
@@ -49,6 +51,7 @@ const VersatilePost = observer(() => {
       setAllFiles(files)
       setLinkFiles(fileUrl)
       setPostInfo(post)
+      onFileChange('done', [])
     }
     fetch()
   }, [PostID])
@@ -84,7 +87,7 @@ const VersatilePost = observer(() => {
   const [filesUpload, setFilesUpload] = useState<{
     status: StatusValue
     allFiles: IFileWithMeta[]
-  }>({ status: 'done', allFiles: [] })
+  }>({ status: 'started', allFiles: [] })
 
   useEffect(() => {
     if (isNewPost || !postInfo[1]) return
@@ -127,6 +130,7 @@ const VersatilePost = observer(() => {
   }
 
   const onFileChange = (status: StatusValue, allFiles: IFileWithMeta[]) => {
+    console.log(filesUpload.status)
     setFilesUpload({ status, allFiles })
   }
 
@@ -207,6 +211,20 @@ const VersatilePost = observer(() => {
     console.log(deletedFile)
   }
 
+  const fileStatus = () => {
+    // specific for this case
+    // if final result  file is 0 -> red, else if done or removed -> green, eise if uploading -> green
+    return (allFiles?.length ? allFiles?.length : 0) -
+      deletedFile.length +
+      filesUpload.allFiles.length
+      ? filesUpload.status != 'uploading'
+        ? filesUpload.status == 'done' || filesUpload.status == 'removed'
+          ? '#007bff'
+          : '#ffc107'
+        : '#ffc107'
+      : '#FF5A5A'
+  }
+
   return (
     <div className="white-bg py-5">
       <h2 className="font-weight-bold text-center mb-5">
@@ -274,7 +292,7 @@ const VersatilePost = observer(() => {
             style={{ minHeight: '15rem' }}
             placeholder="รายละเอียดเกี่ยวกับโพสต์..."
             onChange={(e) => setDescription(e.target.value)}
-            maxLength={500}
+            maxLength={9999}
           />
           <div
             style={{
@@ -285,7 +303,7 @@ const VersatilePost = observer(() => {
               opacity: 0.5,
             }}
           >
-            {description?.length}/500
+            {description?.length}/9999
           </div>
         </InputGroup>
 
@@ -399,28 +417,45 @@ const VersatilePost = observer(() => {
             })}
         </div>
         <DropFileZone onChange={onFileChange} />
-        <p className="text-right w-100 mt-4" style={{ fontSize: '18px' }}>
-          {filesUpload.status === 'done' ? 'Ready to publish' : 'Waiting...'}
+        <p
+          className={
+            'style13 w-100 px-3 py-1 text-center mt-4 rounded-lg shadow-sm text-white'
+          }
+          style={{
+            fontSize: '18px',
+            backgroundColor: fileStatus(),
+            borderColor: fileStatus(),
+          }}
+        >
+          {fileStatus() != '#FF5A5A'
+            ? fileStatus() != '#ffc107'
+              ? 'File ready !'
+              : 'Waiting...'
+            : 'Choose at least 1 file to publish'}
         </p>
       </div>
 
       <div className="mx-auto my-5" style={{ maxWidth: '70rem' }}>
-        <div className="d-flex justify-content-end">
+        <div className="d-flex justify-content-center">
           {!isNewPost && (
             <Button
+              className="pl-1"
               variant="danger"
               style={{ width: '7rem' }}
               onClick={handleOnDeletePost}
             >
+              <DeleteIcon className="mr-1 ml-0" />
               DELETE
             </Button>
           )}
           <div className="mx-2" />
           <Button
+            className="pl-1"
             style={{ width: '7rem' }}
             onClick={isNewPost ? handelOnCreatePost : handelOnEditPost}
-            disabled={filesUpload.status !== 'done'}
+            disabled={fileStatus() != '#007bff'}
           >
+            <FileUploadIcon className="mr-1 ml-1" />
             PUBLISH
           </Button>
         </div>
