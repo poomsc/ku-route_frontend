@@ -17,6 +17,7 @@ import Slide from '@mui/material/Slide'
 import LockLabel from '@material-ui/icons/Lock'
 import applicationStore from 'stores/applicationStore'
 import { useHistory } from 'react-router'
+import PrivacyTipIcon from '@mui/icons-material/PrivacyTip'
 import { observer } from 'mobx-react'
 import { BasicSearch } from 'service/search'
 import { border } from '@mui/system'
@@ -25,12 +26,24 @@ import instagram from 'assets/icons/instagram.png'
 import mail from 'assets/icons/mail.png'
 import phone from 'assets/icons/phone.png'
 import PhoneInput from 'react-phone-input-2'
+import Switch from 'react-switch'
 import 'react-phone-input-2/lib/style.css'
+import { Face, Facebook, Instagram } from '@material-ui/icons'
+import Logo from 'src/assets/icons/logo.png'
 
 const facultyList = [] as any
 let facultyLoader = 0
 let currentFaculty, newFacultySelected
-let sectionChangeStatus = [false, false, false, false, false, false, false]
+let sectionChangeStatus = [
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+]
 
 let databaseTarget = 'Account'
 let UUID = 'Account01'
@@ -40,6 +53,18 @@ const contractChannels = [
   { Icon: phone, Placeholder: 'เบอร์โทร' },
   { Icon: facebook, Placeholder: 'Facebok' },
   { Icon: instagram, Placeholder: 'Instagram' },
+]
+
+const privacyProfile = [
+  { Text: 'แสดงชื่อจริงและนามสกุล' },
+  { Text: 'แสดงรูปโปรไฟล์' },
+]
+
+const privacyContact = [
+  { Text: 'แสดงอีเมลติดต่อ' },
+  { Text: 'แสดงเบอร์โทรศัพท์ติดต่อ' },
+  { Text: 'แสดงช่องทางติดต่อ Facebook' },
+  { Text: 'แสดงช่องทางติดต่อ Instagram' },
 ]
 
 function loadFaculty(components) {
@@ -68,6 +93,8 @@ function findFacultyKey(faculty, keyword: string) {
 const EditProfilePage = observer(() => {
   if (applicationStore.user) UUID = applicationStore.user.uid
 
+  const [firstRender, setFirstRender] = useState(true)
+
   const [saveButtonClickable, setSaveButtonClickable] = useState(false)
   const [faculty, setFaculty] = useState<string[]>()
 
@@ -79,6 +106,14 @@ const EditProfilePage = observer(() => {
   const [phone, setPhone] = useState<string>()
   const [facebook, setFacebook] = useState<string>()
   const [instagram, setInstagram] = useState<string>()
+  const [privacyToggle, setPrivacyToggle] = useState([
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+  ])
 
   const [successAlertHidden, setSuccessAlertHidden] = useState(true)
   const [failAlertHidden, setFailAlertHidden] = useState(true)
@@ -87,13 +122,35 @@ const EditProfilePage = observer(() => {
   useEffect(() => {
     async function fetch() {
       if (!applicationStore.user) return
-      const rawInfo = (await get_info(UUID)) as DocumentData
+      let rawInfo = (await get_info(UUID)) as DocumentData
       const rawFaculty = (await get_faculty()) as string[]
       setUserInfo(rawInfo)
+
+      if (!rawInfo.Privacy) {
+        let changedInfo = {}
+        changedInfo['Privacy'] = privacyToggle
+        uploadInfo(changedInfo)
+        rawInfo = (await get_info(UUID)) as DocumentData
+      }
+
+      setTitle(rawInfo?.DisplayName)
       setFaculty(rawFaculty)
+      setAbout(rawInfo?.About)
+      setMail(rawInfo?.Mail)
+      setPhone(rawInfo?.Phone)
+      setFacebook(rawInfo?.Facebook)
+      setInstagram(rawInfo?.Instagram)
+      setPrivacyToggle(rawInfo?.Privacy)
+      setFirstRender(false)
     }
     fetch()
   }, [])
+
+  useEffect(() => {
+    if (!firstRender) {
+      checkChangeData(userInfo?.Privacy, privacyToggle, 7)
+    }
+  }, [privacyToggle])
 
   async function uploadInfo(changedInfo) {
     let result = await edit(changedInfo, UUID, databaseTarget)
@@ -164,6 +221,9 @@ const EditProfilePage = observer(() => {
     if (sectionChangeStatus[6]) {
       changedInfo['Instagram'] = instagram
     }
+    if (sectionChangeStatus[7]) {
+      changedInfo['Privacy'] = privacyToggle
+    }
     changedInfo['DateEdited'] = serverTimestamp()
     // sent new changes to database
     uploadInfo(changedInfo)
@@ -175,6 +235,7 @@ const EditProfilePage = observer(() => {
   }
 
   const handleOnDisplayNameChange = (event: any) => {
+    console.log(firstRender)
     setTitle(event.target.value)
     checkChangeData(userInfo?.DisplayName, event.target.value, 0)
   }
@@ -216,7 +277,20 @@ const EditProfilePage = observer(() => {
   const checkChangeData = (attr, value, index: number) => {
     // Check equal of two string
     if (index != 1) {
-      if (attr && !(value === attr)) {
+      if (index == 0 && value == '') {
+        sectionChangeStatus[index] = false
+      } else if (index == 7) {
+        for (let i = 0; i < 6; i++) {
+          console.log(i + ' ' + attr[i] + ' ' + value[i])
+          if (attr[i] != value[i]) {
+            sectionChangeStatus[7] = true
+            break
+          }
+          if (i == 5) {
+            sectionChangeStatus[7] = false
+          }
+        }
+      } else if (attr && !(value === attr)) {
         sectionChangeStatus[index] = true
       } else if (!attr && value != '') {
         sectionChangeStatus[index] = true
@@ -237,12 +311,19 @@ const EditProfilePage = observer(() => {
       !sectionChangeStatus[3] &&
       !sectionChangeStatus[4] &&
       !sectionChangeStatus[5] &&
-      !sectionChangeStatus[6]
+      !sectionChangeStatus[6] &&
+      !sectionChangeStatus[7]
     ) {
       setSaveButtonClickable(false)
     } else {
       setSaveButtonClickable(true)
     }
+  }
+
+  const handleOnPrivacyChange = (event, i) => {
+    setPrivacyToggle((prevState) =>
+      prevState.map((item, idx) => (idx === i ? !item : item))
+    )
   }
 
   return (
@@ -317,7 +398,7 @@ const EditProfilePage = observer(() => {
         <InputGroup className="rounded-10 bg-white shadow mb-4">
           <FormControl
             aria-label="title"
-            defaultValue={userInfo?.DisplayName}
+            value={title}
             className="rounded-10 border-0"
             placeholder="ฉันมีชื่อเล่นว่า"
             onChange={handleOnDisplayNameChange}
@@ -340,6 +421,13 @@ const EditProfilePage = observer(() => {
             /50
           </div>
         </InputGroup>
+        <p
+          className="text-danger font-weight-bold"
+          style={{ marginTop: '-5px' }}
+          hidden={title !== ''}
+        >
+          * ชื่อเล่นไม่สามารถเป็นค่าว่างได้
+        </p>
 
         <p className="font-weight-bold">คณะ</p>
         <div
@@ -368,12 +456,40 @@ const EditProfilePage = observer(() => {
           />
         </div>
 
-        <div className="pt-3">
+        <p className="font-weight-bold">สาขา</p>
+        <InputGroup className="rounded-10 bg-white shadow mb-4">
+          <FormControl
+            aria-label="title"
+            value={'To be Added ...'}
+            className="rounded-10 border-0"
+            placeholder="ฉันมีชื่อเล่นว่า"
+            // onChange={handleOnDisplayNameChange}
+            maxLength={50}
+          />
+          {/* <div
+            style={{
+              position: 'absolute',
+              top: -25,
+              right: 0,
+              fontSize: 14,
+              opacity: 0.5,
+            }}
+          >
+            {title
+              ? title?.length
+              : sectionChangeStatus[0]
+              ? 0
+              : userInfo?.DisplayName.length}
+            /50
+          </div> */}
+        </InputGroup>
+
+        <div className="pt-4">
           <h5 className="font-weight-bold mb-3">เกี่ยวกับตัวฉัน</h5>
           <InputGroup className="rounded-10 bg-white shadow mb-4">
             <FormControl
               as="textarea"
-              defaultValue={userInfo?.About}
+              value={about}
               aria-label="title"
               className="rounded-10 border-0"
               placeholder="คำอธิบายของตัวท่าน"
@@ -401,7 +517,7 @@ const EditProfilePage = observer(() => {
           </InputGroup>
         </div>
 
-        <div className="pt-3 pb-4">
+        <div className="pt-3 mb-2">
           <h5 className="font-weight-bold mb-3">ช่องทางติดต่อ</h5>
           {contractChannels.map(({ Icon, Placeholder }, idx) => (
             <InputGroup
@@ -425,31 +541,25 @@ const EditProfilePage = observer(() => {
                   className="border-0 h-100"
                   placeholder={Placeholder}
                   aria-label={Placeholder}
-                  defaultValue={
-                    idx == 0
-                      ? userInfo?.Mail
-                      : idx == 2
-                      ? userInfo?.Facebook
-                      : userInfo?.Instagram
-                  }
+                  value={idx == 0 ? mail : idx == 2 ? facebook : instagram}
                   onChange={(e) => handleOnContactChange(e.target.value, idx)}
                 />
               ) : (
                 <div
-                  className="d-flex p-0 m-0 w-50"
-                  style={{
-                    // overflow: 'hidden',
-                    whiteSpace: 'nowrap',
-                  }}
+                  className="d-flex p-0 m-0"
+                  style={{ width: 'calc(100% - 70px)' }}
                 >
                   <PhoneInput
                     placeholder={Placeholder}
-                    value={userInfo?.Phone}
+                    value={phone}
                     onChange={(phone) => handleOnContactChange(phone, 1)}
                     autoFormat={true}
                     enableSearch={true}
                     containerClass="d-flex w-100"
                     inputClass="d-flex w-100 h-100 m-0 border-0"
+                    buttonClass="rounded-0"
+                    inputStyle={{ paddingLeft: '4rem' }}
+                    buttonStyle={{ width: '50px' }}
                   />
                 </div>
               )}
@@ -457,6 +567,64 @@ const EditProfilePage = observer(() => {
           ))}
         </div>
 
+        <h5 className="font-weight-bold mb-4 pb-2 mt-5 ">ความเป็นส่วนตัว</h5>
+        <div
+          className="bg-secondary p-5 rounded-10 shadow mx-auto mb-5"
+          style={{
+            maxWidth: '70rem',
+            position: 'inherit',
+            //  width:"70%"
+          }}
+        >
+          <div className="">
+            <div
+              className=""
+              //  style={{paddingRight: "5%", paddingLeft: "5%"}}
+            >
+              <h6 className="mb-2 font-weight-bold">ข้อมูลส่วนตัว</h6>
+              <div
+                className="w-100 bg-dark mb-4"
+                style={{ height: '1px' }}
+              ></div>
+              {privacyProfile.map(({ Text }, idx) => (
+                <InputGroup className="rounded-10 mb-2 d-flex justify-content-between">
+                  <span className="h5 textPostStyle">{Text}</span>
+                  <Switch
+                    className="d-flex"
+                    onChange={(e) => handleOnPrivacyChange(e, idx)}
+                    checked={privacyToggle[idx]}
+                    onColor="#2eaf7d"
+                    uncheckedIcon={false}
+                    checkedIcon={true}
+                    handleDiameter={22}
+                  />
+                </InputGroup>
+              ))}
+
+              <h6 className="mt-3 pt-2 font-weight-bold">ช่องทางติดต่อ</h6>
+              <div
+                className="w-100 bg-dark mb-4"
+                style={{ height: '1px' }}
+              ></div>
+              {privacyContact.map(({ Text }, idx) => (
+                <InputGroup className="rounded-10 mb-2 d-flex justify-content-between">
+                  <span className="h5 textPostStyle">{Text}</span>
+                  <Switch
+                    className="d-flex"
+                    onChange={(e) =>
+                      handleOnPrivacyChange(e, idx + privacyProfile.length)
+                    }
+                    checked={privacyToggle[idx + privacyProfile.length]}
+                    onColor="#2eaf7d"
+                    uncheckedIcon={false}
+                    checkedIcon={true}
+                    handleDiameter={22}
+                  />
+                </InputGroup>
+              ))}
+            </div>
+          </div>
+        </div>
         <div className="d-flex justify-content-end">
           <div className="mx-2"></div>
           <Button

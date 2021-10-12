@@ -14,7 +14,6 @@ import pdf from './../assets/icons/PDF.png'
 import jpg from './../assets/icons/JPG.png'
 import userIcon from './../assets/icons/user-icon.png'
 import MoreLabel from '@material-ui/icons/MoreHoriz'
-import CloseLabel from '@material-ui/icons/Close'
 import sendArrow from './../assets/icons/sendArrow.png'
 import Comment from './../assets/icons/Comment.png'
 import Like from './../assets/icons/Like.png'
@@ -190,7 +189,6 @@ const PostPage = () => {
   const PopoverItem = (props) => {
     const { id, item } = props
     const [popoverOpen, setPopoverOpen] = useState(false)
-
     const toggle = () => setPopoverOpen(!popoverOpen)
 
     return (
@@ -212,7 +210,9 @@ const PostPage = () => {
               <img className="style23 mr-3" src={userIcon} />
               <div className="style25 d-flex-block">
                 <p className="p-0 m-0 font-weight-light">
-                  {item.text?.Name + ' ' + item.text?.Surname}
+                  {item.text?.Privacy[0]
+                    ? item.text?.Name + ' ' + item.text?.Surname
+                    : ' '}
                 </p>
                 <p className="p-0 m-0 font-weight-light">
                   {' '}
@@ -221,34 +221,38 @@ const PostPage = () => {
                 <div className="mt-2"></div>
                 <div className="max-h-content p-0 m-0 d-flex">
                   <p className="p-0 m-0 font-weight-bolder d-inline-flex mr-2">
-                    E-mail:{' '}
+                    {item.text?.Privacy[2] && item.text?.Mail ? 'E-mail: ' : ''}
                   </p>
                   <p className="p-0 m-0 d-inline-flex font-weight-light">
-                    {item.text?.Mail}
+                    {item.text?.Privacy[2] ? item.text?.Mail : ''}
                   </p>
                 </div>
                 <div className="max-h-content p-0 m-0 d-flex">
                   <p className="p-0 m-0 font-weight-bolder d-inline-flex mr-2">
-                    Phone:{' '}
+                    {item.text?.Privacy[3] && item.text?.Phone ? 'Phone: ' : ''}
                   </p>
                   <p className="p-0 m-0 d-inline-flex font-weight-light">
-                    {item.text?.Phone}
+                    {item.text?.Privacy[3] ? item.text?.Phone : ''}
                   </p>
                 </div>
                 <div className="max-h-content p-0 m-0 d-flex">
                   <p className="p-0 m-0 font-weight-bolder d-inline-flex mr-2">
-                    Facebook:{' '}
+                    {item.text?.Privacy[4] && item.text?.Facebook
+                      ? 'Facebook: '
+                      : ''}
                   </p>
                   <p className="p-0 m-0 d-inline-flex font-weight-light">
-                    {item.text?.Facebook}
+                    {item.text?.Privacy[4] ? item.text?.Facebook : ''}
                   </p>
                 </div>
                 <div className="max-h-content p-0 m-0 d-flex">
                   <p className="p-0 m-0 font-weight-bolder d-inline-flex mr-2">
-                    Instagram:{' '}
+                    {item.text?.Privacy[5] && item.text?.Instagram
+                      ? 'Instagram: '
+                      : ''}
                   </p>
                   <p className="p-0 m-0 d-inline-flex font-weight-light">
-                    {item.text?.Instagram}
+                    {item.text?.Privacy[5] ? item.text?.Instagram : ''}
                   </p>
                 </div>
               </div>
@@ -584,6 +588,7 @@ const PostPage = () => {
                         >
                           {infoComment?.DisplayName}
                         </p>
+
                         <PopoverItem
                           key={labelCount}
                           item={{
