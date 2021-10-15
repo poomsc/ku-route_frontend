@@ -13,14 +13,16 @@ import { Container, Card, Row, Col, Button, Form } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import filepdf1 from '../Data/pdf1'
 import PDF from '../assets/icons/PDF.png'
+import JPG from './../assets/icons/JPG.png'
 import { useEffect, useState } from 'react'
 import { DocumentData, serverTimestamp } from '@firebase/firestore'
-import { BasicSearch } from 'service/search'
+import { DateSearch } from 'service/search'
 import { stringify } from 'querystring'
 import applicationStore from 'stores/applicationStore'
 import React from 'react'
 import { useHistory } from 'react-router'
 import { height } from '@mui/system'
+import { get4File, get_info } from 'service/system'
 
 export function convertTStoDate(timestamp) {
   if (!timestamp) return
@@ -53,6 +55,8 @@ const AllPostPage = () => {
 
   const history = useHistory()
   const [resultPost, setResultPost] = useState<DocumentData>()
+  const [fileUrl, setFileUrl] = useState<any>([])
+  const [info, setInfo] = useState<DocumentData>([])
 
   const currentSearch = localStorage.getItem('currentSearch')
   const tagJSON = localStorage.getItem('tagSearch')
@@ -68,7 +72,7 @@ const AllPostPage = () => {
     history.push(`post/${PostID}`)
   }
 
-  function renderPost(menu, index, col) {
+  function renderPost(menu, index, col, file, info) {
     const PostID = menu[0]
     countPostColumn[col]++
 
@@ -106,11 +110,11 @@ const AllPostPage = () => {
                 <div className="title text-truncate mx-3 px-2 mt-4 my-2">
                   {menu[1].Title}
                 </div>
-                <div className="mx-3 px-2 mb-4">
+                <div className="mx-3 px-2 mb-2">
                   <img className="line-black w-100" src={lineblack} />
                 </div>
                 <div
-                  className="headtext text-truncate mx-3 mt-3 px-2 my-3"
+                  className="headtext text-truncate mx-3 mt-3 px-2 my-2"
                   style={{ height: '41px' }}
                 >
                   {menu[1].Description}
@@ -124,31 +128,32 @@ const AllPostPage = () => {
 
                 <div className="pdfrow mx-3 px-2 mb-2 pb-2">
                   <div className="d-flex align-content-start flex-wrap">
-                    {filepdf1.map((pdftest, AAA) => {
+                    {file.map((file, index) => {
+                      if (index == 3) return
+                      const fileSP = file.name.split('.')
+                      const extFile =
+                        fileSP[fileSP.length - 1] == 'pdf' ? PDF : JPG
                       return (
                         <div className="">
-                          <Link
-                            to={pdftest.path}
-                            className="pdfcount d-inline-block"
+                          <img className="pdf d-inline-block" src={extFile} />
+                          <div
+                            className="text-center text-truncate mr-1 textmore"
+                            style={{ maxWidth: '55px' }}
                           >
-                            <img className="pdf" src={PDF} />
-                            <div
-                              className="text-center text-truncate mr-1"
-                              style={{ maxWidth: '50px' }}
-                            >
-                              {pdftest.name}
-                            </div>
-                          </Link>
+                            {file.name}
+                          </div>
                         </div>
                       )
                     })}
-                    <div
-                      className="pdfcount cursor-pointer d-inline-block"
-                      onClick={() => handleOnViewPage(PostID)}
-                    >
-                      <img className="moreItem" src={moreitem} />
-                      <div className="textmore">MoreItem</div>
-                    </div>
+                    {file.length > 3 && (
+                      <div
+                        className="pdfcount cursor-pointer d-inline-block"
+                        onClick={() => handleOnViewPage(PostID)}
+                      >
+                        <img className="moreItem" src={moreitem} />
+                        <div className="textmore">MoreItem</div>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -166,7 +171,13 @@ const AllPostPage = () => {
                 </tr>
               </div>
             </div>
-            <div className="Time text-center" style={{ marginTop: '-32px' }}>
+            <div
+              className="Time text-right"
+              style={{
+                marginTop: '-32px',
+                marginRight: '10px',
+              }}
+            >
               {'Posted ' + convertTStoDate(menu[1].DateEdited)}
             </div>
           </Container>
@@ -182,8 +193,15 @@ const AllPostPage = () => {
       for (const TagID in tagSearch) {
         if (tagSearch[TagID]) tagResult.push(TagID)
       }
-      const result = await BasicSearch(SubjectIDandTH[0], tagResult)
+      const result = await DateSearch(SubjectIDandTH[0], tagResult, 'desc')
+      const fileUrl = await Promise.all(result.map((Post) => get4File(Post[0])))
+      const info = await Promise.all(
+        result.map((Post) => get_info(Post[1]?.AccountID))
+      )
+      console.log(fileUrl)
       setResultPost(result)
+      setFileUrl(fileUrl)
+      setInfo(info)
     }
     fetch()
   }, [currentSearch])
@@ -225,7 +243,7 @@ const AllPostPage = () => {
                 <div>
                   <div className="d-flex flex-row-reverse align-items-end mt-5 pt-2 mr-4">
                     <div className="">
-                      <img className="pic" src={write_pic} />
+                      <img className="pic my-1" src={write_pic} />
                       <span className="count">{resultPost?.length}</span>
                     </div>
                     <div className=""></div>
@@ -255,14 +273,28 @@ const AllPostPage = () => {
               className="left w-content d-inline-block pt-3 ml-4"
               style={{ verticalAlign: 'top' }}
             >
-              {resultPost?.map((menu, index) => renderPost(menu, index, 0))}
+              {resultPost &&
+                fileUrl &&
+                info &&
+                resultPost.length == fileUrl.length &&
+                resultPost.length == info.length &&
+                resultPost?.map((menu, index) =>
+                  renderPost(menu, index, 0, fileUrl[index], info[index])
+                )}
             </div>
 
             <div
               className="right w-content d-inline-block pt-3 mr-4"
               style={{ verticalAlign: 'top' }}
             >
-              {resultPost?.map((menu, index) => renderPost(menu, index, 1))}
+              {resultPost &&
+                fileUrl &&
+                info &&
+                resultPost.length == fileUrl.length &&
+                resultPost.length == info.length &&
+                resultPost?.map((menu, index) =>
+                  renderPost(menu, index, 1, fileUrl[index], info[index])
+                )}
             </div>
           </div>
         </div>

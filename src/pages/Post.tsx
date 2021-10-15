@@ -7,6 +7,7 @@ import {
   InputGroup,
   CloseButton,
 } from 'react-bootstrap'
+import ReactDOM from 'react-dom'
 import { useState, useEffect } from 'react'
 import user_icon from './../assets/icons/user-icon.png'
 import { url } from 'inspector'
@@ -188,8 +189,6 @@ const PostPage = () => {
 
   const PopoverItem = (props) => {
     const { id, item } = props
-    const [popoverOpen, setPopoverOpen] = useState(false)
-    const toggle = () => setPopoverOpen(!popoverOpen)
 
     return (
       <span>
@@ -198,8 +197,6 @@ const PostPage = () => {
           style={{ minWidth: '225px' }}
           placement={item.placement}
           target={'Popover-' + id}
-          // isOpen={popoverOpen}
-          // toggle={toggle}
           trigger="legacy"
         >
           <PopoverHeader className="font-weight-bold py-2">
@@ -493,7 +490,7 @@ const PostPage = () => {
                       >
                         {fileSP[0]}
                       </div>
-                      .{extFile.toUpperCase()}
+                      .{extFile}
                     </div>
                   </div>
                 </a>
@@ -601,7 +598,7 @@ const PostPage = () => {
                         />
 
                         <div className="style24 d-block text-truncate">
-                          {convertTStoDate(commentData[index][1]?.DateEdited)}
+                          {convertTStoDate(commentData[index][1]?.DateCreate)}
                         </div>
                       </div>
                     </div>

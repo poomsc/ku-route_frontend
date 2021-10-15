@@ -452,7 +452,12 @@ const VersatilePost = observer(() => {
             className="pl-1"
             style={{ width: '7rem' }}
             onClick={isNewPost ? handelOnCreatePost : handelOnEditPost}
-            disabled={fileStatus() != '#007bff'}
+            disabled={
+              fileStatus() != '#007bff' ||
+              tagsSelected.length == 0 ||
+              !topicSelected ||
+              !title
+            }
           >
             <FileUploadIcon className="mr-1 ml-1" />
             PUBLISH
