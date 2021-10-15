@@ -67,7 +67,7 @@ const FavouriteMenu = () => {
     }
   }
   return (
-    <div className="blue-bg">
+    <div className="blue-bg hxladpasdsaipaspiapsdiaspdpiasdipasdpiasdpiasdipasdpid">
       <Container className="rounded-10 bg-primary-dark text-white font-weight-bold d-flex">
         <div className="Menutab">
           <Link to="/edit-profile" style={{ color: 'white' }}>

@@ -11,15 +11,19 @@ import {
   DocumentData,
   orderBy,
 } from 'firebase/firestore'
-import { ref, listAll, deleteObject, getDownloadURL } from 'firebase/storage'
-import { firebaseApp, storage } from 'config/firebase'
-
-const db = getFirestore(firebaseApp)
+import {
+  ref,
+  list,
+  listAll,
+  deleteObject,
+  getDownloadURL,
+} from 'firebase/storage'
+import { firestore, storage } from 'config/firebase'
 
 async function get_faculty() {
   try {
     console.log('get_faculty')
-    const querySnapshot = await getDocs(collection(db, 'Faculty'))
+    const querySnapshot = await getDocs(collection(firestore, 'Faculty'))
     const Facultys = querySnapshot.docs.map(
       (doc) => doc.data().name
     ) as string[]
@@ -34,7 +38,7 @@ async function get_faculty() {
 async function get_info(accountid: string) {
   try {
     console.log('get_info')
-    const docRef = doc(db, 'Account', accountid)
+    const docRef = doc(firestore, 'Account', accountid)
     const docSnap = await getDoc(docRef)
 
     if (docSnap.exists()) {
@@ -55,7 +59,7 @@ async function get_info(accountid: string) {
 async function get_mylikepost(AccountID: string) {
   try {
     const q = query(
-      collection(db, 'Like'),
+      collection(firestore, 'Like'),
       where('AccountID', '==', AccountID),
       where('Status', '==', true),
       orderBy('DateCreate', 'desc')
@@ -77,7 +81,7 @@ async function get_my_post(AccountID: string) {
   try {
     console.log('get_my_post')
     const q = query(
-      collection(db, 'Post'),
+      collection(firestore, 'Post'),
       where('AccountID', '==', AccountID),
       where('Status', '==', true),
       orderBy('DateCreate', 'desc')
@@ -95,7 +99,7 @@ async function get_my_post(AccountID: string) {
 async function get_one_post(PostID: string) {
   try {
     console.log('get_one_post')
-    const docRef = doc(db, 'Post', PostID)
+    const docRef = doc(firestore, 'Post', PostID)
     const docSnap = await getDoc(docRef)
 
     // console.log(docSnap.data()?.Status)
@@ -119,7 +123,7 @@ async function get_comment(PostID: string) {
   try {
     console.log('get_comment')
     const q = query(
-      collection(db, 'Comment'),
+      collection(firestore, 'Comment'),
       where('PostID', '==', PostID),
       where('Status', '==', true),
       orderBy('DateCreate', 'asc')
@@ -146,19 +150,17 @@ async function get_info_comment(comment: DocumentData) {
   }
 }
 
-// export async function get_file(PostID: string) {
-//   try {
-//     console.log('get_file')
-//     const listRef = ref(storage, PostID)
-//     // Find all the prefixes and items.
-//     const result = await listAll(listRef)
-//     const allFileName = result.items.map(file => file.name)
-//     return allFileName
-//   } catch (error) {
-//     console.log('get_file', error)
-//     // alert(error)
-//   }
-// }
+async function get4File(PostID: string) {
+  try {
+    const listRef = ref(storage, PostID + '/')
+    // Find all the prefixes and items.
+    const result = await list(listRef, { maxResults: 4 })
+    return result.items
+  } catch (error) {
+    console.log('get_file', error)
+    // alert(error)
+  }
+}
 
 async function get_file(PostID: string) {
   try {
@@ -167,7 +169,6 @@ async function get_file(PostID: string) {
     // Find all the prefixes and items.
     const result = await listAll(listRef)
     // console.log(result)
-    const allFilePath = result.items.map((file) => file.fullPath)
     return result.items
   } catch (error) {
     console.log('get_file', error)
@@ -176,7 +177,7 @@ async function get_file(PostID: string) {
 
 async function delete_post(PostID: string) {
   try {
-    await deleteDoc(doc(db, 'Post', PostID))
+    await deleteDoc(doc(firestore, 'Post', PostID))
     console.log('Delete successfully')
   } catch (error) {
     console.log('delete_post', error)
@@ -197,7 +198,7 @@ async function delete_file(filepath: string) {
 
 async function delete_comment(CommentID: string) {
   try {
-    await deleteDoc(doc(db, 'Comment', CommentID))
+    await deleteDoc(doc(firestore, 'Comment', CommentID))
     console.log('Delete successfully')
   } catch (error) {
     console.log('delete_comment', error)
@@ -206,7 +207,7 @@ async function delete_comment(CommentID: string) {
 
 async function getDocLike(LikeID: string) {
   try {
-    const LikeRef = doc(db, 'Like', LikeID)
+    const LikeRef = doc(firestore, 'Like', LikeID)
     const LikeSnap = await getDoc(LikeRef)
     if (LikeSnap.exists()) {
       // console.log(LikeSnap.data())
@@ -223,7 +224,7 @@ async function getDocLike(LikeID: string) {
 async function getLikeOfPost(PostID: string) {
   try {
     const q = query(
-      collection(db, 'Like'),
+      collection(firestore, 'Like'),
       where('PostID', '==', PostID),
       where('Status', '==', true)
     )
@@ -245,6 +246,7 @@ export {
   get_mylikepost,
   get_comment,
   get_info_comment,
+  get4File,
   get_file,
   delete_post,
   delete_file,

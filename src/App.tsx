@@ -16,7 +16,7 @@ import {
   getLikeOfPost,
 } from 'service/system'
 import { like } from 'service/user'
-import { BasicSearch } from 'service/search'
+import { DateSearch } from 'service/search'
 import { title } from 'process'
 import { edit } from 'service/user'
 import { serverTimestamp } from '@firebase/firestore'
