@@ -17,7 +17,7 @@ import lineblack from '../assets/icons/lineback.png'
 import moreitem from '../assets/icons/more.png'
 import PDF from '../assets/icons/PDF.png'
 import JPG from './../assets/icons/JPG.png'
-// import convertTStoDate from './AllPost'
+import { get_allpost } from 'service/system'
 
 function convertTStoDate(timestamp) {
   if (!timestamp) return
