@@ -95,7 +95,7 @@ const Signin = ({
           {/* <p id='caption'>
             <Link to='/'>Forgot password?</Link>
           </p> */}
-          <p id="caption">
+          <p id="caption" style={{ fontSize: '20px' }}>
             เข้าสู่ระบบด้วย Email KU (@ku.th) {''}
             {/* <Link to="/signup" id="signup">
               Sign up

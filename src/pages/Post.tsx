@@ -494,7 +494,7 @@ const PostPage = () => {
                     <div className="style15 d-block mx-auto mb-0">
                       <div
                         className="text-truncate mb-3 px-3"
-                        style={{ maxWidth: '125px' }}
+                        style={{ maxWidth: '130px' }}
                       >
                         {fileSP[0]}
                       </div>

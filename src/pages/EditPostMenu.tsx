@@ -95,7 +95,7 @@ const EditPostMenu = () => {
           <Link to="/favourite-post" style={{ color: 'white' }}>
             Favourite
           </Link>
-          <div className="Menu2">
+          {/* <div className="Menu2">
             <Link to="/" style={{ color: 'white' }}>
               About us
             </Link>{' '}
@@ -111,7 +111,7 @@ const EditPostMenu = () => {
             <Link to="/" style={{ color: 'white' }}>
               FAQs
             </Link>
-          </div>
+          </div> */}
         </div>
         <Container className="white-bg d-flex e0igjegewrer9-grewgerggwiwjf9-qweff">
           <div className="Info">

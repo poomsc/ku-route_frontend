@@ -8,7 +8,7 @@ import logo_image from '../assets/icons/Image.png'
 import logo_delete from '../assets/icons/Vector.png'
 import '../FavouriteMenu.css'
 import applicationStore from 'stores/applicationStore'
-import { get_mylikepost, get_one_post } from 'service/system'
+import { get_mylikepost, get_one_post, get_allpost } from 'service/system'
 import { DocumentData } from '@firebase/firestore'
 import { useHistory } from 'react-router'
 import { convertTStoDate } from './AllPost'
@@ -81,7 +81,7 @@ const FavouriteMenu = () => {
           <Link to="/favourite-post" style={{ color: 'white' }}>
             Favourite
           </Link>
-          <div className="Menu2">
+          {/* <div className="Menu2">
             <Link to="/" style={{ color: 'white' }}>
               About us
             </Link>{' '}
@@ -97,7 +97,7 @@ const FavouriteMenu = () => {
             <Link to="/" style={{ color: 'white' }}>
               FAQs
             </Link>
-          </div>
+          </div> */}
         </div>
         <Container className="white-bg d-flex e0igjegewrer9-grewgerggwiwjf9-qweff">
           <div className="Info">

@@ -76,6 +76,24 @@ async function get_info(accountid: string) {
   }
 }
 
+async function get_allpost() {
+  try {
+    // console.log('get_my_post')
+    const q = query(
+      collection(firestore, 'Post'),
+      where('Status', '==', true),
+      orderBy('DateCreate', 'desc')
+    )
+    const querySnapshot = await getDocs(q)
+    const Posts = querySnapshot.docs.map((doc) => [doc.id, doc.data()])
+    return Posts
+  } catch (error) {
+    console.log('get_allpost', error)
+    // alert(error)
+    return null
+  }
+}
+
 async function get_mylikepost(AccountID: string) {
   try {
     const q = query(
@@ -297,4 +315,5 @@ export {
   getDocLike,
   getLikeOfPost,
   createHistoryComment,
+  get_allpost,
 }
