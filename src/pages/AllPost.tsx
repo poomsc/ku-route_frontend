@@ -79,7 +79,7 @@ const AllPostPage = () => {
     if (countPostColumn[col] % 2 == col) {
       return (
         <div
-          className="w-content d-flex mb-4"
+          className="w-content d-flex mb-5"
           key={index}
           //  onMouseEnter={"d"}
           //  onMouseLeave={}
@@ -148,7 +148,7 @@ const AllPostPage = () => {
                     {file.length > 3 && (
                       <div
                         className="pdfcount cursor-pointer d-inline-block"
-                        onClick={() => handleOnViewPage(PostID)}
+                        //onClick={() => handleOnViewPage(PostID)}
                       >
                         <img className="moreItem" src={moreitem} />
                         <div className="textmore">MoreItem</div>

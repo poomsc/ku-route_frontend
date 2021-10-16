@@ -21,6 +21,7 @@ import Like from './../assets/icons/Like.png'
 import Unlike from './../assets/icons/Unlike.png'
 import { collection, DocumentData, serverTimestamp } from '@firebase/firestore'
 import {
+  createHistoryComment,
   get_comment,
   get_file,
   get_info,
@@ -45,7 +46,7 @@ import {
 import { useLocation } from 'react-router'
 import { modalClasses } from '@mui/material'
 import { Modal, Button as ButtonB } from 'semantic-ui-react'
-import { ModalDisableComment } from 'components/Modal'
+import { ModalDisableComment, ModalReport } from 'components/Modal'
 import { right } from '@popperjs/core'
 import { ApplicationVerifier } from '@firebase/auth'
 
@@ -79,6 +80,8 @@ const PostPage = () => {
       const fileUrl = await Promise.all(
         files.map((file) => getDownloadURL(file))
       )
+
+      const TEST = await createHistoryComment('kkY5SaNaRdqaeZ0ToVbF')
 
       if (applicationStore.user) {
         const LikeDoc = await getDocLike(
@@ -297,9 +300,14 @@ const PostPage = () => {
                 </Button>
               </ModalDisableComment>
 
-              <Button className={className} onClick={handleOnReport}>
-                รายงานความไม่เหมาะสม
-              </Button>
+              <ModalReport
+                CommentID={item.data[0]}
+                onClick={handleOnDeleteComment}
+              >
+                <Button className={className} onClick={handleOnReport}>
+                  รายงานความไม่เหมาะสม
+                </Button>
+              </ModalReport>
             </div>
           </PopoverBody>
         </UncontrolledPopover>
@@ -600,6 +608,12 @@ const PostPage = () => {
                         <div className="style24 d-block text-truncate">
                           {convertTStoDate(commentData[index][1]?.DateCreate)}
                         </div>
+                        {commentData[index][1]?.DateCreate !=
+                          commentData[index][1]?.DateEdited && (
+                          <div className="style24 d-block text-truncate">
+                            Edited
+                          </div>
+                        )}
                       </div>
                     </div>
 

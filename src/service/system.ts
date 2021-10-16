@@ -10,6 +10,9 @@ import {
   deleteDoc,
   DocumentData,
   orderBy,
+  serverTimestamp,
+  FieldValue,
+  setDoc,
 } from 'firebase/firestore'
 import {
   ref,
@@ -19,6 +22,23 @@ import {
   getDownloadURL,
 } from 'firebase/storage'
 import { firestore, storage } from 'config/firebase'
+
+interface postProps {
+  AccountID: string
+  TagID: string[]
+  SubjectID: string
+  SubjectTH: string
+  SubjectENG: string
+  Title: string
+  Description: string
+}
+
+interface commentProps {
+  AccountID: string
+  PostID: string
+  Description: string
+  DateEdited: FieldValue
+}
 
 async function get_faculty() {
   try {
@@ -238,6 +258,29 @@ async function getLikeOfPost(PostID: string) {
   }
 }
 
+async function createHistoryComment(
+  // Description : string,
+  // DateEdited: FieldValue,
+  CommentID: string
+) {
+  try {
+    const docRef = await getDocs(
+      collection(collection(firestore, 'Comment'), CommentID)
+    )
+    console.log(docRef)
+    //const docRef = await setDoc()
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+async function createHistoryPost(PostID: string) {
+  try {
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 export {
   get_faculty,
   get_info,
@@ -253,4 +296,5 @@ export {
   delete_comment,
   getDocLike,
   getLikeOfPost,
+  createHistoryComment,
 }
