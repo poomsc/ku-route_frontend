@@ -413,6 +413,8 @@ const HomePage = () => {
             </Form>
           </div>
         </Container>
+        {/* Post */}
+        <div></div>
       </Jumbotron>
       {/* <div>
         HomePage
