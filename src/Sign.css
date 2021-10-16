@@ -15,7 +15,8 @@
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
-  min-height: 100vh;
+  height: 89vh;
+  overflow: hidden;
 }
 
 .white-bg {
@@ -26,7 +27,7 @@
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
-  min-height: 100%;
+  min-height: 100vh;
 }
 
 .header {

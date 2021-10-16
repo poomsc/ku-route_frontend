@@ -84,31 +84,40 @@ const AllPostPage = () => {
           //  onMouseEnter={"d"}
           //  onMouseLeave={}
         >
-          <Container className="w-content d-inline-block p-0 zoom-1 hover-brighten">
+          <Container className="w-content d-inline-block p-0 zoom-1 hover-brighte">
             <div className="row m-0 p-0 d-inline w-25">
               <div
                 className="form py-4 cursor-pointer"
                 onClick={() => handleOnViewPage(PostID)}
               >
-                <tr className="TAG d-block w-content my-1 mx-2 mb-3">
-                  {menu[1].TagID.map((tag, idx) => (
-                    <div
-                      className="hover-darken-2 max-w-content d-inline-block rounded cursor-pointer px-2 py-1 ml-3 mb-2"
-                      key={tag}
-                      style={{
-                        backgroundColor:
-                          colors[maxColor - (idx % maxColor) - 1],
-                        color: '#FFFFFF',
-                      }}
-                    >
-                      {tag}
-                    </div>
-                  ))}
-                  {/* <th className="category">{menu.Category}</th> */}
-                </tr>
-
+                <div className="row ml-1">
+                  <tr className="TAG d-block w-content my-1 mx-2 mb-3">
+                    {menu[1].TagID.map((tag, idx) => (
+                      <div
+                        className="hover-darken-2 max-w-content d-inline-block rounded cursor-pointer px-2 py-1 ml-3 mb-2"
+                        key={tag}
+                        style={{
+                          backgroundColor:
+                            colors[maxColor - (idx % maxColor) - 1],
+                          color: '#FFFFFF',
+                        }}
+                      >
+                        {tag}
+                      </div>
+                    ))}
+                    {/* <th className="category">{menu.Category}</th> */}
+                    {/* <div className ="text-align: right">{SubjectIDandTH[0]}</div>
+                    <div className ="text-align: right">
+                      {SubjectENG}
+                    </div> */}
+                  </tr>
+                </div>
                 <div className="title text-truncate mx-3 px-2 mt-4 my-2">
                   {menu[1].Title}
+                </div>
+                <div className="row ml-2">
+                  <div className="texttitle col-8 ">{SubjectENG}</div>
+                  <div className="texttitle col-4 ">{SubjectIDandTH[0]}</div>
                 </div>
                 <div className="mx-3 px-2 mb-2">
                   <img className="line-black w-100" src={lineblack} />
