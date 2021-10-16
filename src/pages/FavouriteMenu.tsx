@@ -67,7 +67,7 @@ const FavouriteMenu = () => {
     }
   }
   return (
-    <div className="blue-bg">
+    <div className="blue-bg hxladpasdsaipaspiapsdiaspdpiasdipasdpiasdpiasdipasdpid">
       <Container className="rounded-10 bg-primary-dark text-white font-weight-bold d-flex">
         <div className="Menutab">
           <Link to="/edit-profile" style={{ color: 'white' }}>
@@ -81,7 +81,7 @@ const FavouriteMenu = () => {
           <Link to="/favourite-post" style={{ color: 'white' }}>
             Favourite
           </Link>
-          <div className="Menu2">
+          {/* <div className="Menu2">
             <Link to="/" style={{ color: 'white' }}>
               About us
             </Link>{' '}
@@ -97,7 +97,7 @@ const FavouriteMenu = () => {
             <Link to="/" style={{ color: 'white' }}>
               FAQs
             </Link>
-          </div>
+          </div> */}
         </div>
         <Container className="white-bg d-flex">
           <div className="Info">

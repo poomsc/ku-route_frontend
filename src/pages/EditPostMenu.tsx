@@ -41,6 +41,11 @@ const EditPostMenu = () => {
   // console.log(mypostData)
 
   const history = useHistory()
+  const handleOnViewPage = (PostID: string) => {
+    //localStorage.setItem('currentViewPost', PostID)
+    history.push(`post/${PostID}`)
+  }
+
   const handleOnEditPost = (PostID: string) => {
     // localStorage.setItem('currentViewPost', PostID)
     history.push(`/edit-post/${PostID}`)
@@ -76,7 +81,7 @@ const EditPostMenu = () => {
   }
 
   return (
-    <div className="blue-bg">
+    <div className="blue-bg hxladpasdsaipaspiapsdiaspdpiasdipasdpiasdpiasdipasdpid">
       <Container className="rounded-10 bg-primary-dark text-white font-weight-bold d-flex h-auto">
         <div className="Menutab">
           <Link to="/edit-profile" style={{ color: 'white' }}>
@@ -90,7 +95,7 @@ const EditPostMenu = () => {
           <Link to="/favourite-post" style={{ color: 'white' }}>
             Favourite
           </Link>
-          <div className="Menu2">
+          {/* <div className="Menu2">
             <Link to="/" style={{ color: 'white' }}>
               About us
             </Link>{' '}
@@ -106,9 +111,9 @@ const EditPostMenu = () => {
             <Link to="/" style={{ color: 'white' }}>
               FAQs
             </Link>
-          </div>
+          </div> */}
         </div>
-        <Container className="white-bg">
+        <Container className="white-bg d-flex e0igjegewrer9-grewgerggwiwjf9-qweff">
           <div className="Info">
             <h1 style={{ color: 'black' }}>ประวัติการอัพโหลด </h1>
             <div className="table max-w-content">
@@ -158,6 +163,12 @@ const EditPostMenu = () => {
                   </td>
                   <td>{convertTStoDate(object[1]?.DateEdited)}</td>
                   <td>
+                    <div
+                      onClick={() => handleOnViewPage(object[0])}
+                      className="viewbutton max-w-content d-inline-block cursor-pointer"
+                    >
+                      VIEW
+                    </div>
                     <div
                       onClick={() => handleOnEditPost(object[0])}
                       className="fixbutton max-w-content d-inline-block cursor-pointer hover-darken-2"

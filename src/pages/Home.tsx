@@ -13,7 +13,37 @@ import { constTags } from 'constants/index'
 import { useHistory, useLocation } from 'react-router'
 import applicationStore from 'stores/applicationStore'
 import '../App.css'
+import lineblack from '../assets/icons/lineback.png'
+import moreitem from '../assets/icons/more.png'
+import PDF from '../assets/icons/PDF.png'
+import JPG from './../assets/icons/JPG.png'
+// import convertTStoDate from './AllPost'
 
+function convertTStoDate(timestamp) {
+  if (!timestamp) return
+  const timeCurrent = new Date().getTime() / 1000
+  const timeDiff = timeCurrent - timestamp.seconds
+
+  if (timeDiff < 60) {
+    //second
+    const second = Math.floor(timeDiff)
+    if (second == 1) return second.toString() + ' second ago'
+    return second.toString() + ' seconds ago'
+  } else if (timeDiff < 3600) {
+    //minute
+    const minute = Math.floor(timeDiff / 60)
+    if (minute == 1) return minute.toString() + ' minute ago'
+    return minute.toString() + ' minutes ago'
+  } else if (timeDiff < 86400) {
+    //hour
+    const hour = Math.floor(timeDiff / 3600)
+    if (hour == 1) return hour.toString() + ' hour ago'
+    return hour.toString() + ' hours ago'
+  } else {
+    const date = new Date(timestamp.seconds * 1000)
+    return date.toLocaleString().split(',')[0]
+  }
+}
 interface dropdownType {
   text: string
   value: number
@@ -113,6 +143,144 @@ const HomePage = () => {
   // }
 
   const [dropdown, setDropdrown] = useState(false)
+
+  //
+  const colors = [
+    '#5697C4',
+    '#E0598B',
+    '#E278A3',
+    '#9163B6',
+    '#993767',
+    '#A34974',
+    '#BE5168',
+    '#C84A52',
+    '#E16452',
+    '#F19670',
+    '#E9D78E',
+    '#E4BE7F',
+    '#74C493',
+  ]
+  const maxColor = colors.length
+  let countPostColumn = [-1, -1]
+
+  const handleOnViewPage = (PostID: string) => {
+    history.push(`post/${PostID}`)
+  }
+
+  function renderPost(menu, index, col, file, info) {
+    const PostID = menu[0]
+    countPostColumn[col]++
+
+    if (countPostColumn[col] % 2 == col) {
+      return (
+        <div
+          className="w-content d-flex mb-4"
+          key={index}
+          //  onMouseEnter={"d"}
+          //  onMouseLeave={}
+        >
+          <Container className="w-content d-inline-block p-0 zoom-1 hover-brighten">
+            <div className="row m-0 p-0 d-inline w-25">
+              <div
+                className="form py-4 cursor-pointer"
+                onClick={() => handleOnViewPage(PostID)}
+              >
+                <tr className="TAG d-block w-content my-1 mx-2 mb-3">
+                  {menu[1].TagID.map((tag, idx) => (
+                    <div
+                      className="hover-darken-2 max-w-content d-inline-block rounded cursor-pointer px-2 py-1 ml-3 mb-2"
+                      key={tag}
+                      style={{
+                        backgroundColor:
+                          colors[maxColor - (idx % maxColor) - 1],
+                        color: '#FFFFFF',
+                      }}
+                    >
+                      {tag}
+                    </div>
+                  ))}
+                  {/* <th className="category">{menu.Category}</th> */}
+                </tr>
+
+                <div className="title text-truncate mx-3 px-2 mt-4 my-2">
+                  {menu[1].Title}
+                </div>
+                <div className="mx-3 px-2 mb-2">
+                  <img className="line-black w-100" src={lineblack} />
+                </div>
+                <div
+                  className="headtext text-truncate mx-3 mt-3 px-2 my-2"
+                  style={{ height: '41px' }}
+                >
+                  {menu[1].Description}
+                  <p
+                    className="font-weight-bold cursor-pointer"
+                    onClick={() => handleOnViewPage(PostID)}
+                  >
+                    {menu[1].Description.length > 40 ? 'ดูเพิ่มเติม...' : null}
+                  </p>
+                </div>
+
+                <div className="pdfrow mx-3 px-2 mb-2 pb-2">
+                  <div className="d-flex align-content-start flex-wrap">
+                    {file.map((file, index) => {
+                      if (index == 3) return
+                      const fileSP = file.name.split('.')
+                      const extFile =
+                        fileSP[fileSP.length - 1] == 'pdf' ? PDF : JPG
+                      return (
+                        <div className="">
+                          <img className="pdf d-inline-block" src={extFile} />
+                          <div
+                            className="text-center text-truncate mr-1 textmore"
+                            style={{ maxWidth: '55px' }}
+                          >
+                            {file.name}
+                          </div>
+                        </div>
+                      )
+                    })}
+                    {file.length > 3 && (
+                      <div
+                        className="pdfcount cursor-pointer d-inline-block"
+                        onClick={() => handleOnViewPage(PostID)}
+                      >
+                        <img className="moreItem" src={moreitem} />
+                        <div className="textmore">MoreItem</div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <tr className="d-block">
+                  {/* <th className="creatby">
+                      <img className="Profile" src={profile} />
+                      <span className="Name">{menu.create}</span>
+                    </th> */}
+                  {/* <div className="aqualine mx-3 mt-4 mb-2"
+                         style={{background: "#3fd0c9",
+                                 height: "2px"  
+                                }}
+                    >
+                      </div> */}
+                </tr>
+              </div>
+            </div>
+            <div
+              className="Time text-right"
+              style={{
+                marginTop: '-32px',
+                marginRight: '10px',
+              }}
+            >
+              {'Posted ' + convertTStoDate(menu[1].DateEdited)}
+            </div>
+          </Container>
+        </div>
+      )
+    }
+  }
+  //
 
   return (
     <div>

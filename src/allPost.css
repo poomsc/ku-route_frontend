@@ -54,12 +54,14 @@
 }
 
 .pic {
-  height: 11px;
+  height: 22px;
   border: 1px;
   margin-left: 2px;
 }
+
 .count {
-  margin-left: 5px;
+  margin-left: 10px;
+  font-size: 22px;
 }
 
 .Subjectnum {
@@ -167,8 +169,8 @@
 }
 
 .pdf {
-  width: 50px;
-  height: 50px;
+  width: 55px;
+  height: 55px;
 }
 .pdfcount {
   text-align: left;
@@ -218,7 +220,7 @@
   font-family: Roboto;
   font-style: normal;
   font-weight: normal;
-  font-size: 18px;
+  font-size: 15px;
   /* line-height: 11px; */
 }
 
@@ -226,8 +228,8 @@
   position: relative;
   top: 4px;
   left: 5px;
-  width: 50px;
-  height: 49px;
+  width: 55px;
+  height: 55px;
 }
 .textmore {
   position: relative;

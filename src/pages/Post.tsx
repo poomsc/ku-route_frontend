@@ -1,17 +1,25 @@
 import React from 'react'
 import '../PostStyles.css'
-import { Container, Card } from 'react-bootstrap'
+import {
+  Container,
+  Card,
+  FormControl,
+  InputGroup,
+  CloseButton,
+} from 'react-bootstrap'
+import ReactDOM from 'react-dom'
 import { useState, useEffect } from 'react'
 import user_icon from './../assets/icons/user-icon.png'
 import { url } from 'inspector'
 import pdf from './../assets/icons/PDF.png'
 import jpg from './../assets/icons/JPG.png'
 import userIcon from './../assets/icons/user-icon.png'
+import MoreLabel from '@material-ui/icons/MoreHoriz'
 import sendArrow from './../assets/icons/sendArrow.png'
 import Comment from './../assets/icons/Comment.png'
 import Like from './../assets/icons/Like.png'
 import Unlike from './../assets/icons/Unlike.png'
-import { collection, DocumentData } from '@firebase/firestore'
+import { collection, DocumentData, serverTimestamp } from '@firebase/firestore'
 import {
   get_comment,
   get_file,
@@ -21,7 +29,7 @@ import {
 } from 'service/system'
 import applicationStore from 'stores/applicationStore'
 import { convertTStoDate } from './AllPost'
-import { create_comment, like, disable } from 'service/user'
+import { create_comment, like, disable, edit } from 'service/user'
 import { getDocLike, getLikeOfPost } from 'service/system'
 import { awaitExpression } from '@babel/types'
 import { getDownloadURL, StorageReference } from '@firebase/storage'
@@ -32,8 +40,14 @@ import {
   PopoverHeader,
   PopoverBody,
   Tooltip,
+  UncontrolledPopover,
 } from 'reactstrap'
 import { useLocation } from 'react-router'
+import { modalClasses } from '@mui/material'
+import { Modal, Button as ButtonB } from 'semantic-ui-react'
+import { ModalDisableComment } from 'components/Modal'
+import { right } from '@popperjs/core'
+import { ApplicationVerifier } from '@firebase/auth'
 
 const PostPage = () => {
   const [postData, setPostData] = useState<DocumentData>()
@@ -45,6 +59,11 @@ const PostPage = () => {
   const [commentDescription, setCommentDescription] = useState<string>('')
   const [allFiles, setAllFiles] = useState<StorageReference[]>()
   const [linkFiles, setLinkFiles] = useState<string[]>()
+  const [postOwnerUID, setPostOwnerUID] = useState('')
+  const [open, setOpen] = useState(false)
+  const [editCommentBlock, setEditCommentBlock] = useState(-1)
+  const [newCommentEdited, setNewCommentEdited] = useState('')
+  const [saveCommentEnable, setSaveCommentEnable] = useState(false)
 
   const { pathname } = useLocation()
   const PostID = pathname.split('/')[2]
@@ -61,21 +80,15 @@ const PostPage = () => {
         files.map((file) => getDownloadURL(file))
       )
 
-      // console.log(allFiles)
-      // console.log(infoComment)
-      // console.log(fileUrl)
-
       if (applicationStore.user) {
         const LikeDoc = await getDocLike(
           'Like:' + applicationStore.user.uid + '_' + PostID
         )
         setLikeData(LikeDoc?.Status)
       }
-      // const countLike = await getLikeOfPost(currentViewPost)
-      // console.log(post)
-      // console.log(info)
 
       setPostData(post[1])
+      setPostOwnerUID(post[1]?.AccountID)
       setInfoData(info)
       setCommentData(comment)
       setInfoCommentData(infoComment)
@@ -85,9 +98,6 @@ const PostPage = () => {
     }
     fetch()
   }, [])
-
-  // console.log(allFiles)
-  // console.log(linkFiles)
 
   const handleOnLike = async () => {
     if (!applicationStore.user) return
@@ -108,13 +118,13 @@ const PostPage = () => {
     setAmountLike(countLike)
   }
 
-  const handleOnAddComment = async () => {
-    if (!applicationStore.user || commentDescription == '') return
-    console.log(commentDescription)
+  const handleOnAddComment = async (text) => {
+    if (!applicationStore.user || text == '') return
+    console.log(text)
     create_comment({
       AccountID: applicationStore.user.uid,
       PostID: PostID,
-      Description: commentDescription,
+      Description: text,
     })
     const comment = (await get_comment(PostID)) as DocumentData
     const infoComment = await get_info_comment(comment)
@@ -123,23 +133,71 @@ const PostPage = () => {
       console.log(commentData)
       setInfoCommentData(infoComment)
     }
+    // reset comment message
+    setEditCommentBlock(editCommentBlock != -1 ? editCommentBlock + 1 : -1)
+    setCommentDescription('')
+  }
+
+  const handleOnEditComment = (index) => {
+    setEditCommentBlock(index)
+  }
+
+  const handleOnDeleteComment = async (CommentID: string) => {
+    const comment = (await get_comment(PostID)) as DocumentData
+    const infoComment = await get_info_comment(comment)
+    if (comment?.length && infoComment?.length) {
+      setCommentData(comment)
+      setInfoCommentData(infoComment)
+    }
+  }
+
+  const handleOnReport = () => {
+    // doSomething;
+  }
+
+  const handleOnEditCommentChange = (oldComment, event: any) => {
+    setNewCommentEdited(event.target.value)
+    checkChangeData(oldComment, event)
+  }
+
+  const checkChangeData = (attr, event) => {
+    // Check equal of two string
+    if (attr && !(event.target.value === attr)) {
+      setSaveCommentEnable(true)
+    } else if (!attr) {
+      setSaveCommentEnable(true)
+    } else {
+      setSaveCommentEnable(false)
+    }
+  }
+
+  const handleOnSubmitEditedComment = async (text) => {
+    let changedInfo = {}
+    changedInfo['Description'] = text
+    changedInfo['DateEdited'] = serverTimestamp()
+    edit(changedInfo, targetUUID, databaseTarget)
+    const comment = (await get_comment(PostID)) as DocumentData
+    const infoComment = await get_info_comment(comment)
+    if (comment?.length && infoComment?.length) {
+      setCommentData(comment)
+      setInfoCommentData(infoComment)
+    }
+    setSaveCommentEnable(false)
+    setEditCommentBlock(-1)
+    setNewCommentEdited('')
   }
 
   const PopoverItem = (props) => {
     const { id, item } = props
-    const [popoverOpen, setPopoverOpen] = useState(false)
-
-    const toggle = () => setPopoverOpen(!popoverOpen)
 
     return (
       <span>
-        <Popover
+        <UncontrolledPopover
           className="rounded-25"
           style={{ minWidth: '225px' }}
           placement={item.placement}
-          isOpen={popoverOpen}
           target={'Popover-' + id}
-          toggle={toggle}
+          trigger="legacy"
         >
           <PopoverHeader className="font-weight-bold py-2">
             <p className="style25 p-0 m-0">{item.text?.DisplayName}</p>
@@ -147,16 +205,154 @@ const PostPage = () => {
           <PopoverBody>
             <div className="d-inline-flex">
               <img className="style23 mr-3" src={userIcon} />
-              <div className="style25 font-weight-light d-flex-block">
-                <p className="p-0 m-0">
-                  {item.text?.Name + ' ' + item.text?.Surname}
+              <div className="style25 d-flex-block">
+                <p className="p-0 m-0 font-weight-light">
+                  {item.text?.Privacy[0]
+                    ? item.text?.Name + ' ' + item.text?.Surname
+                    : ' '}
                 </p>
-                <p className="p-0 m-0">{item.text?.Faculty}</p>
+                <p className="p-0 m-0 font-weight-light">
+                  {' '}
+                  {item.text?.Faculty}
+                </p>
+                <div className="mt-2"></div>
+                <div className="max-h-content p-0 m-0 d-flex">
+                  <p className="p-0 m-0 font-weight-bolder d-inline-flex mr-2">
+                    {item.text?.Privacy[2] && item.text?.Mail ? 'E-mail: ' : ''}
+                  </p>
+                  <p className="p-0 m-0 d-inline-flex font-weight-light">
+                    {item.text?.Privacy[2] ? item.text?.Mail : ''}
+                  </p>
+                </div>
+                <div className="max-h-content p-0 m-0 d-flex">
+                  <p className="p-0 m-0 font-weight-bolder d-inline-flex mr-2">
+                    {item.text?.Privacy[3] && item.text?.Phone ? 'Phone: ' : ''}
+                  </p>
+                  <p className="p-0 m-0 d-inline-flex font-weight-light">
+                    {item.text?.Privacy[3] ? item.text?.Phone : ''}
+                  </p>
+                </div>
+                <div className="max-h-content p-0 m-0 d-flex">
+                  <p className="p-0 m-0 font-weight-bolder d-inline-flex mr-2">
+                    {item.text?.Privacy[4] && item.text?.Facebook
+                      ? 'Facebook: '
+                      : ''}
+                  </p>
+                  <p className="p-0 m-0 d-inline-flex font-weight-light">
+                    {item.text?.Privacy[4] ? item.text?.Facebook : ''}
+                  </p>
+                </div>
+                <div className="max-h-content p-0 m-0 d-flex">
+                  <p className="p-0 m-0 font-weight-bolder d-inline-flex mr-2">
+                    {item.text?.Privacy[5] && item.text?.Instagram
+                      ? 'Instagram: '
+                      : ''}
+                  </p>
+                  <p className="p-0 m-0 d-inline-flex font-weight-light">
+                    {item.text?.Privacy[5] ? item.text?.Instagram : ''}
+                  </p>
+                </div>
               </div>
             </div>
           </PopoverBody>
-        </Popover>
+        </UncontrolledPopover>
       </span>
+    )
+  }
+
+  const MoreItem = (props) => {
+    const { id, item } = props
+    const className =
+      'h6 w-100 bg-white hover-darken py-1 px-2 text-left rounded-lg'
+
+    return (
+      <span>
+        <UncontrolledPopover
+          className="rounded-25"
+          style={{ minWidth: '225px' }}
+          placement={item.placement}
+          target={'Popover-' + id}
+          trigger="legacy"
+        >
+          <PopoverBody className="px-2 pt-2 py-1">
+            <div className="style25 font-weight-light d-flex-block">
+              <Button
+                className={className}
+                onClick={(e) => handleOnEditComment(id / 2 - 1)}
+                hidden={applicationStore.user?.uid != item.data[1].AccountID}
+              >
+                แก้ไข...
+              </Button>
+
+              <ModalDisableComment
+                CommentID={item.data[0]}
+                onClick={handleOnDeleteComment}
+              >
+                <Button
+                  variant="primary"
+                  className={className}
+                  hidden={applicationStore.user?.uid != item.data[1].AccountID}
+                >
+                  ลบความคิดเห็น
+                </Button>
+              </ModalDisableComment>
+
+              <Button className={className} onClick={handleOnReport}>
+                รายงานความไม่เหมาะสม
+              </Button>
+            </div>
+          </PopoverBody>
+        </UncontrolledPopover>
+      </span>
+    )
+  }
+
+  const renderEditBlock = (commentBlock) => {
+    let content = commentBlock[1]
+    targetUUID = commentBlock[0]
+
+    return (
+      <Container className="d-block w-100 pl-0">
+        <InputGroup className="rounded-สเ bg-white shadow mb-4">
+          <FormControl
+            as="textarea"
+            defaultValue={content?.Description}
+            aria-label="title"
+            className="rounded-10 border-0"
+            placeholder="แก้ไขความคิดเห็น..."
+            onChange={(e) => handleOnEditCommentChange(content?.Description, e)}
+            rows={3}
+            style={{ minHeight: '5rem' }}
+          />
+        </InputGroup>
+
+        <div className="d-flex justify-content-end">
+          <div className="mx-2"></div>
+          <Button
+            className="bg-dark text-white mr-3"
+            style={{ width: '7rem' }}
+            type="submit"
+            onClick={(e) => {
+              handleOnEditComment(-1)
+              setSaveCommentEnable(false)
+              setNewCommentEdited('')
+            }}
+          >
+            ยกเลิก
+          </Button>
+          <Button
+            className="bg-primary text-white"
+            disabled={!saveCommentEnable}
+            style={{ width: '7rem' }}
+            type="submit"
+            onClick={(e) => {
+              handleOnSubmitEditedComment(newCommentEdited)
+            }}
+          >
+            บันทึก
+          </Button>
+        </div>
+      </Container>
     )
   }
 
@@ -171,6 +367,9 @@ const PostPage = () => {
   let title = postData?.Title ? postData?.Title : ''
   let descript = postData?.Description ? postData?.Description : ''
   let labelCount = 0
+
+  let databaseTarget = 'Comment'
+  let targetUUID = null
 
   const mockTags = postData?.TagID ? postData?.TagID : ['']
   const SubjectID = postData?.SubjectID ? postData?.SubjectID : 'รหัสวิชา'
@@ -271,7 +470,7 @@ const PostPage = () => {
               const extFile = fileSP[fileSP.length - 1]
               return (
                 <a
-                  className="style13 mr-4 mb-4 cursor-pointer hover-darken"
+                  className="style13 mr-4 mb-4 hover-darken cursor-pointer"
                   key={file.name}
                   href={linkFiles[index]}
                   target="_blank"
@@ -287,11 +486,11 @@ const PostPage = () => {
                     <div className="style15 d-block mx-auto mb-0">
                       <div
                         className="text-truncate mb-3 px-3"
-                        style={{ maxWidth: '125px' }}
+                        style={{ maxWidth: '130px' }}
                       >
                         {fileSP[0]}
                       </div>
-                      .{extFile.toUpperCase()}
+                      .{extFile}
                     </div>
                   </div>
                 </a>
@@ -338,20 +537,33 @@ const PostPage = () => {
             </div>
           </div>
           <div>
-            {infocommentData && commentData && commentData?.length ? (
+            {/* load comment */}
+            {infocommentData &&
+            commentData &&
+            commentData?.length &&
+            infocommentData?.length == commentData?.length ? (
               infocommentData.map((infoComment, index) => (
                 <div className="style21 d-block bg-white mx-auto w-100 p-4 mb-3">
                   <div className="w-content d-flex justify-content-between">
                     <div
                       className="d-flex align-items-center"
-                      style={{ width: '76%' }}
+                      style={{ width: '72.5%' }}
                     >
-                      <p className="style22 text-break pl-3">
-                        {commentData[index]?.Description}
+                      <p
+                        className="style22 text-break pl-3"
+                        hidden={editCommentBlock == index}
+                      >
+                        {commentData[index][1]?.Description}
                       </p>
+
+                      {editCommentBlock == index ? (
+                        renderEditBlock(commentData[index])
+                      ) : (
+                        <></>
+                      )}
                     </div>
 
-                    <div className="d-flex pl-4" style={{ width: '24%' }}>
+                    <div className="d-flex pl-4" style={{ width: '22.5%' }}>
                       <div
                         className=" d-inline-block"
                         style={{ verticalAlign: 'top' }}
@@ -362,11 +574,18 @@ const PostPage = () => {
                         <p className="h6 d-inline-block mr-1 my-0">by</p>
                         <p
                           className="style25 d-inline-flex text-truncate my-0 cursor-pointer"
+                          ata-toggle="tooltip"
+                          data-placement="left"
+                          title={
+                            infoComment?.DisplayName +
+                            ' (Click for more details)'
+                          }
                           id={'Popover-' + labelCount}
                           style={{ width: '80%', maxWidth: '120px' }}
                         >
                           {infoComment?.DisplayName}
                         </p>
+
                         <PopoverItem
                           key={labelCount}
                           item={{
@@ -379,9 +598,32 @@ const PostPage = () => {
                         />
 
                         <div className="style24 d-block text-truncate">
-                          {convertTStoDate(commentData[index]?.DateEdited)}
+                          {convertTStoDate(commentData[index][1]?.DateCreate)}
                         </div>
                       </div>
+                    </div>
+
+                    <div
+                      className="p-0 m-0 max-w-content"
+                      style={{ width: '5%' }}
+                    >
+                      <Button
+                        className="rounded-circle m-0 p-2 hover-darken"
+                        id={'Popover-' + labelCount}
+                      >
+                        <MoreLabel />
+                      </Button>
+                      <MoreItem
+                        key={labelCount}
+                        item={{
+                          placement: 'top',
+                          user: infoComment,
+                          data: commentData[index],
+                          className:
+                            'style25 d-inline-flex text-truncate font-weight-bold my-0 cursor-pointer p-0',
+                        }}
+                        id={genLoadLabel()}
+                      />
                     </div>
                   </div>
                 </div>
@@ -405,11 +647,12 @@ const PostPage = () => {
               className="form-control pl-3 border-0"
               style={{ height: '40px', borderRadius: '10px 0px 0px 10px' }}
               placeholder="ตอบกลับโพสต์นี้..."
+              value={commentDescription}
               onChange={(e) => setCommentDescription(e.target.value)}
             />
             <button
               type="submit"
-              onClick={handleOnAddComment}
+              onClick={(e) => handleOnAddComment(commentDescription)}
               className="style28 btn btn-primary btn-sm px-3 border-0"
               style={{
                 backgroundColor: '#FFFFFF',
@@ -420,6 +663,7 @@ const PostPage = () => {
             </button>
           </div>
         </div>
+
         {/* {infocommentData &&
           commentData &&
           infocommentData.map((infoComment, index) => (
@@ -445,7 +689,7 @@ const PostPage = () => {
                     border: 'none',
                   }}
                 >
-                  {commentData[index].Description}
+                  {commentData[index][1].Description}
                 </div>
                 <div className="py-2">
                   <img
@@ -478,7 +722,7 @@ const PostPage = () => {
                   >
                     &nbsp;&nbsp;by&nbsp;&nbsp;
                     <br />
-                    &nbsp;&nbsp;{convertTStoDate(commentData[index].DateEdited)}
+                    &nbsp;&nbsp;{convertTStoDate(commentData[index][1].DateEdited)}
                   </div>
                   <div
                     className="d-inline-flex py-2"
