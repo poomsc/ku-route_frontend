@@ -206,11 +206,13 @@ const PostPage = () => {
             <div className="d-inline-flex">
               <img className="style23 mr-3" src={userIcon} />
               <div className="style25 d-flex-block">
-                <p className="p-0 m-0 font-weight-light">
-                  {item.text?.Privacy[0]
-                    ? item.text?.Name + ' ' + item.text?.Surname
-                    : ' '}
-                </p>
+                {item && (
+                  <p className="p-0 m-0 font-weight-light">
+                    {item.text?.Privacy[0]
+                      ? item.text?.Name + ' ' + item.text?.Surname
+                      : ' '}
+                  </p>
+                )}
                 <p className="p-0 m-0 font-weight-light">
                   {' '}
                   {item.text?.Faculty}

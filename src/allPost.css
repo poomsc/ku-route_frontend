@@ -137,7 +137,7 @@
   /* width: 80%; */
   font-family: Roboto;
   font-style: normal;
-  font-weight: bold;
+  font-weight: bolder;
   font-size: 24px;
   line-height: 28px;
   /* display: flex;
@@ -244,4 +244,20 @@
   left: 10px;
   /* margin-bottom: -; */
   /* display: inline-flex; */
+}
+
+.TEXT {
+  position: relative;
+  /* text-align: right; */
+  font-size: 14pt;
+  color: pink;
+  /* margin-left: 220pt; */
+}
+
+.texttitle {
+  font-size: 10pt;
+  font-weight: bold;
+  font-family: Roboto;
+  font-style: normal;
+  color: #525252;
 }

@@ -18,6 +18,9 @@ import moreitem from '../assets/icons/more.png'
 import PDF from '../assets/icons/PDF.png'
 import JPG from './../assets/icons/JPG.png'
 import { get_allpost } from 'service/system'
+import { DocumentData } from '@firebase/firestore'
+import { get4File, get_info } from 'service/system'
+import '../allPost.css'
 
 function convertTStoDate(timestamp) {
   if (!timestamp) return
@@ -50,6 +53,8 @@ interface dropdownType {
 }
 
 const HomePage = () => {
+  const [fileUrl, setFileUrl] = useState<any>([])
+  const [info, setInfo] = useState<DocumentData>([])
   const [statusFilter, setStatusFilter] = useState<any>()
 
   useEffect(() => {
@@ -121,7 +126,6 @@ const HomePage = () => {
     console.log(subjectSelected)
     const SubjectIDandTH = subjectSelected.split(' ')
     const SubjectENG = subjectSelected.split('(')
-
     localStorage.setItem('currentSearch', subjectSelected)
     console.log(statusFilter)
     localStorage.setItem('tagSearch', JSON.stringify(statusFilter))
@@ -129,43 +133,24 @@ const HomePage = () => {
     goToAllPost()
   }
 
-  // var expanded = false;
+  const [allpostData, setallpostData] = useState<DocumentData>([])
 
-  // function showCheckboxes() {
-  //   var checkboxes = document.getElementById("checkboxes");
-  //   if (!expanded) {
-  //     checkboxes.style.display = "block";
-  //     expanded = true;
-  //   } else {
-  //     checkboxes.style.display = "none";
-  //     expanded = false;
-  //   }
-  // }
-
-  const [dropdown, setDropdrown] = useState(false)
-
-  //
-  const colors = [
-    '#5697C4',
-    '#E0598B',
-    '#E278A3',
-    '#9163B6',
-    '#993767',
-    '#A34974',
-    '#BE5168',
-    '#C84A52',
-    '#E16452',
-    '#F19670',
-    '#E9D78E',
-    '#E4BE7F',
-    '#74C493',
-  ]
-  const maxColor = colors.length
-  let countPostColumn = [-1, -1]
-
-  const handleOnViewPage = (PostID: string) => {
-    history.push(`post/${PostID}`)
-  }
+  useEffect(() => {
+    async function fetch() {
+      const allpost = (await get_allpost()) as DocumentData
+      const fileUrl = await Promise.all(
+        allpost.map((Post) => get4File(Post[0]))
+      )
+      const info = await Promise.all(
+        allpost.map((Post) => get_info(Post[1]?.AccountID))
+      )
+      setallpostData(allpost)
+      setFileUrl(fileUrl)
+      setInfo(info)
+    }
+    fetch()
+  }, [])
+  // console.log(allpostData)
 
   function renderPost(menu, index, col, file, info) {
     const PostID = menu[0]
@@ -174,7 +159,7 @@ const HomePage = () => {
     if (countPostColumn[col] % 2 == col) {
       return (
         <div
-          className="w-content d-flex mb-4"
+          className="w-content d-flex mb-5"
           key={index}
           //  onMouseEnter={"d"}
           //  onMouseLeave={}
@@ -204,6 +189,10 @@ const HomePage = () => {
 
                 <div className="title text-truncate mx-3 px-2 mt-4 my-2">
                   {menu[1].Title}
+                </div>
+                <div className="row ml-2">
+                  <div className="texttitle col-8 ">{menu[1].SubjectENG}</div>
+                  <div className="texttitle col-4 ">{menu[1].SubjectID}</div>
                 </div>
                 <div className="mx-3 px-2 mb-2">
                   <img className="line-black w-100" src={lineblack} />
@@ -280,6 +269,45 @@ const HomePage = () => {
       )
     }
   }
+
+  // var expanded = false;
+
+  // function showCheckboxes() {
+  //   var checkboxes = document.getElementById("checkboxes");
+  //   if (!expanded) {
+  //     checkboxes.style.display = "block";
+  //     expanded = true;
+  //   } else {
+  //     checkboxes.style.display = "none";
+  //     expanded = false;
+  //   }
+  // }
+
+  const [dropdown, setDropdrown] = useState(false)
+
+  //
+  const colors = [
+    '#5697C4',
+    '#E0598B',
+    '#E278A3',
+    '#9163B6',
+    '#993767',
+    '#A34974',
+    '#BE5168',
+    '#C84A52',
+    '#E16452',
+    '#F19670',
+    '#E9D78E',
+    '#E4BE7F',
+    '#74C493',
+  ]
+  const maxColor = colors.length
+  let countPostColumn = [-1, -1]
+
+  const handleOnViewPage = (PostID: string) => {
+    history.push(`post/${PostID}`)
+  }
+
   //
 
   return (
@@ -413,8 +441,62 @@ const HomePage = () => {
             </Form>
           </div>
         </Container>
-        {/* Post */}
-        <div></div>
+        <div>
+          {/* Post */}
+          {allpostData &&
+            allpostData.map((object, idx) => {
+              return (
+                <div className="mb-0">
+                  <div className="d-inline-block justify-content-center d-flex ">
+                    <div>
+                      <div className="my-5 d-block"></div>
+                      <div className="row w-content d-flex justify-content-between">
+                        <div
+                          className="col w-content d-inline-block pt-3 ml-4"
+                          style={{ verticalAlign: 'top' }}
+                        >
+                          {allpostData &&
+                            fileUrl &&
+                            info &&
+                            allpostData.length == fileUrl.length &&
+                            allpostData.length == info.length &&
+                            allpostData?.map((menu, index) =>
+                              renderPost(
+                                menu,
+                                index,
+                                0,
+                                fileUrl[index],
+                                info[index]
+                              )
+                            )}
+                        </div>
+
+                        <div
+                          className="col w-content d-inline-block pt-3 mr-4"
+                          style={{ verticalAlign: 'top' }}
+                        >
+                          {allpostData &&
+                            fileUrl &&
+                            info &&
+                            allpostData.length == fileUrl.length &&
+                            allpostData.length == info.length &&
+                            allpostData?.map((menu, index) =>
+                              renderPost(
+                                menu,
+                                index,
+                                1,
+                                fileUrl[index],
+                                info[index]
+                              )
+                            )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+        </div>
       </Jumbotron>
       {/* <div>
         HomePage
