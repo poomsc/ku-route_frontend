@@ -65,3 +65,90 @@
 .cursor-pointer:hover {
   cursor: pointer;
 }
+
+.dimmed.dimmable > .ui.animating.dimmer,
+.dimmed.dimmable > .ui.visible.dimmer,
+.ui.active.dimmer {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.ui.modal,
+.ui.active.modal {
+  margin: 0 auto !important;
+  top: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  transform-origin: center;
+  transition: all ease 0.5s;
+}
+
+#myModal {
+  position: relative;
+}
+
+.checkbox-round {
+  width: 12px;
+  height: 12px;
+  background-color: white;
+  border-radius: 50%;
+  vertical-align: middle;
+  border: 1px solid #000000;
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.checkbox-round:checked {
+  background-color: #2eaf7d;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+.hover-darken {
+  -webkit-filter: brightness(100%);
+}
+
+.hover-darken:hover {
+  -webkit-filter: brightness(95%);
+}
+
+.hover-darken-2 {
+  -webkit-filter: brightness(100%);
+}
+
+.hover-darken-2:hover {
+  -webkit-filter: brightness(90%);
+  /* -webkit-transition: all 1s ease; */
+  /* -moz-transition: all 1s ease;
+  -o-transition: all 1s ease;
+  -ms-transition: all 1s ease; */
+  /* transition: all 1s ease; */
+}
+
+.hover-brighten {
+  -webkit-filter: brightness(92.5%);
+}
+
+.hover-brighten:hover {
+  -webkit-filter: brightness(100%);
+}
+
+.hover-brighten-2 {
+  -webkit-filter: brightness(80%);
+}
+
+.hover-brighten-2:hover {
+  -webkit-filter: brightness(100%);
+}
+
+.zoom-1 {
+  transition: transform 0.2s ease;
+}
+
+.zoom-1:hover {
+  transform: scale(1.025);
+  transition: transform 0.2s ease;
+}

@@ -1,18 +1,19 @@
 import './App.css'
 import React, { useEffect } from 'react'
 import Routes from 'routes/index'
-import { signOut, signIn_Google } from 'service/auth'
+import { signOut, signInWithGoogle } from 'service/auth'
 import {
   delete_post,
   get_comment,
   get_info,
-  get_post,
+  get_my_post,
   delete_comment,
   get_file,
-  get_pathfile,
   delete_file,
   get_one_post,
   get_faculty,
+  getDocLike,
+  getLikeOfPost,
 } from 'service/system'
 import { like } from 'service/user'
 import { BasicSearch } from 'service/search'
@@ -36,6 +37,8 @@ const App = () => {
   //console.log(res.to)
   //console.log(TagSearch(['คลังความรู้', 'คลังข้อสอบ']))
   //edit({Faculty:'คณะหมูกรอบ'}, 'QgeVAV0fQHgqv99ttcdB', 'Account')
+  // getDocLike('Like:sf77wrdhiENidGmA1GwWPaEfEXp1_bGzcRjPiMQyoDPIA2q7n')?
+  // console.log(getLikeOfPost('bGzcRjPiMQyoDPIA2q7n'))
 
   return <Routes />
 }

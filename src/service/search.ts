@@ -2,6 +2,7 @@ import { collection, orderBy, query, where, getDocs } from '@firebase/firestore'
 import { firestore } from 'config/firebase'
 
 async function BasicSearch(Subject: string, Tag: Array<string>) {
+  console.log(Subject)
   try {
     if (Tag.length == 0) {
       Tag = [
@@ -29,8 +30,8 @@ async function BasicSearch(Subject: string, Tag: Array<string>) {
       all_post.push([doc.id, doc.data()])
       // console.log(doc.id, ' => ', doc.data())
     })
-    console.log(all_post)
-    console.log(querySnapshot)
+    // console.log(all_post)
+    // console.log(querySnapshot)
     return all_post
   } catch (e) {
     console.error('Error searching: ', e)

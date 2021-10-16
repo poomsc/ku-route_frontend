@@ -8,10 +8,12 @@
   border-top-right-radius: 20px;
   border-bottom-right-radius: 20px;
 }
+
 .rounded-10 bg-primary-dark text-white font-weight-bold d-flex {
   height: 643px;
   width: 243px;
 }
+
 .table td,
 .table th {
   min-width: 150px;
@@ -29,9 +31,9 @@
 .fixbutton {
   border-radius: 5px;
   text-align: center;
-  padding-left: 10px;
-  padding-right: 10px;
-  height: 20px;
+  padding-left: 4.6px;
+  padding-right: 4.5px;
+  margin: 2px;
   background-color: blue;
   color: white;
 }
@@ -39,11 +41,11 @@
 .deletebutton {
   background-color: red;
   border-radius: 3px;
-
   padding-left: 4.6px;
   padding-right: 4.5px;
   margin: 2px;
 }
+
 .Menutab {
   width: 300px;
   text-align: left;

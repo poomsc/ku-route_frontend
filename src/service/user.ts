@@ -9,7 +9,6 @@ import {
 } from 'firebase/firestore'
 import { IFileWithMeta } from 'react-dropzone-uploader'
 import { upload_file } from './file'
-
 interface registerProps {
   UID: string
   Name: string
@@ -21,6 +20,8 @@ interface postProps {
   AccountID: string
   TagID: string[]
   SubjectID: string
+  SubjectTH: string
+  SubjectENG: string
   Title: string
   Description: string
 }
@@ -56,16 +57,26 @@ async function register({ UID, Name, Surname, Email }: registerProps) {
 }
 
 async function create_post(
-  { AccountID, TagID, SubjectID, Title, Description }: postProps,
+  {
+    AccountID,
+    TagID,
+    SubjectID,
+    SubjectTH,
+    SubjectENG,
+    Title,
+    Description,
+  }: postProps,
   allFiles: IFileWithMeta[],
   callBack?: () => void
 ) {
-  console.log({ AccountID, TagID, SubjectID, Title, Description })
+  //console.log({ AccountID, TagID, SubjectID, Title, Description })
 
   const data = {
     AccountID,
     TagID,
     SubjectID,
+    SubjectTH,
+    SubjectENG,
     Title,
     Description,
     DateCreate: serverTimestamp(),
@@ -75,8 +86,8 @@ async function create_post(
   try {
     console.log('Post is being added...')
     const docRef = await addDoc(collection(firestore, 'Post'), data)
-    allFiles.forEach((file) => upload_file(file.file, docRef.id))
-    console.log('Post written with ID: ', docRef.id)
+    await Promise.all(allFiles.map((file) => upload_file(file.file, docRef.id)))
+    console.log('Post was written')
     callBack && callBack()
     return docRef.id
   } catch (e) {
@@ -101,7 +112,7 @@ async function create_comment({
   try {
     console.log('Comment is being added...')
     const docRef = await addDoc(collection(firestore, 'Comment'), data)
-    console.log('Comment written with ID: ', docRef.id)
+    console.log('Comment was written')
     return true
   } catch (e) {
     console.error('Error adding Comment: ', e)
@@ -118,12 +129,12 @@ async function like(AccountID: string, PostID: string) {
     Status: true,
   }
   try {
-    console.log('Like is being added...')
+    console.log('Like...')
     const docRef = await setDoc(
       doc(firestore, 'Like', 'Like:' + AccountID + '_' + PostID),
       data
     )
-    console.log('Like was written') // with ID ");
+    //console.log('Like was written') // with ID ");
   } catch (e) {
     console.error('Error adding Like: ', e)
   }
@@ -135,6 +146,25 @@ async function edit(props: any, ID, col) {
     const docRef = await updateDoc(doc(firestore, col, ID), {
       ...props,
     })
+    return 'Successful'
+  } catch (error) {
+    // alert(error)
+  }
+}
+
+async function editPost(
+  props: any,
+  ID,
+  allFiles: IFileWithMeta[],
+  callBack?: () => void
+) {
+  //edit_post, edit_comment, edit_info
+  try {
+    const docRef = await updateDoc(doc(firestore, 'Post', ID), {
+      ...props,
+    })
+    await Promise.all(allFiles.map((file) => upload_file(file.file, ID))) //new file upload
+    callBack && callBack()
     return 'Successful'
   } catch (error) {
     // alert(error)
@@ -154,4 +184,4 @@ async function disable(props: any, ID, col) {
   }
 }
 
-export { register, create_post, create_comment, like, edit, disable }
+export { register, create_post, create_comment, like, edit, editPost, disable }

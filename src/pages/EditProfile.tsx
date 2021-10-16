@@ -2,6 +2,7 @@ import React, { SyntheticEvent, useState, useEffect } from 'react'
 import { Alert, Button, FormControl, InputGroup } from 'react-bootstrap'
 import defaultUserProfile from 'assets/icons/user-icon.png'
 import { Dropdown as SMTDropdown } from 'semantic-ui-react'
+import 'semantic-ui-css/semantic.min.css'
 import { BsFillCaretDownFill } from 'react-icons/bs'
 import { DocumentData, serverTimestamp } from '@firebase/firestore'
 import { get_faculty, get_info } from 'service/system'
@@ -12,6 +13,7 @@ import applicationStore from 'stores/applicationStore'
 import { useHistory } from 'react-router'
 import { observer } from 'mobx-react'
 import { BasicSearch } from 'service/search'
+import { border } from '@mui/system'
 
 const facultyList = [] as any
 let facultyLoader = 0
@@ -48,7 +50,7 @@ const EditProfilePage = observer(() => {
   if (applicationStore.user) UUID = applicationStore.user.uid
 
   const [saveButtonClickable, setSaveButtonClickable] = useState(false)
-  const [faculty, setFaculty] = useState<string>()
+  const [faculty, setFaculty] = useState<string[]>()
 
   const [userInfo, setUserInfo] = useState<DocumentData>()
   const [title, setTitle] = useState<string>()
@@ -63,7 +65,7 @@ const EditProfilePage = observer(() => {
     async function fetch() {
       if (!applicationStore.user) return
       const rawInfo = (await get_info(UUID)) as DocumentData
-      const rawFaculty = await get_faculty()
+      const rawFaculty = (await get_faculty()) as string[]
       setUserInfo(rawInfo)
       setFaculty(rawFaculty)
     }
@@ -98,7 +100,7 @@ const EditProfilePage = observer(() => {
   }
 
   async function fetchFaculty() {
-    const rawFaculty = await get_faculty()
+    const rawFaculty = (await get_faculty()) as string[]
     setFaculty(rawFaculty)
   }
 
@@ -106,6 +108,13 @@ const EditProfilePage = observer(() => {
   if (faculty && facultyLoader == 0) {
     loadFaculty(faculty)
     currentFaculty = findFacultyKey(faculty, userInfo?.Faculty)
+  }
+
+  const triggerThis = () => {
+    window.onbeforeunload = confirmExit
+    function confirmExit() {
+      return 'show message'
+    }
   }
 
   const saveCurrentState = (title, about, newFaculty) => {
@@ -286,7 +295,8 @@ const EditProfilePage = observer(() => {
                 ? facultyList[newFacultySelected]?.value
                 : facultyList[currentFaculty]?.value
             }
-            className="rounded-10 bg-primary-dark text-white font-weight-bold d-flex"
+            className="rounded-10 bg-primary-dark font-weight-bold d-flex"
+            style={{ color: 'aliceblue' }}
             icon={
               <div className="ml-auto">
                 <BsFillCaretDownFill />

@@ -13,3 +13,11 @@ a {
   text-decoration: none;
   background-color: none;
 }
+
+.search {
+  color: white;
+}
+
+#home-search-block .search {
+  color: black !important;
+}

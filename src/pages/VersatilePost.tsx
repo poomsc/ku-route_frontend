@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button, Dropdown, FormControl, InputGroup } from 'react-bootstrap'
 import { useHistory, useLocation } from 'react-router'
 import { generateRandomColor, removeElementFromArray } from 'utils'
@@ -17,6 +17,12 @@ import { delete_post } from 'service/system'
 import { ISubject } from 'interface/subject.interface'
 import { constTags } from 'constants/index'
 import Subjects from 'constants/subjects.json'
+import { get_one_post, get_file, delete_file } from 'service/system'
+import { edit, editPost } from 'service/user'
+import { DocumentData } from '@firebase/firestore'
+import { getDownloadURL, StorageReference } from '@firebase/storage'
+import pdf from './../assets/icons/PDF.png'
+import jpg from './../assets/icons/JPG.png'
 
 const contractChannels = [
   { Icon: mail, Placeholder: 'hello@kuroute.com' },
@@ -29,14 +35,42 @@ const pathType = { '/create-post': true, '/edit-post': false }
 
 interface dropdownType {
   text: string
-  value: number
+  value: string
 }
 
 const VersatilePost = observer(() => {
+  const [postInfo, setPostInfo] = useState<DocumentData>([])
+  const [allFiles, setAllFiles] = useState<StorageReference[]>()
+  const [linkFiles, setLinkFiles] = useState<string[]>()
+
+  const { pathname } = useLocation()
+  const isNewPost = pathType[pathname]
+  const PostID = pathname.split('/')[2]
+  useEffect(() => {
+    async function fetch() {
+      if (!PostID) return
+      const post = (await get_one_post(PostID)) as DocumentData
+      const files = (await get_file(PostID)) as StorageReference[]
+      const fileUrl = await Promise.all(
+        files.map((file) => getDownloadURL(file))
+      )
+
+      setAllFiles(files)
+      setLinkFiles(fileUrl)
+      setPostInfo(post)
+    }
+    fetch()
+  }, [PostID])
+
+  // if(allFiles){
+  //   console.log(allFiles[0].fullPath)
+  //   // delete_file(allFiles[0].fullPath)
+  // }
+
   const _subjects: dropdownType[] = (Subjects as ISubject[]).map((s, i) => {
     return {
       text: `${s.subjectCode} ${s.subjectNameTh} (${s.subjectNameEn})`,
-      value: i,
+      value: s.subjectCode,
       key: i,
     }
   })
@@ -45,10 +79,13 @@ const VersatilePost = observer(() => {
       return { text }
     })
   )
+
   const [subjects, setSubjects] = useState<dropdownType[]>(
     _subjects.slice(0, 10)
   )
+
   const [topicSelected, setTopicSelected] = useState<string>()
+  const [unselectedTagCount, setUnselectedTagCount] = useState(0)
   const [title, setTitle] = useState<string>('')
   const [description, setDescription] = useState<string>('')
   const [tags, setTags] = useState<{ [name: string]: string }[]>(preprocessTags)
@@ -58,26 +95,43 @@ const VersatilePost = observer(() => {
     allFiles: IFileWithMeta[]
   }>({ status: 'done', allFiles: [] })
 
-  const { pathname } = useLocation()
-  const isNewPost = pathType[pathname]
+  useEffect(() => {
+    if (isNewPost || !postInfo[1]) return
+    const includingSubject = _subjects.find(
+      (s) => s.value === postInfo[1].SubjectID
+    )
+    if (includingSubject) setSubjects([...subjects, includingSubject])
+    setTopicSelected(
+      postInfo[1]?.SubjectID +
+        ' ' +
+        postInfo[1]?.SubjectTH +
+        ' (' +
+        postInfo[1]?.SubjectENG +
+        ')'
+    )
+    setTitle(postInfo[1]?.Title)
+    setTagSelected(postInfo[1]?.TagID)
+    setDescription(postInfo[1]?.Description)
+  }, [isNewPost, postInfo])
 
   const history = useHistory()
-  const backToHome = () => {
-    history.push('/')
+  const goToMyPost = () => {
+    history.push('/my-post')
   }
 
   const handleOnTagChange = (value: string, event: 'add' | 'remove') => {
     if (event === 'add') {
       setTagSelected([...tagsSelected, value])
+      setUnselectedTagCount(unselectedTagCount + 1)
     } else {
       setTagSelected(removeElementFromArray(tagsSelected, value))
+      setUnselectedTagCount(unselectedTagCount - 1)
     }
   }
 
   const handleOnSelectSubject = (event: any) => {
     console.log(event.target.innerText.split(' ')[0])
-
-    setTopicSelected(event.target.innerText.split(' ')[0])
+    setTopicSelected(event.target.innerText)
   }
 
   const onFileChange = (status: StatusValue, allFiles: IFileWithMeta[]) => {
@@ -86,11 +140,14 @@ const VersatilePost = observer(() => {
 
   const onSearchChange = (event: any) => {
     setSubjects(
-      _subjects.filter((s) => s.text.includes(event.target.value)).slice(0, 10)
+      _subjects.filter((s) =>
+        s.text.toLowerCase().includes(event.target.value.toLowerCase())
+      )
     )
   }
 
-  const handelOnCreatePost = () => {
+  const handelOnCreatePost = async () => {
+    console.log(topicSelected, filesUpload.status, applicationStore.user)
     if (
       !topicSelected ||
       filesUpload.status !== 'done' ||
@@ -98,21 +155,50 @@ const VersatilePost = observer(() => {
     )
       return
     // create_post
-    create_post(
+    await create_post(
       {
         AccountID: applicationStore.user.uid,
         TagID: tagsSelected,
-        SubjectID: topicSelected,
+        SubjectID: topicSelected.split(' ')[0],
+        SubjectTH: topicSelected.split(' ')[1],
+        SubjectENG: topicSelected.split('(')[1].replace(')', ''),
         Title: title,
         Description: description,
       },
       filesUpload.allFiles,
-      backToHome
+      goToMyPost
     )
   }
 
   const handleOnDeletePost = () => {
     // delete_post()
+  }
+
+  const handelOnEditPost = async () => {
+    // console.log('test edit')
+    if (
+      !topicSelected ||
+      filesUpload.status !== 'done' ||
+      !applicationStore.user
+    )
+      return
+    // delete_file
+
+    // edit_post
+    await editPost(
+      {
+        AccountID: applicationStore.user.uid,
+        TagID: tagsSelected,
+        SubjectID: topicSelected.split(' ')[0],
+        SubjectTH: topicSelected.split(' ')[1],
+        SubjectENG: topicSelected.split('(')[1].replace(')', ''),
+        Title: title,
+        Description: description,
+      },
+      postInfo[0],
+      filesUpload.allFiles,
+      goToMyPost
+    )
   }
 
   return (
@@ -125,8 +211,10 @@ const VersatilePost = observer(() => {
         className="rounded-25 shadow mx-auto mb-4"
         style={{ maxWidth: '70rem' }}
       >
+        {/* {console.log(topicSelected === postInfo[1]?.SubjectID)} */}
         <SMTDropdown
-          placeholder="กรุณาเลือกวิชา"
+          placeholder={isNewPost ? 'กรุณาเลือกวิชา' : topicSelected}
+          value={topicSelected}
           fluid
           search
           selection
@@ -150,6 +238,7 @@ const VersatilePost = observer(() => {
         <p className="font-weight-bold">หัวเรื่อง</p>
         <InputGroup className="rounded-10 bg-white mb-4">
           <FormControl
+            value={title}
             aria-label="title"
             className="rounded-10 border-0"
             placeholder="หัวข้อโพสต์..."
@@ -172,6 +261,7 @@ const VersatilePost = observer(() => {
         <p className="font-weight-bold">ข้อความ</p>
         <InputGroup>
           <FormControl
+            value={description}
             as="textarea"
             rows={8}
             className="rounded-10 border-0 mb-4"
@@ -210,6 +300,7 @@ const VersatilePost = observer(() => {
             <Dropdown.Toggle
               id="dropdown-custom-components"
               className="px-2 py-1 rounded border-0"
+              hidden={unselectedTagCount != tags?.length ? false : true}
             >
               + เพิ่ม
             </Dropdown.Toggle>
@@ -238,6 +329,41 @@ const VersatilePost = observer(() => {
         style={{ maxWidth: '70rem' }}
       >
         <h5 className="font-weight-bold mb-3">แนบไฟล์เพิ่มเติม</h5>
+        <div className="max-w-content d-flex align-items-center flex-wrap">
+          {allFiles &&
+            linkFiles &&
+            allFiles.map((file, index) => {
+              const fileSP = file.name.split('.')
+              const extFile = fileSP[fileSP.length - 1]
+              return (
+                <a
+                  className="style13 mr-4 mb-4 cursor-pointer hover-darken"
+                  key={file.name}
+                  href={linkFiles[index]}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <div className="style14 d-flex flex-column pb-3">
+                    <div className="d-block mx-auto">
+                      <img
+                        src={extFile == 'pdf' ? pdf : jpg}
+                        style={{ width: '125px', height: '125px' }}
+                      />
+                    </div>
+                    <div className="style15 d-block mx-auto mb-0">
+                      <div
+                        className="text-truncate mb-3 px-3"
+                        style={{ maxWidth: '125px' }}
+                      >
+                        {fileSP[0]}
+                      </div>
+                      .{extFile.toUpperCase()}
+                    </div>
+                  </div>
+                </a>
+              )
+            })}
+        </div>
         <DropFileZone onChange={onFileChange} />
       </div>
       <div
@@ -279,7 +405,10 @@ const VersatilePost = observer(() => {
             </Button>
           )}
           <div className="mx-2" />
-          <Button style={{ width: '7rem' }} onClick={handelOnCreatePost}>
+          <Button
+            style={{ width: '7rem' }}
+            onClick={isNewPost ? handelOnCreatePost : handelOnEditPost}
+          >
             PUBLISH
           </Button>
         </div>

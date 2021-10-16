@@ -1,5 +1,5 @@
 import React from 'react'
-import '../Post.css'
+import '../PostStyles.css'
 import { Container, Card } from 'react-bootstrap'
 import { useState, useEffect } from 'react'
 import user_icon from './../assets/icons/user-icon.png'
@@ -10,7 +10,8 @@ import userIcon from './../assets/icons/user-icon.png'
 import sendArrow from './../assets/icons/sendArrow.png'
 import Comment from './../assets/icons/Comment.png'
 import Like from './../assets/icons/Like.png'
-import { DocumentData } from '@firebase/firestore'
+import Unlike from './../assets/icons/Unlike.png'
+import { collection, DocumentData } from '@firebase/firestore'
 import {
   get_comment,
   get_file,
@@ -19,59 +20,162 @@ import {
   get_one_post,
 } from 'service/system'
 import applicationStore from 'stores/applicationStore'
-import { create_comment } from 'service/user'
+import { convertTStoDate } from './AllPost'
+import { create_comment, like, disable } from 'service/user'
+import { getDocLike, getLikeOfPost } from 'service/system'
+import { awaitExpression } from '@babel/types'
+import { getDownloadURL, StorageReference } from '@firebase/storage'
+import { Document, Page, pdfjs } from 'react-pdf'
+import {
+  Button,
+  Popover,
+  PopoverHeader,
+  PopoverBody,
+  Tooltip,
+} from 'reactstrap'
+import { useLocation } from 'react-router'
 
 const PostPage = () => {
   const [postData, setPostData] = useState<DocumentData>()
   const [infoData, setInfoData] = useState<DocumentData>()
   const [commentData, setCommentData] = useState<DocumentData>()
   const [infocommentData, setInfoCommentData] = useState<DocumentData>()
+  const [likeData, setLikeData] = useState<boolean>()
+  const [amountLike, setAmountLike] = useState<number>()
+  const [commentDescription, setCommentDescription] = useState<string>('')
+  const [allFiles, setAllFiles] = useState<StorageReference[]>()
+  const [linkFiles, setLinkFiles] = useState<string[]>()
 
-  const handleOnAddComment = () => {
-    if (!applicationStore.user) return
-    // create_comment({
-
-    // })
-  }
+  const { pathname } = useLocation()
+  const PostID = pathname.split('/')[2]
 
   useEffect(() => {
     async function fetch() {
-      const currentViewPost = localStorage.getItem('currentViewPost')
-      if (!currentViewPost) return
-      const post = (await get_one_post(currentViewPost)) as DocumentData
-      const info = (await get_info(post?.AccountID)) as DocumentData
-      const comment = (await get_comment(
-        'x6XyIHVqD9BVslonhypR'
-      )) as DocumentData
-      const info_comment = (await get_info_comment(
-        'x6XyIHVqD9BVslonhypR'
-      )) as Array<string>
+      const post = (await get_one_post(PostID)) as DocumentData
+      const info = (await get_info(post[1]?.AccountID)) as DocumentData
+      const comment = (await get_comment(PostID)) as DocumentData
+      const infoComment = await get_info_comment(comment)
+      const countLike = (await getLikeOfPost(PostID)) as number
+      const files = (await get_file(PostID)) as StorageReference[]
+      const fileUrl = await Promise.all(
+        files.map((file) => getDownloadURL(file))
+      )
 
-      setPostData(post)
+      // console.log(allFiles)
+      // console.log(infoComment)
+      // console.log(fileUrl)
+
+      if (applicationStore.user) {
+        const LikeDoc = await getDocLike(
+          'Like:' + applicationStore.user.uid + '_' + PostID
+        )
+        setLikeData(LikeDoc?.Status)
+      }
+      // const countLike = await getLikeOfPost(currentViewPost)
+      // console.log(post)
+      // console.log(info)
+
+      setPostData(post[1])
       setInfoData(info)
       setCommentData(comment)
-      setInfoCommentData(info_comment)
+      setInfoCommentData(infoComment)
+      setAmountLike(countLike)
+      setAllFiles(files)
+      setLinkFiles(fileUrl)
     }
     fetch()
   }, [])
 
-  console.log(infocommentData)
-  const mockFiles = [
-    ['สรุปบทที่ 1.pdf', '23.40 MB'],
-    ['สรุปบทที่ 2.pdf', '4.70 MB'],
-    ['สรุปบทที่ 3.pdf', '5.20 MB'],
-    ['สรุปแถม.jpg', '2.70 MB'],
-  ]
+  // console.log(allFiles)
+  // console.log(linkFiles)
+
+  const handleOnLike = async () => {
+    if (!applicationStore.user) return
+    await like(applicationStore.user.uid, PostID)
+
+    setLikeData(!likeData)
+    const countLike = await getLikeOfPost(PostID)
+    setAmountLike(countLike)
+  }
+
+  const handleOnUnlike = async () => {
+    if (!applicationStore.user) return
+    const likeID = 'Like:' + applicationStore.user.uid + '_' + PostID
+    await disable({}, likeID, 'Like')
+
+    setLikeData(!likeData)
+    const countLike = await getLikeOfPost(PostID)
+    setAmountLike(countLike)
+  }
+
+  const handleOnAddComment = async () => {
+    if (!applicationStore.user || commentDescription == '') return
+    console.log(commentDescription)
+    create_comment({
+      AccountID: applicationStore.user.uid,
+      PostID: PostID,
+      Description: commentDescription,
+    })
+    const comment = (await get_comment(PostID)) as DocumentData
+    const infoComment = await get_info_comment(comment)
+    if (comment?.length && infoComment?.length) {
+      setCommentData(comment)
+      console.log(commentData)
+      setInfoCommentData(infoComment)
+    }
+  }
+
+  const PopoverItem = (props) => {
+    const { id, item } = props
+    const [popoverOpen, setPopoverOpen] = useState(false)
+
+    const toggle = () => setPopoverOpen(!popoverOpen)
+
+    return (
+      <span>
+        <Popover
+          className="rounded-25"
+          style={{ minWidth: '225px' }}
+          placement={item.placement}
+          isOpen={popoverOpen}
+          target={'Popover-' + id}
+          toggle={toggle}
+        >
+          <PopoverHeader className="font-weight-bold py-2">
+            <p className="style25 p-0 m-0">{item.text?.DisplayName}</p>
+          </PopoverHeader>
+          <PopoverBody>
+            <div className="d-inline-flex">
+              <img className="style23 mr-3" src={userIcon} />
+              <div className="style25 font-weight-light d-flex-block">
+                <p className="p-0 m-0">
+                  {item.text?.Name + ' ' + item.text?.Surname}
+                </p>
+                <p className="p-0 m-0">{item.text?.Faculty}</p>
+              </div>
+            </div>
+          </PopoverBody>
+        </Popover>
+      </span>
+    )
+  }
+
+  const genLoadLabel = () => {
+    return labelCount++
+  }
+
   let postOwner = infoData?.DisplayName ? infoData?.DisplayName : ''
-  let datePosted = '05/06/2564'
+  let datePosted = postData?.DateEdited
+    ? new Date(postData?.DateEdited?.seconds * 1000).toLocaleString()
+    : '00/00/0000, 00:00:00 AM'
   let title = postData?.Title ? postData?.Title : ''
   let descript = postData?.Description ? postData?.Description : ''
+  let labelCount = 0
+
   const mockTags = postData?.TagID ? postData?.TagID : ['']
-  const mockSubjectName = ['01204241', 'Software Engineer']
-  //const [allTag, setAllTag] = useState<string[]>(mockTags)
-  //console.log(mockTags)
-  //console.log(allTag)
-  const [allFile, setAllFile] = useState<string[][]>(mockFiles)
+  const SubjectID = postData?.SubjectID ? postData?.SubjectID : 'รหัสวิชา'
+  const SubjectENG = postData?.SubjectENG ? postData?.SubjectENG : 'SubjectName'
+
   const colors = [
     '#5697C4',
     '#E0598B',
@@ -88,464 +192,309 @@ const PostPage = () => {
     '#74C493',
   ]
 
-  //let mockComment = []
-  if (infocommentData && commentData) {
-  }
-  const mockComment = [
-    ['ขอบคุณที่แชร์ครับ ^_^', 'MAMMOTH123', '1'],
-    ['พอจะมีของวิชา Digital Design มั้ยครับ', 'XanXiah', '2'],
-    ['ขอด้วยคนคร้าบบ', 'Max', '2'],
-  ]
-  const [allComment, setAllComment] =
-    useState<(string | number)[][]>(mockComment)
-
   const maxColor = colors.length
   return (
-    <div className="white-bg" style={{ paddingTop: '90px' }}>
-      <Container
-        className="box-shadow bg-white mx-auto mb-5"
-        style={{
-          height: '350px',
-          left: '157px',
-          top: '190px',
-          width: '1126px',
-          backgroundColor: 'rgba(255, 255, 255, 0.5)',
-          boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-          borderRadius: '20px',
-        }}
-      >
+    <div className="white-bg pt-5">
+      <Container className="style1 box-shadow bg-secondary mx-auto my-5 px-5 p-5">
         <div className="">
-          <div
-            className="d-inline-flex pl-3"
-            style={{
-              height: '32px',
-              top: '228px',
-              borderRadius: '5px',
-              marginBottom: '5px',
-            }}
-          >
-            {mockTags.map((tag, idx) => (
-              <div
-                className="max-w-content cursor-pointer align-self-center px-3 pt-1 ml-3 "
-                key={tag}
-                style={{
-                  backgroundColor: colors[maxColor - (idx % maxColor) - 1],
-                  color: '#FFFFFF',
-                  top: '233px',
-                  fontSize: '18px',
-                  lineHeight: '21px',
-                  alignItems: 'center',
-                  textAlign: 'center',
-                  fontStyle: 'normal',
-                  fontWeight: 'bold',
-                  fontFamily: 'Roboto',
-                  borderRadius: '5px',
-                  marginTop: '75px',
-                }}
-              >
-                <div
-                  className=""
-                  style={{
-                    width: '91px',
-                    height: '25px',
-                    left: '222px',
-                    top: '233px',
-                    fontSize: '18px',
-                    lineHeight: '21px',
-                    alignItems: 'center',
-                    textAlign: 'center',
-                    fontStyle: 'normal',
-                    fontWeight: 'bold',
-                    fontFamily: 'Roboto',
-                    marginTop: '3px',
-                  }}
-                >
-                  {tag}
-                </div>
-              </div>
-            ))}
-          </div>
-          <div
-            className="float-right "
-            style={{
-              height: '80px',
-              color: '#02353C',
-              fontStyle: 'normal',
-              fontWeight: 'bold',
-              fontFamily: 'Roboto',
-              display: 'flex',
-              alignItems: 'center',
-              fontSize: '18px',
-              lineHeight: '21px',
-              textAlign: 'right',
-              marginTop: '15px',
-            }}
-          >
-            {mockSubjectName[0]} | {mockSubjectName[1]}
-          </div>
-        </div>
-        <h2
-          className="d-flex pt-4"
-          style={{
-            fontWeight: 'bold',
-            fontFamily: 'Roboto',
-            display: 'flex',
-            alignItems: 'center',
-            fontSize: '48px',
-            lineHeight: '56px',
-            color: '#525252',
-            left: '208px',
-            top: '273px',
-            paddingLeft: '25px',
-          }}
-        >
-          {title}
-        </h2>
-        <div>
-          <div
-            className="d-flex d-inline-flex"
-            style={{
-              fontFamily: 'Roboto',
-              fontStyle: 'normal',
-              lineHeight: '28px',
-              fontWeight: 'bold',
-              fontSize: '24px',
-              color: '#525252',
-              height: '70px',
-              alignItems: 'center',
-              paddingLeft: '25px',
-              paddingBottom: '15px',
-            }}
-          >
-            โพสต์โดย &nbsp;{' '}
-            <img
-              src={user_icon}
-              className="mt-0"
-              style={{
-                padding: '2px',
-                background: '#E4E6E7',
-                width: '25px',
-                height: '25px',
-                borderRadius: '50px',
-              }}
-            />{' '}
-            &nbsp;{postOwner}
-          </div>
-          <div
-            className="float-right mt-4"
-            style={{
-              fontSize: '18px',
-              lineHeight: '11px',
-              fontFamily: 'Roboto',
-              fontStyle: 'normal',
-              fontWeight: 'normal',
-              color: '#000000',
-              textAlign: 'right',
-              height: '37px',
-              top: '416px',
-            }}
-          >
-            {datePosted}
-          </div>
-        </div>
-        <div
-          className="d-flex py-3 pl-5 pb-5 mb-5"
-          style={{
-            color: '#525252',
-            fontFamily: 'Roboto',
-            fontStyle: 'normal',
-            fontWeight: 'normal',
-            fontSize: '24px',
-            lineHeight: '28px',
-          }}
-        >
-          {descript}
-        </div>
-      </Container>
-
-      <Container
-        className="box-shadow bg-white mx-auto mb-4 px-5 pt-4"
-        style={{
-          borderRadius: '20px',
-          boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-          background: 'rgba(255, 255, 255, 0.5)',
-          width: '1126px',
-          height: '308px',
-        }}
-      >
-        <h5
-          className="py-4 px-2"
-          style={{
-            fontWeight: 'bold',
-            fontFamily: 'Roboto',
-            fontStyle: 'normal',
-            fontSize: '24px',
-            lineHeight: '28px',
-            color: '#525252',
-          }}
-        >
-          ไฟล์ที่แนบมาด้วย
-        </h5>
-        <div className="d-flex pb-4 px-3 mb-5">
-          {allFile.map((file) => (
-            <div
-              className="mr-2 ml-4 mb-4"
-              style={{
-                border: '1px solid #BFBFBF ',
-                background: '#FAFAFA',
-                borderRadius: '10px',
-                boxSizing: 'border-box',
-              }}
-              key={file[0]}
-            >
-              <div
-                className="d-flex flex-column mb-3"
-                style={{
-                  fontFamily: 'Roboto',
-                  fontStyle: 'normal',
-                  fontWeight: 'normal',
-                  color: '#000000',
-                  fontSize: '10px',
-                  display: 'flex',
-                  lineHeight: '12px',
-                  textAlign: 'center',
-                }}
-              >
-                {file[0].split('.')[1] == 'pdf' ? (
-                  <div className="d-block mx-auto">
-                    {' '}
-                    <img
-                      src={pdf}
-                      style={{ width: '111px', height: '111px' }}
-                    />{' '}
-                  </div>
-                ) : (
-                  <div className="d-block mx-auto">
-                    <img
-                      src={jpg}
-                      style={{ width: '111px', height: '111px' }}
-                    />{' '}
-                  </div>
-                )}
-
-                <div className="d-block mx-auto">
+          <div className="w-content d-flex justify-content-between">
+            <div className="max-w-content d-inline-block">
+              <div className="h-100 d-flex align-items-center flex-wrap">
+                {mockTags.map((tag, idx) => (
                   <div
+                    className="d-inline-block mr-2 rounded-lg hover-darken-2"
+                    key={tag}
                     style={{
-                      marginBottom: '0px',
-                      fontFamily: 'Roboto',
-                      fontSize: '13px',
-                      lineHeight: '15px',
-                      fontWeight: 'normal',
-                      fontStyle: 'normal',
+                      backgroundColor: colors[maxColor - (idx % maxColor) - 1],
                     }}
                   >
-                    {file[0]}
+                    <div className="style4 p-2 px-3 max-w-content cursor-pointer">
+                      {tag}
+                    </div>
                   </div>
-                  <br />
-                  {file[1]}
+                ))}
+              </div>
+            </div>
+            <div
+              className="style5 d-inline-block py-2 m-0 text-right cursor-pointer"
+              style={{ maxWidth: '35%' }}
+            >
+              {SubjectID} | {SubjectENG}
+            </div>
+          </div>
+        </div>
+        <div className="style6 d-flex pt-3" style={{ maxWidth: '70%' }}>
+          {title}
+        </div>
+        <div className="mt-3">
+          <div className="w-100 d-flex justify-content-between m-0">
+            <div className="d-inline-block">
+              <div className="d-flex">
+                <p className="textPostStyle h4 d-inline-block m-0 mt-1 mr-2">
+                  โพสต์โดย
+                </p>
+                <div className="cursor-pointer d-flex">
+                  <img className="style8 d-inline-block mx-2" src={user_icon} />{' '}
+                  <p
+                    className="textPostStyle h4 font-weight-bold d-inline-vlock mt-1"
+                    id={'Popover-' + labelCount}
+                  >
+                    {postOwner}
+                  </p>
+                  <PopoverItem
+                    key={labelCount}
+                    item={{
+                      placement: 'button',
+                      text: infoData,
+                      className:
+                        'textPostStyle h4 font-weight-bold d-inline-vlock mt-1',
+                    }}
+                    id={genLoadLabel()}
+                  />
                 </div>
               </div>
             </div>
-          ))}
+            <div className="style9 d-inline-block">{datePosted}</div>
+          </div>
+        </div>
+
+        <div className="style10 text-justify mt-4 pt-4 pb-3">{descript}</div>
+      </Container>
+
+      <Container className="style1 box-shadow bg-secondary mx-auto my-5 p-5 pt-4">
+        <h5 className="style12 mb-4">ไฟล์ที่แนบมาด้วย</h5>
+        <div className="max-w-content d-flex align-items-center flex-wrap">
+          {allFiles &&
+            linkFiles &&
+            allFiles.map((file, index) => {
+              const fileSP = file.name.split('.')
+              const extFile = fileSP[fileSP.length - 1]
+              return (
+                <a
+                  className="style13 mr-4 mb-4 cursor-pointer hover-darken"
+                  key={file.name}
+                  href={linkFiles[index]}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <div className="style14 d-flex flex-column pb-3">
+                    <div className="d-block mx-auto">
+                      <img
+                        src={extFile == 'pdf' ? pdf : jpg}
+                        style={{ width: '125px', height: '125px' }}
+                      />
+                    </div>
+                    <div className="style15 d-block mx-auto mb-0">
+                      <div
+                        className="text-truncate mb-3 px-3"
+                        style={{ maxWidth: '125px' }}
+                      >
+                        {fileSP[0]}
+                      </div>
+                      .{extFile.toUpperCase()}
+                    </div>
+                  </div>
+                </a>
+              )
+            })}
         </div>
       </Container>
 
-      <Container
-        className="box-shadow bg-white mx-auto mb-4 px-0 pt-4"
-        style={{
-          width: '1200px',
-          height: '310px',
-          left: '157px',
-          top: '1017px',
-          borderRadius: '5px 5px 5px 5px',
-        }}
-      >
-        <div
-          style={{
-            paddingLeft: '3vw',
-            paddingRight: '3vw',
-            marginBottom: '30px',
-            lineHeight: '38px',
-            height: '35px',
-          }}
-        >
-          <div
-            className="d-flex pl-3 pb-2 d-inline-flex"
-            style={{
-              fontFamily: 'Roboto',
-              fontStyle: 'normal',
-              fontSize: '25px',
-              fontWeight: 'bold',
-              color: '#525252',
-            }}
-          >
-            การตอบกลับ
-          </div>
-          <div
-            className="float-right mt-0 "
-            style={{
-              fontFamily: 'Roboto',
-              fontStyle: 'normal',
-              fontSize: '15px',
-              fontWeight: 'bold',
-              color: '#2EAF7D',
-              paddingRight: '0vw',
-            }}
-          >
-            &nbsp;&nbsp;7&nbsp;&nbsp;
-          </div>
-          <img
-            className="float-right mt-2"
-            style={{
-              width: '20px',
-              height: '20px',
-            }}
-            src={Like}
-          />
-          <div
-            className="float-right mt-0 "
-            style={{
-              fontFamily: 'Roboto',
-              fontStyle: 'normal',
-              fontSize: '15px',
-              fontWeight: 'bold',
-              color: '#3FD0C9',
-              paddingRight: '0vw',
-            }}
-          >
-            &nbsp;&nbsp;6&nbsp;&nbsp;
-          </div>
-          <img
-            className="float-right mt-2"
-            style={{
-              width: '20px',
-              height: '20px',
-            }}
-            src={Comment}
-          />
-        </div>
-
-        {allComment.map((comment) => (
-          <div className="d-block mx-auto px-5">
-            <div
-              className="d-block d-inline-flex"
-              style={{
-                marginBottom: '15px',
-                boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                borderRadius: '5px 5px 5px 5px',
-                height: '50px',
-                width: '1060px',
-              }}
-            >
-              <div
-                style={{
-                  fontSize: '18px',
-                  color: '#525252',
-                  width: '860px',
-                  height: '50px',
-                  paddingLeft: '3vw',
-                  lineHeight: '50px',
-                  border: 'none',
-                }}
-              >
-                {comment[0]}
-              </div>
-              <div className="py-2">
-                <img
-                  src={userIcon}
-                  style={{
-                    border: 'none',
-                    background: '#E4E6E7',
-                    width: '35px',
-                    height: '35px',
-                    borderRadius: '50px',
-                  }}
-                />
-              </div>
-              <div
-                className="d-inline-flex"
-                style={{
-                  width: '165px',
-                  height: '15px',
-                }}
-              >
-                <div
-                  className="py-2"
-                  style={{
-                    color: '#525252',
-                    fontSize: '12px',
-                    fontWeight: 'lighter',
-                    border: 'none',
-                    width: '23px',
-                  }}
-                >
-                  &nbsp;&nbsp;by&nbsp;&nbsp;
-                  <br />
-                  &nbsp;&nbsp;{comment[2]}&nbsp;&nbsp;&nbsp;&nbsp;
+      <Container className="style1 box-shadow bg-secondary px-0 mt-5">
+        <div className="mx-auto px-5 pt-5 pb-4">
+          <div className="style17 mb-5">
+            <div className="w-content d-flex justify-content-between">
+              <div className="style18 d-inline-block">การตอบกลับ</div>
+              <div className="d-inline-block">
+                <div className="style20 mt-0 d-inline-block pr-1 mr-3">
+                  <img
+                    className="mr-2"
+                    style={{
+                      width: '20px',
+                      height: '20px',
+                    }}
+                    src={Comment}
+                  />
+                  <p className="h5 font-weight-bold d-inline-block">
+                    {commentData?.length}
+                  </p>
                 </div>
-                <div
-                  className="d-inline-flex py-2"
-                  style={{
-                    color: '#525252',
-                    fontSize: '15px',
-                    fontWeight: 'bolder',
-                    border: 'none',
-                  }}
-                >
-                  {comment[1]}
+                <div className="style19 mt-0 d-inline-block">
+                  <img
+                    className="mr-2 cursor-pointer hover-darken-2"
+                    onClick={likeData ? handleOnUnlike : handleOnLike}
+                    style={{
+                      marginTop: '-10px',
+                      width: '20px',
+                      height: '20px',
+                    }}
+                    src={likeData ? Like : Unlike}
+                  />
+                  <p className="h5 font-weight-bold d-inline-block">
+                    {amountLike}
+                  </p>
                 </div>
               </div>
             </div>
           </div>
-        ))}
+          <div>
+            {infocommentData && commentData && commentData?.length ? (
+              infocommentData.map((infoComment, index) => (
+                <div className="style21 d-block bg-white mx-auto w-100 p-4 mb-3">
+                  <div className="w-content d-flex justify-content-between">
+                    <div
+                      className="d-flex align-items-center"
+                      style={{ width: '76%' }}
+                    >
+                      <p className="style22 text-break pl-3">
+                        {commentData[index]?.Description}
+                      </p>
+                    </div>
 
-        <div
-          className="d-block mx-auto px-5 py-3"
-          style={{
-            width: '1140px',
-            height: '60px',
-            top: '1017px',
-            borderRadius: '0rem 0rem 5px 5px',
-            background: '#D9D9D9',
-            margin: '0px',
-            boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-          }}
-        >
-          <div className="form-group shadow d-flex">
+                    <div className="d-flex pl-4" style={{ width: '24%' }}>
+                      <div
+                        className=" d-inline-block"
+                        style={{ verticalAlign: 'top' }}
+                      >
+                        <img className="style23 mr-3" src={userIcon} />
+                      </div>
+                      <div className="d-inline-block" style={{ width: '70%' }}>
+                        <p className="h6 d-inline-block mr-1 my-0">by</p>
+                        <p
+                          className="style25 d-inline-flex text-truncate my-0 cursor-pointer"
+                          id={'Popover-' + labelCount}
+                          style={{ width: '80%', maxWidth: '120px' }}
+                        >
+                          {infoComment?.DisplayName}
+                        </p>
+                        <PopoverItem
+                          key={labelCount}
+                          item={{
+                            placement: 'top',
+                            text: infoComment,
+                            className:
+                              'style25 d-inline-flex text-truncate font-weight-bold my-0 cursor-pointer p-0',
+                          }}
+                          id={genLoadLabel()}
+                        />
+
+                        <div className="style24 d-block text-truncate">
+                          {convertTStoDate(commentData[index]?.DateEdited)}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="h6 text-center">
+                ดูเหมือนว่ายังไม่มีความคิดเห็นใด ๆ
+                หากคุณต้องการเสนอแนะสามารถตอบกลับได้ผ่านช่องทางด้านล่าง
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div className="style26 d-block mx-auto px-5 pt-4 pb-1">
+          <div
+            className="style27 form-group shadow d-flex"
+            style={{ borderRadius: '10px' }}
+          >
             <input
-              style={{
-                borderRadius: '4px 0px 0px 4px',
-                background: '#FFFFFF',
-                border: 'none',
-                width: '1160px',
-              }}
               type="text"
-              className="form-control"
+              className="form-control pl-3 border-0"
+              style={{ height: '40px', borderRadius: '10px 0px 0px 10px' }}
               placeholder="ตอบกลับโพสต์นี้..."
+              onChange={(e) => setCommentDescription(e.target.value)}
             />
             <button
               type="submit"
-              className="btn btn-primary btn-sm"
+              onClick={handleOnAddComment}
+              className="style28 btn btn-primary btn-sm px-3 border-0"
               style={{
-                borderRadius: '0px 4px 4px 0px',
                 backgroundColor: '#FFFFFF',
-                border: 'none',
-                height: '33px',
+                borderRadius: '0 10px 10px 0',
               }}
             >
-              <img
-                style={{
-                  width: '15px',
-                  height: '15px',
-                  background: '#FFFFFF',
-                  borderRadius: '0px 4px 4px 0px',
-                  border: 'none',
-                }}
-                src={sendArrow}
-              />
+              <img className="style29" src={sendArrow} />
             </button>
           </div>
         </div>
+        {/* {infocommentData &&
+          commentData &&
+          infocommentData.map((infoComment, index) => (
+            <div className="d-block mx-auto px-5">
+              <div
+                className="d-block d-inline-flex"
+                style={{
+                  marginBottom: '15px',
+                  boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                  borderRadius: '5px 5px 5px 5px',
+                  height: '50px',
+                  width: '1060px',
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: '18px',
+                    color: '#525252',
+                    width: '860px',
+                    height: '50px',
+                    paddingLeft: '3vw',
+                    lineHeight: '50px',
+                    border: 'none',
+                  }}
+                >
+                  {commentData[index].Description}
+                </div>
+                <div className="py-2">
+                  <img
+                    src={userIcon}
+                    style={{
+                      border: 'none',
+                      background: '#E4E6E7',
+                      width: '35px',
+                      height: '35px',
+                      borderRadius: '50px',
+                    }}
+                  />
+                </div>
+                <div
+                  className="d-inline-flex"
+                  style={{
+                    width: '165px',
+                    height: '15px',
+                  }}
+                >
+                  <div
+                    className="py-2"
+                    style={{
+                      color: '#525252',
+                      fontSize: '12px',
+                      fontWeight: 'lighter',
+                      border: 'none',
+                      width: '23px',
+                    }}
+                  >
+                    &nbsp;&nbsp;by&nbsp;&nbsp;
+                    <br />
+                    &nbsp;&nbsp;{convertTStoDate(commentData[index].DateEdited)}
+                  </div>
+                  <div
+                    className="d-inline-flex py-2"
+                    style={{
+                      color: '#525252',
+                      fontSize: '15px',
+                      fontWeight: 'bolder',
+                      border: 'none',
+                    }}
+                  >
+                    {infoComment?.DisplayName}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))} */}
       </Container>
     </div>
   )

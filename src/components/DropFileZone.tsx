@@ -18,6 +18,10 @@ const DropFileZone = ({ onChange }: Props) => {
     onChange(status, allFiles)
   }
 
+  const getUploadParams = ({ meta }) => {
+    return { url: 'https://httpbin.org/post' }
+  }
+
   return (
     <Dropzone
       styles={{
@@ -28,6 +32,7 @@ const DropFileZone = ({ onChange }: Props) => {
           overflow: 'auto',
         },
       }}
+      getUploadParams={getUploadParams}
       onChangeStatus={handleChangeStatus}
       // onSubmit={handleSubmit}
       // accept="image/*,audio/*,video/*"
