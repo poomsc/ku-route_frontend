@@ -9,7 +9,7 @@ import profile from '../assets/icons/profile.png'
 import linewhite from '../assets/icons/line.png'
 import lineblack from '../assets/icons/lineback.png'
 import moreitem from '../assets/icons/more.png'
-import { Container, Card, Row, Col, Button, Form } from 'react-bootstrap'
+import { Container, Card, Row, Col, Button, Form } from 'reactstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import filepdf1 from '../Data/pdf1'
 import PDF from '../assets/icons/PDF.png'
@@ -202,6 +202,55 @@ const AllPostPage = () => {
     }
   }
 
+  const genPageNavigator = () => {
+    const a = '<'
+    const b = '>'
+    const c = 'mr-2 hover-darken-2'
+    const s = { width: '40px', backgroundColor: '#FFFFFF' }
+    return (
+      <div className="d-flex justify-content-center m-4">
+        <div className="mr-3">
+          <Button className={c} style={s}>
+            {a + a}
+          </Button>
+          <Button className={c} style={s}>
+            {a}
+          </Button>
+        </div>
+        <Button className={c} style={s}>
+          {a + a}
+        </Button>
+        <Button className={c} style={s}>
+          {a}
+        </Button>
+
+        <Button className={c} style={s}>
+          1
+        </Button>
+        <Button className={c} style={s}>
+          2
+        </Button>
+        <Button className={c} style={s}>
+          3
+        </Button>
+        <Button className={c} style={s}>
+          ...
+        </Button>
+        <Button className={c} style={s}>
+          150
+        </Button>
+
+        <div className="ml-3">
+          <Button className={c} style={s}>
+            {b}
+          </Button>
+          <Button className={c} style={s}>
+            {b + b}
+          </Button>
+        </div>
+      </div>
+    )
+  }
   useEffect(() => {
     async function fetch() {
       if (!currentSearch || !tagSearch) return
@@ -282,6 +331,7 @@ const AllPostPage = () => {
             <img className="line-white d-block mt-2" src={linewhite} />
           </thead>
 
+          {genPageNavigator()}
           <div className="my-5 d-block"></div>
 
           <div className="w-content d-flex justify-content-between">
@@ -313,6 +363,7 @@ const AllPostPage = () => {
                 )}
             </div>
           </div>
+          {genPageNavigator()}
         </div>
       </div>
     </div>
