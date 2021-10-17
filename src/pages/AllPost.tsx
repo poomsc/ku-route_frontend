@@ -79,42 +79,51 @@ const AllPostPage = () => {
     if (countPostColumn[col] % 2 == col) {
       return (
         <div
-          className="w-content d-flex mb-4"
+          className="w-content d-flex mb-5"
           key={index}
           //  onMouseEnter={"d"}
           //  onMouseLeave={}
         >
-          <Container className="w-content d-inline-block p-0 zoom-1 hover-brighten">
+          <Container className="w-content d-inline-block p-0 zoom-1 hover-brighte">
             <div className="row m-0 p-0 d-inline w-25">
               <div
                 className="form py-4 cursor-pointer"
                 onClick={() => handleOnViewPage(PostID)}
               >
-                <tr className="TAG d-block w-content my-1 mx-2 mb-3">
-                  {menu[1].TagID.map((tag, idx) => (
-                    <div
-                      className="hover-darken-2 max-w-content d-inline-block rounded cursor-pointer px-2 py-1 ml-3 mb-2"
-                      key={tag}
-                      style={{
-                        backgroundColor:
-                          colors[maxColor - (idx % maxColor) - 1],
-                        color: '#FFFFFF',
-                      }}
-                    >
-                      {tag}
-                    </div>
-                  ))}
-                  {/* <th className="category">{menu.Category}</th> */}
-                </tr>
-
-                <div className="title text-truncate mx-3 px-2 mt-4 my-2">
+                <div className="row ml-1">
+                  <tr className="TAG d-block w-content my-1 mx-2 mb-3">
+                    {menu[1].TagID.map((tag, idx) => (
+                      <div
+                        className="hover-darken-2 max-w-content d-inline-block rounded cursor-pointer px-2 py-1 ml-3 mb-2"
+                        key={tag}
+                        style={{
+                          backgroundColor:
+                            colors[maxColor - (idx % maxColor) - 1],
+                          color: '#FFFFFF',
+                        }}
+                      >
+                        {tag}
+                      </div>
+                    ))}
+                    {/* <th className="category">{menu.Category}</th> */}
+                    {/* <div className ="text-align: right">{SubjectIDandTH[0]}</div>
+                    <div className ="text-align: right">
+                      {SubjectENG}
+                    </div> */}
+                  </tr>
+                </div>
+                <div className="title text-truncate mx-3 px-2 mt-1 my-2">
                   {menu[1].Title}
+                </div>
+                <div className="row ml-2">
+                  <div className="texttitle col-8 ">{SubjectENG}</div>
+                  <div className="texttitle col-4 ">{SubjectIDandTH[0]}</div>
                 </div>
                 <div className="mx-3 px-2 mb-2">
                   <img className="line-black w-100" src={lineblack} />
                 </div>
                 <div
-                  className="headtext text-truncate mx-3 mt-3 px-2 my-2"
+                  className="headtext text-truncate mx-3 mt-1 px-2 my-2"
                   style={{ height: '41px' }}
                 >
                   {menu[1].Description}
@@ -130,29 +139,36 @@ const AllPostPage = () => {
                   <div className="d-flex align-content-start flex-wrap">
                     {file.map((file, index) => {
                       if (index == 3) return
-                      const fileSP = file.name.split('.')
+                      const fileSP = file[1].name.split('.')
                       const extFile =
                         fileSP[fileSP.length - 1] == 'pdf' ? PDF : JPG
                       return (
-                        <div className="">
+                        <a
+                          className=""
+                          key={file[1].name}
+                          href={file[0]}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                        >
                           <img className="pdf d-inline-block" src={extFile} />
                           <div
                             className="text-center text-truncate mr-1 textmore"
                             style={{ maxWidth: '55px' }}
                           >
-                            {file.name}
+                            {file[1].name}
                           </div>
-                        </div>
+                        </a>
                       )
                     })}
-                    {file.length > 3 && (
-                      <div
+                    {file && file.length > 3 && (
+                      <a
                         className="pdfcount cursor-pointer d-inline-block"
-                        // onClick={() => handleOnViewPage(PostID)}
+                        //onClick={() => handleOnViewPage(PostID)}
                       >
                         <img className="moreItem" src={moreitem} />
-                        <div className="textmore">MoreItem</div>
-                      </div>
+                        <div className="textmore">ดูเพิ่มเติม</div>
+                      </a>
                     )}
                   </div>
                 </div>

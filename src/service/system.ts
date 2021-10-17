@@ -10,6 +10,9 @@ import {
   deleteDoc,
   DocumentData,
   orderBy,
+  serverTimestamp,
+  FieldValue,
+  setDoc,
 } from 'firebase/firestore'
 import {
   ref,
@@ -19,6 +22,23 @@ import {
   getDownloadURL,
 } from 'firebase/storage'
 import { firestore, storage } from 'config/firebase'
+
+interface postProps {
+  AccountID: string
+  TagID: string[]
+  SubjectID: string
+  SubjectTH: string
+  SubjectENG: string
+  Title: string
+  Description: string
+}
+
+interface commentProps {
+  AccountID: string
+  PostID: string
+  Description: string
+  DateEdited: FieldValue
+}
 
 async function get_faculty() {
   try {
@@ -173,7 +193,11 @@ async function get4File(PostID: string) {
     const listRef = ref(storage, PostID + '/')
     // Find all the prefixes and items.
     const result = await list(listRef, { maxResults: 4 })
-    return result.items
+    const linkUrl = await Promise.all(
+      result.items.map((file) => getDownloadURL(file))
+    )
+    const files = result.items.map((file, index) => [linkUrl[index], file])
+    return files
   } catch (error) {
     console.log('get_file', error)
     // alert(error)
@@ -256,6 +280,29 @@ async function getLikeOfPost(PostID: string) {
   }
 }
 
+async function createHistoryComment(
+  // Description : string,
+  // DateEdited: FieldValue,
+  CommentID: string
+) {
+  try {
+    const docRef = await getDocs(
+      collection(collection(firestore, 'Comment'), CommentID)
+    )
+    console.log(docRef)
+    //const docRef = await setDoc()
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+async function createHistoryPost(PostID: string) {
+  try {
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 export {
   get_faculty,
   get_info,
@@ -271,5 +318,6 @@ export {
   delete_comment,
   getDocLike,
   getLikeOfPost,
+  createHistoryComment,
   get_allpost,
 }
