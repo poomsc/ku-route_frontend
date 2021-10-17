@@ -10,6 +10,8 @@ import 'scss/custom.scss'
 import { firebaseAuth } from 'config/firebase'
 import { onAuthStateChanged } from '@firebase/auth'
 import applicationStore from 'stores/applicationStore'
+import { serverTimestamp } from 'firebase/firestore'
+import { edit } from 'service/user'
 
 // ReactDOM.render(<App />, document.getElementById('root'))
 
@@ -20,6 +22,7 @@ import applicationStore from 'stores/applicationStore'
 onAuthStateChanged(firebaseAuth, (user) => {
   if (user) {
     applicationStore.setUser(user)
+    edit({ DateLastlogin: serverTimestamp() }, user.uid, 'Account')
   }
   render(<App />, document.getElementById('root'))
 })

@@ -112,7 +112,7 @@ const AllPostPage = () => {
                     </div> */}
                   </tr>
                 </div>
-                <div className="title text-truncate mx-3 px-2 mt-4 my-2">
+                <div className="title text-truncate mx-3 px-2 mt-1 my-2">
                   {menu[1].Title}
                 </div>
                 <div className="row ml-2">
@@ -123,7 +123,7 @@ const AllPostPage = () => {
                   <img className="line-black w-100" src={lineblack} />
                 </div>
                 <div
-                  className="headtext text-truncate mx-3 mt-3 px-2 my-2"
+                  className="headtext text-truncate mx-3 mt-1 px-2 my-2"
                   style={{ height: '41px' }}
                 >
                   {menu[1].Description}
@@ -139,29 +139,36 @@ const AllPostPage = () => {
                   <div className="d-flex align-content-start flex-wrap">
                     {file.map((file, index) => {
                       if (index == 3) return
-                      const fileSP = file.name.split('.')
+                      const fileSP = file[1].name.split('.')
                       const extFile =
                         fileSP[fileSP.length - 1] == 'pdf' ? PDF : JPG
                       return (
-                        <div className="">
+                        <a
+                          className=""
+                          key={file[1].name}
+                          href={file[0]}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                        >
                           <img className="pdf d-inline-block" src={extFile} />
                           <div
                             className="text-center text-truncate mr-1 textmore"
                             style={{ maxWidth: '55px' }}
                           >
-                            {file.name}
+                            {file[1].name}
                           </div>
-                        </div>
+                        </a>
                       )
                     })}
-                    {file.length > 3 && (
-                      <div
+                    {file && file.length > 3 && (
+                      <a
                         className="pdfcount cursor-pointer d-inline-block"
                         //onClick={() => handleOnViewPage(PostID)}
                       >
                         <img className="moreItem" src={moreitem} />
-                        <div className="textmore">MoreItem</div>
-                      </div>
+                        <div className="textmore">ดูเพิ่มเติม</div>
+                      </a>
                     )}
                   </div>
                 </div>

@@ -430,7 +430,7 @@ const VersatilePost = observer(() => {
             ? fileStatus() != '#ffc107'
               ? 'File ready !'
               : 'Waiting...'
-            : 'Choose at least 1 file to publish'}
+            : 'Choose file to publish'}
         </p>
       </div>
 
@@ -453,7 +453,7 @@ const VersatilePost = observer(() => {
             style={{ width: '7rem' }}
             onClick={isNewPost ? handelOnCreatePost : handelOnEditPost}
             disabled={
-              fileStatus() != '#007bff' ||
+              (filesUpload.allFiles.length > 0 && fileStatus() != '#007bff') ||
               tagsSelected.length == 0 ||
               !topicSelected ||
               !title

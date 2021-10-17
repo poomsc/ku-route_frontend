@@ -44,6 +44,11 @@ async function register({ UID, Name, Surname, Email }: registerProps) {
     DateEdited: serverTimestamp(),
     DateLastlogin: serverTimestamp(),
     Status: true,
+    Phone: '',
+    Instagram: '',
+    Facebook: '',
+    Mail: '',
+    Privacy: [true, true, true, true, true, true],
   }
   try {
     console.log('Account is being added...')

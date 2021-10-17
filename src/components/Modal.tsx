@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react'
-import { useState, ReactElement } from 'react'
+import { useEffect, useState, ReactElement } from 'react'
 import { Button, Modal, Dropdown } from 'semantic-ui-react'
 import applicationStore from 'stores/applicationStore'
 import { disable } from 'service/user'
@@ -147,17 +147,15 @@ const ModalDisableComment = observer(
 
 const ModalReport = observer(
   ({ CommentID, onClick, children }: commentProps) => {
-    const [open, setOpen] = useState<boolean>()
+    const [open, setOpen] = useState<boolean>(false)
 
-    //useEffect
+    console.log(open)
+
     const [filter, setFilter] = useState([
       'เนื้อหาไม่เหมาะสม',
       'ใช้คำหยาบ',
       'สแปม',
       'คุกคามทางเพศ',
-      'Lecture',
-      'แบบฝึกหัด',
-      'อื่นๆ',
     ])
 
     const statusFilter = {
@@ -165,15 +163,13 @@ const ModalReport = observer(
       ใช้คำหยาบ: false,
       สแปม: false,
       คุกคามทางเพศ: false,
-      Lecture: false,
-      แบบฝึกหัด: false,
-      อื่นๆ: false,
     }
 
     const changeStatus = (TagID: string) => {
       statusFilter[TagID] = !statusFilter[TagID]
       console.log(statusFilter)
       setOpen(true)
+      console.log(open)
     }
 
     return (
@@ -188,23 +184,21 @@ const ModalReport = observer(
       >
         <Modal.Header>Report</Modal.Header>
         <Modal.Content>
-          <Modal.Description>
-            {filter.map((filter) => (
-              <div style={{ color: 'black', fontSize: '18px' }}>
-                <form>
-                  <input
-                    type="checkbox"
-                    className="checkbox-round"
-                    style={{
-                      boxSizing: 'border-box',
-                    }}
-                    onClick={() => changeStatus(filter)}
-                  />
-                  <label>&nbsp;&nbsp;{filter}</label>
-                </form>
-              </div>
-            ))}
-          </Modal.Description>
+          {filter.map((filter) => (
+            <div style={{ color: 'black', fontSize: '18px' }}>
+              <form>
+                <input
+                  type="checkbox"
+                  className="checkbox-round"
+                  style={{
+                    boxSizing: 'border-box',
+                  }}
+                  onClick={() => changeStatus(filter)}
+                />
+                <label>&nbsp;&nbsp;{filter}</label>
+              </form>
+            </div>
+          ))}
         </Modal.Content>
         <Modal.Actions>
           <Button color="black" onClick={() => setOpen(false)}>

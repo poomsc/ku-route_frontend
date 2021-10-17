@@ -269,6 +269,8 @@ const PostPage = () => {
     const { id, item } = props
     const className =
       'h6 w-100 bg-white hover-darken py-1 px-2 text-left rounded-lg'
+    const [popoverOpen, setPopoverOpen] = useState(false)
+    const toggle = () => setPopoverOpen(!popoverOpen)
 
     return (
       <span>
@@ -277,6 +279,8 @@ const PostPage = () => {
           style={{ minWidth: '225px' }}
           placement={item.placement}
           target={'Popover-' + id}
+          // isOpen={popoverOpen}
+          // toggle={toggle}
           trigger="legacy"
         >
           <PopoverBody className="px-2 pt-2 py-1">
