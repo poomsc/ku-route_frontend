@@ -18,6 +18,7 @@ import moreitem from '../assets/icons/more.png'
 import PDF from '../assets/icons/PDF.png'
 import JPG from './../assets/icons/JPG.png'
 import { get_allpost } from 'service/system'
+import { DocumentData } from '@firebase/firestore'
 
 function convertTStoDate(timestamp) {
   if (!timestamp) return
@@ -128,6 +129,17 @@ const HomePage = () => {
     console.log('Searching... ' + SubjectIDandTH[0])
     goToAllPost()
   }
+
+  const [allpostData, setallpostData] = useState<DocumentData>([])
+
+  useEffect(() => {
+    async function fetch() {
+      const allpost = (await get_allpost()) as DocumentData
+      setallpostData(allpost)
+    }
+    fetch()
+  }, [])
+  console.log(allpostData)
 
   // var expanded = false;
 

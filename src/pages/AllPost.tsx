@@ -148,7 +148,7 @@ const AllPostPage = () => {
                     {file.length > 3 && (
                       <div
                         className="pdfcount cursor-pointer d-inline-block"
-                        onClick={() => handleOnViewPage(PostID)}
+                        // onClick={() => handleOnViewPage(PostID)}
                       >
                         <img className="moreItem" src={moreitem} />
                         <div className="textmore">MoreItem</div>
