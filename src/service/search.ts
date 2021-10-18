@@ -42,7 +42,6 @@ async function DateSearch(
       allPost.push([doc.id, doc.data()])
       // console.log(doc.id, ' => ', doc.data())
     })
-    console.log(allPost)
     return allPost
   } catch (e) {
     console.error('Error searching: ', e)

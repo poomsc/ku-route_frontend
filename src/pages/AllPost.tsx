@@ -9,7 +9,7 @@ import profile from '../assets/icons/profile.png'
 import linewhite from '../assets/icons/line.png'
 import lineblack from '../assets/icons/lineback.png'
 import moreitem from '../assets/icons/more.png'
-import { Container, Card, Row, Col, Button, Form } from 'react-bootstrap'
+import { Container, Card, Row, Col, Button, Form } from 'reactstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import filepdf1 from '../Data/pdf1'
 import PDF from '../assets/icons/PDF.png'
@@ -20,9 +20,11 @@ import { DateSearch } from 'service/search'
 import { stringify } from 'querystring'
 import applicationStore from 'stores/applicationStore'
 import React from 'react'
-import { useHistory } from 'react-router'
+import { useHistory, useLocation } from 'react-router'
 import { height } from '@mui/system'
 import { get4File, get_info } from 'service/system'
+import { ISubject } from 'interface/subject.interface'
+import Subjects from 'constants/subjects.json'
 
 export function convertTStoDate(timestamp) {
   if (!timestamp) return
@@ -57,10 +59,22 @@ const AllPostPage = () => {
   const [resultPost, setResultPost] = useState<DocumentData>()
   const [fileUrl, setFileUrl] = useState<any>([])
   const [info, setInfo] = useState<DocumentData>([])
+  const [allPost, setAllPost] = useState<DocumentData>([])
 
   const currentSearch = localStorage.getItem('currentSearch')
   const tagJSON = localStorage.getItem('tagSearch')
   const tagSearch = tagJSON ? JSON.parse(tagJSON) : null
+  const { pathname } = useLocation()
+  const path = pathname.split('/')
+
+  const page = isNormalInteger(path[path.length - 1].replace('page=', ''))
+    ? parseInt(path[path.length - 1].replace('page=', ''))
+    : null
+
+  if (!currentSearch || !tagSearch || !page) {
+    history.push('/')
+  }
+
   const SubjectIDandTH = currentSearch
     ? currentSearch.split(' ')
     : [' ', 'ชื่อวิชา่']
@@ -69,7 +83,31 @@ const AllPostPage = () => {
     : 'SubjectName'
 
   const handleOnViewPage = (PostID: string) => {
-    history.push(`post/${PostID}`)
+    history.push(`/post/${PostID}`)
+  }
+
+  const handleOnNextPage = async (page: number) => {
+    const subsetpage = allPost?.slice(
+      ((page as number) - 1) * 10,
+      (page as number) * 10
+    )
+    const fileUrl = await Promise.all(
+      subsetpage.map((Post) => get4File(Post[0]))
+    )
+    const info = await Promise.all(
+      subsetpage.map((Post) => get_info(Post[1]?.AccountID))
+    )
+    setResultPost(subsetpage)
+    setFileUrl(fileUrl)
+    setInfo(info)
+    history.listen(() => {
+      window.scrollTo(0, 0)
+    })
+    history.push(
+      `/all-post/${SubjectIDandTH[0]}+${
+        SubjectIDandTH[1]
+      }+${SubjectENG}/page=${page.toString()}`
+    )
   }
 
   function renderPost(menu, index, col, file, info) {
@@ -202,6 +240,107 @@ const AllPostPage = () => {
     }
   }
 
+  const genPageNavigator = (sumPost: number) => {
+    if (!resultPost || resultPost.length == 0) return
+    const a = '<'
+    const b = '>'
+    const c = 'mr-2 hover-darken-2 mx-1 font-weight-bold'
+    const s = { width: '40px', backgroundColor: '#FFFFFF' }
+    const sc = { width: '40px', backgroundColor: '#b9fff3' }
+    return (
+      <div className="d-flex justify-content-center m-4">
+        <div className="mr-3">
+          <Button className={c} style={s} onClick={() => handleOnNextPage(1)}>
+            {a + a}
+          </Button>
+          <Button
+            className={c}
+            style={s}
+            onClick={() => handleOnNextPage((page as number) - 1)}
+          >
+            {a}
+          </Button>
+        </div>
+
+        {(page as number) - 2 > 0 && (
+          <Button
+            className={c}
+            style={s}
+            onClick={() => handleOnNextPage((page as number) - 2)}
+          >
+            {(page as number) - 2}
+          </Button>
+        )}
+        {(page as number) - 1 > 0 && (
+          <Button
+            className={c}
+            style={s}
+            onClick={() => handleOnNextPage((page as number) - 1)}
+          >
+            {(page as number) - 1}
+          </Button>
+        )}
+        <Button className={c} style={sc}>
+          {page as number}
+        </Button>
+        {allPost.length / 10 > (page as number) && (
+          <Button
+            className={c}
+            style={s}
+            onClick={() => handleOnNextPage((page as number) + 1)}
+          >
+            {(page as number) + 1}
+          </Button>
+        )}
+        {allPost.length / 10 > (page as number) + 1 && (
+          <Button
+            className={c}
+            style={s}
+            onClick={() => handleOnNextPage((page as number) + 2)}
+          >
+            {(page as number) + 2}
+          </Button>
+        )}
+        {allPost.length / 10 > (page as number) + 2 && (
+          <Button className={c} style={s}>
+            ...
+          </Button>
+        )}
+        {allPost.length / 10 > (page as number) + 2 && (
+          <Button
+            className={c}
+            style={s}
+            onClick={() => handleOnNextPage(Math.ceil(allPost.length / 10))}
+          >
+            {Math.ceil(allPost.length / 10)}
+          </Button>
+        )}
+
+        <div className="ml-3">
+          <Button
+            className={c}
+            style={s}
+            onClick={() => handleOnNextPage((page as number) + 1)}
+          >
+            {b}
+          </Button>
+          <Button
+            className={c}
+            style={s}
+            onClick={() => handleOnNextPage(Math.ceil(allPost.length / 10))}
+          >
+            {b + b}
+          </Button>
+        </div>
+      </div>
+    )
+  }
+
+  function isNormalInteger(str) {
+    const n = Math.floor(Number(str))
+    return n !== Infinity && String(n) === str && n >= 0
+  }
+
   useEffect(() => {
     async function fetch() {
       if (!currentSearch || !tagSearch) return
@@ -209,18 +348,28 @@ const AllPostPage = () => {
       for (const TagID in tagSearch) {
         if (tagSearch[TagID]) tagResult.push(TagID)
       }
-      const result = await DateSearch(SubjectIDandTH[0], tagResult, 'desc')
-      const fileUrl = await Promise.all(result.map((Post) => get4File(Post[0])))
-      const info = await Promise.all(
-        result.map((Post) => get_info(Post[1]?.AccountID))
+      const posts = (await DateSearch(
+        SubjectIDandTH[0],
+        tagResult,
+        'desc'
+      )) as DocumentData
+      const subsetpage = posts.slice(
+        ((page as number) - 1) * 10,
+        (page as number) * 10
       )
-      console.log(fileUrl)
-      setResultPost(result)
+      const fileUrl = await Promise.all(
+        subsetpage.map((Post) => get4File(Post[0]))
+      )
+      const info = await Promise.all(
+        subsetpage.map((Post) => get_info(Post[1]?.AccountID))
+      )
+      setAllPost(posts)
+      setResultPost(subsetpage)
       setFileUrl(fileUrl)
       setInfo(info)
     }
     fetch()
-  }, [currentSearch])
+  }, [page])
 
   const colors = [
     '#5697C4',
@@ -260,7 +409,7 @@ const AllPostPage = () => {
                   <div className="d-flex flex-row-reverse align-items-end mt-5 pt-2 mr-4">
                     <div className="">
                       <img className="pic my-1" src={write_pic} />
-                      <span className="count">{resultPost?.length}</span>
+                      <span className="count">{allPost?.length}</span>
                     </div>
                     <div className=""></div>
                     <div className=""></div>
@@ -282,6 +431,7 @@ const AllPostPage = () => {
             <img className="line-white d-block mt-2" src={linewhite} />
           </thead>
 
+          <div className="my-5">{genPageNavigator(allPost?.length)}</div>
           <div className="my-5 d-block"></div>
 
           <div className="w-content d-flex justify-content-between">
@@ -313,6 +463,7 @@ const AllPostPage = () => {
                 )}
             </div>
           </div>
+          {genPageNavigator(allPost?.length)}
         </div>
       </div>
     </div>

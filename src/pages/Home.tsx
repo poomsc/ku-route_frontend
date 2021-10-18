@@ -97,8 +97,8 @@ const HomePage = () => {
     _subjects.slice(0, 10)
   )
 
-  const goToAllPost = () => {
-    history.push('/all-post')
+  const goToAllPost = (ID: string, TH: string, ENG: string) => {
+    history.push(`/all-post/${ID}+${TH}+${ENG}/page=1`)
   }
 
   const changeStatus = (TagID: string) => {
@@ -118,7 +118,7 @@ const HomePage = () => {
 
   const handleOnSelectSubject = (event: any) => {
     setSubjectSelected(event.target.innerText)
-    console.log(subjectSelected)
+    //console.log(subjectSelected)
   }
 
   const handleOnSearch = () => {
@@ -130,7 +130,11 @@ const HomePage = () => {
     console.log(statusFilter)
     localStorage.setItem('tagSearch', JSON.stringify(statusFilter))
     console.log('Searching... ' + SubjectIDandTH[0])
-    goToAllPost()
+    goToAllPost(
+      SubjectIDandTH[0],
+      SubjectIDandTH[1],
+      SubjectENG[1].replace(')', '')
+    )
   }
 
   const [allpostData, setallpostData] = useState<DocumentData>([])
@@ -151,8 +155,8 @@ const HomePage = () => {
     fetch()
   }, [])
 
-  console.log(allpostData)
-  console.log(fileUrl)
+  // console.log(allpostData)
+  // console.log(fileUrl)
 
   function renderPost(menu, index, col, file, info) {
     const PostID = menu[0]
@@ -480,9 +484,11 @@ const HomePage = () => {
                   info &&
                   allpostData.length == fileUrl.length &&
                   allpostData.length == info.length &&
-                  allpostData?.map((menu, index) =>
-                    renderPost(menu, index, 0, fileUrl[index], info[index])
-                  )}
+                  allpostData
+                    .slice(0, 6)
+                    ?.map((menu, index) =>
+                      renderPost(menu, index, 0, fileUrl[index], info[index])
+                    )}
               </div>
 
               <div
@@ -494,9 +500,11 @@ const HomePage = () => {
                   info &&
                   allpostData.length == fileUrl.length &&
                   allpostData.length == info.length &&
-                  allpostData?.map((menu, index) =>
-                    renderPost(menu, index, 1, fileUrl[index], info[index])
-                  )}
+                  allpostData
+                    .slice(0, 6)
+                    ?.map((menu, index) =>
+                      renderPost(menu, index, 1, fileUrl[index], info[index])
+                    )}
               </div>
             </div>
           </div>
