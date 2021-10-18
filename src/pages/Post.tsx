@@ -517,7 +517,7 @@ const PostPage = () => {
         <div className="mx-auto px-5 pt-5 pb-4">
           <div className="style17 mb-5">
             <div className="w-content d-flex justify-content-between">
-              <div className="style18 d-inline-block">การตอบกลับ</div>
+              <div className="style18 d-inline-block">ความคิดเห็น</div>
               <div className="d-inline-block">
                 <div className="style20 mt-0 d-inline-block pr-1 mr-3">
                   <img
