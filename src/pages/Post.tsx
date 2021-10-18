@@ -216,7 +216,7 @@ const PostPage = () => {
                       : ' '}
                   </p>
                 )}
-                <p className="p-0 m-0 font-weight-light">
+                <p className="p-0 m-0 font-weight-light text-break">
                   {' '}
                   {item.text?.Faculty}
                 </p>
@@ -225,7 +225,7 @@ const PostPage = () => {
                   <p className="p-0 m-0 font-weight-bolder d-inline-flex mr-2">
                     {item.text?.Privacy[2] && item.text?.Mail ? 'E-mail: ' : ''}
                   </p>
-                  <p className="p-0 m-0 d-inline-flex font-weight-light">
+                  <p className="p-0 m-0 d-inline-flex font-weight-light text-break">
                     {item.text?.Privacy[2] ? item.text?.Mail : ''}
                   </p>
                 </div>
@@ -233,7 +233,7 @@ const PostPage = () => {
                   <p className="p-0 m-0 font-weight-bolder d-inline-flex mr-2">
                     {item.text?.Privacy[3] && item.text?.Phone ? 'Phone: ' : ''}
                   </p>
-                  <p className="p-0 m-0 d-inline-flex font-weight-light">
+                  <p className="p-0 m-0 d-inline-flex font-weight-light text-break">
                     {item.text?.Privacy[3] ? item.text?.Phone : ''}
                   </p>
                 </div>
@@ -243,7 +243,7 @@ const PostPage = () => {
                       ? 'Facebook: '
                       : ''}
                   </p>
-                  <p className="p-0 m-0 d-inline-flex font-weight-light">
+                  <p className="p-0 m-0 d-inline-flex font-weight-light text-break">
                     {item.text?.Privacy[4] ? item.text?.Facebook : ''}
                   </p>
                 </div>
@@ -253,7 +253,7 @@ const PostPage = () => {
                       ? 'Instagram: '
                       : ''}
                   </p>
-                  <p className="p-0 m-0 d-inline-flex font-weight-light">
+                  <p className="p-0 m-0 d-inline-flex font-weight-light text-break">
                     {item.text?.Privacy[5] ? item.text?.Instagram : ''}
                   </p>
                 </div>
@@ -436,7 +436,10 @@ const PostPage = () => {
             </div>
           </div>
         </div>
-        <div className="style6 d-flex pt-3" style={{ maxWidth: '70%' }}>
+        <div
+          className="style6 d-flex pt-3 text-break"
+          style={{ maxWidth: '70%' }}
+        >
           {title}
         </div>
         <div className="mt-3">
@@ -471,7 +474,9 @@ const PostPage = () => {
           </div>
         </div>
 
-        <div className="style10 text-justify mt-4 pt-4 pb-3">{descript}</div>
+        <div className="style10 text-justify mt-4 pt-4 pb-3 text-break">
+          {descript}
+        </div>
       </Container>
 
       <Container className="style1 box-shadow bg-secondary mx-auto my-5 p-5 pt-4">
