@@ -142,7 +142,7 @@ const VersatilePost = observer(() => {
     )
   }
 
-  const handelOnCreatePost = async () => {
+  const handleOnCreatePost = async () => {
     console.log(topicSelected, filesUpload.status, applicationStore.user)
     if (
       !topicSelected ||
@@ -170,7 +170,7 @@ const VersatilePost = observer(() => {
     // delete_post()
   }
 
-  const handelOnEditPost = async () => {
+  const handleOnEditPost = async () => {
     // console.log('test edit')
     if (
       !topicSelected ||
@@ -451,7 +451,7 @@ const VersatilePost = observer(() => {
           <Button
             className="pl-1"
             style={{ width: '7rem' }}
-            onClick={isNewPost ? handelOnCreatePost : handelOnEditPost}
+            onClick={isNewPost ? handleOnCreatePost : handleOnEditPost}
             disabled={
               (filesUpload.allFiles.length > 0 && fileStatus() != '#007bff') ||
               tagsSelected.length == 0 ||

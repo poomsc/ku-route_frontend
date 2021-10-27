@@ -13,6 +13,7 @@ import {
   serverTimestamp,
   FieldValue,
   setDoc,
+  limit,
 } from 'firebase/firestore'
 import {
   ref,
@@ -82,7 +83,8 @@ async function get_allpost() {
     const q = query(
       collection(firestore, 'Post'),
       where('Status', '==', true),
-      orderBy('DateCreate', 'desc')
+      orderBy('DateCreate', 'desc'),
+      limit(6)
     )
     const querySnapshot = await getDocs(q)
     const Posts = querySnapshot.docs.map((doc) => [doc.id, doc.data()])
@@ -286,10 +288,10 @@ async function createHistoryComment(
   CommentID: string
 ) {
   try {
-    const docRef = await getDocs(
-      collection(collection(firestore, 'Comment'), CommentID)
-    )
-    console.log(docRef)
+    // const docRef = await getDocs(
+    //   collection(collection(firestore, 'Comment'), CommentID)
+    // )
+    // console.log(docRef)
     //const docRef = await setDoc()
   } catch (error) {
     console.log(error)
@@ -298,6 +300,18 @@ async function createHistoryComment(
 
 async function createHistoryPost(PostID: string) {
   try {
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+async function getReport(CommentID: string) {
+  try {
+    const querySnapshot = await getDocs(
+      collection(firestore, 'Comment', CommentID, 'Report')
+    )
+    const report = querySnapshot.docs.map((doc) => doc.data())
+    return report
   } catch (error) {
     console.log(error)
   }
@@ -320,4 +334,5 @@ export {
   getLikeOfPost,
   createHistoryComment,
   get_allpost,
+  getReport,
 }

@@ -32,6 +32,12 @@ interface commentProps {
   Description: string
 }
 
+interface reportProps {
+  AccountID: string
+  Description: string
+  Status: string[]
+}
+
 async function register({ UID, Name, Surname, Email }: registerProps) {
   const data = {
     Name,
@@ -113,6 +119,7 @@ async function create_comment({
     DateCreate: serverTimestamp(),
     DateEdited: serverTimestamp(),
     Status: true,
+    IsReport: false,
   }
   try {
     console.log('Comment is being added...')
@@ -189,4 +196,34 @@ async function disable(props: any, ID, col) {
   }
 }
 
-export { register, create_post, create_comment, like, edit, editPost, disable }
+async function report(
+  { AccountID, Description, Status }: reportProps,
+  CommentID
+) {
+  try {
+    const data = {
+      AccountID,
+      Description,
+      DateCreate: serverTimestamp(),
+      Status,
+    }
+    const docRef = await setDoc(
+      doc(firestore, 'Comment', CommentID, 'Report', 'Report_' + AccountID),
+      data
+    )
+    return true
+  } catch (error) {
+    // alert(error)
+  }
+}
+
+export {
+  register,
+  create_post,
+  create_comment,
+  like,
+  edit,
+  editPost,
+  disable,
+  report,
+}

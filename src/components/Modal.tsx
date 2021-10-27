@@ -11,12 +11,6 @@ interface postProps {
   PostID: string
 }
 
-interface commentProps {
-  CommentID: string
-  onClick: (CommentID: string) => void
-  children: ReactElement<any, any>
-}
-
 const ModalFavouriteMenu = observer(({ PostID, onClick }: postProps) => {
   const [open, setOpen] = useState<boolean>(false)
 
@@ -42,7 +36,7 @@ const ModalFavouriteMenu = observer(({ PostID, onClick }: postProps) => {
       }
       open={open}
       size="tiny"
-      dimmer="blurring"
+      dimmer="inverted"
       className="h-auto"
     >
       <Modal.Header>Unlike Post</Modal.Header>
@@ -84,7 +78,7 @@ const ModalEditPostMenu = observer(({ PostID, onClick }: postProps) => {
       }
       open={open}
       size="tiny"
-      dimmer="blurring"
+      dimmer="inverted"
       className="h-auto"
     >
       <Modal.Header>Delete Post</Modal.Header>
@@ -105,117 +99,4 @@ const ModalEditPostMenu = observer(({ PostID, onClick }: postProps) => {
   )
 })
 
-const ModalDisableComment = observer(
-  ({ CommentID, onClick, children }: commentProps) => {
-    const [open, setOpen] = useState<boolean>(false)
-
-    const handleOnDelete = async () => {
-      if (!applicationStore.user) return
-      await disable({}, CommentID, 'Comment')
-      setOpen(false)
-      onClick(CommentID)
-    }
-
-    return (
-      <Modal
-        onClose={() => setOpen(false)}
-        onOpen={() => setOpen(true)}
-        open={open}
-        trigger={children}
-        size="tiny"
-        dimmer="blurring"
-        className="h-auto"
-      >
-        <Modal.Header>Delete Comment</Modal.Header>
-        <Modal.Content>
-          <Modal.Description>
-            <p style={{ fontSize: '16px' }}>คุณต้องการลบความคิดเห็นนี้ ?</p>
-          </Modal.Description>
-        </Modal.Content>
-        <Modal.Actions>
-          <Button color="black" onClick={() => setOpen(false)}>
-            ยกเลิก
-          </Button>
-          <Button onClick={() => handleOnDelete()} negative>
-            ตกลง
-          </Button>
-        </Modal.Actions>
-      </Modal>
-    )
-  }
-)
-
-const ModalReport = observer(
-  ({ CommentID, onClick, children }: commentProps) => {
-    const [open, setOpen] = useState<boolean>(false)
-
-    console.log(open)
-
-    const [filter, setFilter] = useState([
-      'เนื้อหาไม่เหมาะสม',
-      'ใช้คำหยาบ',
-      'สแปม',
-      'คุกคามทางเพศ',
-    ])
-
-    const statusFilter = {
-      เนื้อหาไม่เหมาะสม: false,
-      ใช้คำหยาบ: false,
-      สแปม: false,
-      คุกคามทางเพศ: false,
-    }
-
-    const changeStatus = (TagID: string) => {
-      statusFilter[TagID] = !statusFilter[TagID]
-      console.log(statusFilter)
-      setOpen(true)
-      console.log(open)
-    }
-
-    return (
-      <Modal
-        onClose={() => setOpen(false)}
-        onOpen={() => setOpen(true)}
-        open={open}
-        trigger={children}
-        size="tiny"
-        dimmer="blurring"
-        className="h-auto"
-      >
-        <Modal.Header>Report</Modal.Header>
-        <Modal.Content>
-          {filter.map((filter) => (
-            <div style={{ color: 'black', fontSize: '18px' }}>
-              <form>
-                <input
-                  type="checkbox"
-                  className="checkbox-round"
-                  style={{
-                    boxSizing: 'border-box',
-                  }}
-                  onClick={() => changeStatus(filter)}
-                />
-                <label>&nbsp;&nbsp;{filter}</label>
-              </form>
-            </div>
-          ))}
-        </Modal.Content>
-        <Modal.Actions>
-          <Button color="black" onClick={() => setOpen(false)}>
-            ยกเลิก
-          </Button>
-          <Button onClick={() => setOpen(false)} negative>
-            ตกลง
-          </Button>
-        </Modal.Actions>
-      </Modal>
-    )
-  }
-)
-
-export {
-  ModalFavouriteMenu,
-  ModalEditPostMenu,
-  ModalDisableComment,
-  ModalReport,
-}
+export { ModalFavouriteMenu, ModalEditPostMenu }

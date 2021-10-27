@@ -203,7 +203,7 @@ const HomePage = () => {
                 </div>
                 <div className="row ml-2">
                   <div className="texttitle col-8 ">{menu[1].SubjectENG}</div>
-                  <div className="texttitle col-3 ">{menu[1].SubjectID}</div>
+                  <div className="texttitle col-4 ">{menu[1].SubjectID}</div>
                 </div>
                 <div className="mx-3 px-2 mb-2">
                   <img className="line-black w-100" src={lineblack} />

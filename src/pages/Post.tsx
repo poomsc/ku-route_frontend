@@ -9,6 +9,7 @@ import {
 } from 'react-bootstrap'
 import ReactDOM from 'react-dom'
 import { useState, useEffect } from 'react'
+import { useHistory, useLocation } from 'react-router'
 import user_icon from './../assets/icons/user-icon.png'
 import { url } from 'inspector'
 import pdf from './../assets/icons/PDF.png'
@@ -22,6 +23,7 @@ import Unlike from './../assets/icons/Unlike.png'
 import { collection, DocumentData, serverTimestamp } from '@firebase/firestore'
 import {
   createHistoryComment,
+  getReport,
   get_comment,
   get_file,
   get_info,
@@ -30,7 +32,7 @@ import {
 } from 'service/system'
 import applicationStore from 'stores/applicationStore'
 import { convertTStoDate } from './AllPost'
-import { create_comment, like, disable, edit } from 'service/user'
+import { create_comment, like, disable, edit, report } from 'service/user'
 import { getDocLike, getLikeOfPost } from 'service/system'
 import { awaitExpression } from '@babel/types'
 import { getDownloadURL, StorageReference } from '@firebase/storage'
@@ -43,10 +45,8 @@ import {
   Tooltip,
   UncontrolledPopover,
 } from 'reactstrap'
-import { useLocation } from 'react-router'
 import { modalClasses } from '@mui/material'
 import { Modal, Button as ButtonB } from 'semantic-ui-react'
-import { ModalDisableComment, ModalReport } from 'components/Modal'
 import { right } from '@popperjs/core'
 import { ApplicationVerifier } from '@firebase/auth'
 
@@ -61,15 +61,20 @@ const PostPage = () => {
   const [allFiles, setAllFiles] = useState<StorageReference[]>()
   const [linkFiles, setLinkFiles] = useState<string[]>()
   const [postOwnerUID, setPostOwnerUID] = useState('')
-  const [open, setOpen] = useState(false)
   const [editCommentBlock, setEditCommentBlock] = useState(-1)
   const [newCommentEdited, setNewCommentEdited] = useState('')
   const [saveCommentEnable, setSaveCommentEnable] = useState(false)
+  const [trigger, setTrigger] = useState('legacy')
 
+  const history = useHistory()
   const { pathname } = useLocation()
   const PostID = pathname.split('/')[2]
+  const [statusFilter, setStatusFilter] = useState<any>()
 
   useEffect(() => {
+    history.listen(() => {
+      window.scrollTo(0, 0)
+    })
     async function fetch() {
       const post = (await get_one_post(PostID)) as DocumentData
       const info = (await get_info(post[1]?.AccountID)) as DocumentData
@@ -80,6 +85,13 @@ const PostPage = () => {
       const fileUrl = await Promise.all(
         files.map((file) => getDownloadURL(file))
       )
+      const statusFilter = {
+        รีวิวรายวิชา: false,
+        สรุป: false,
+        Lecture: false,
+        แบบฝึกหัด: false,
+        อื่นๆ: false,
+      }
 
       const TEST = await createHistoryComment('kkY5SaNaRdqaeZ0ToVbF')
 
@@ -90,6 +102,7 @@ const PostPage = () => {
         setLikeData(LikeDoc?.Status)
       }
 
+      setStatusFilter(statusFilter)
       setPostData(post[1])
       setPostOwnerUID(post[1]?.AccountID)
       setInfoData(info)
@@ -146,6 +159,8 @@ const PostPage = () => {
   }
 
   const handleOnDeleteComment = async (CommentID: string) => {
+    if (!applicationStore.user) return
+    await disable({}, CommentID, 'Comment')
     const comment = (await get_comment(PostID)) as DocumentData
     const infoComment = await get_info_comment(comment)
     if (comment?.length && infoComment?.length) {
@@ -154,13 +169,40 @@ const PostPage = () => {
     }
   }
 
-  const handleOnReport = () => {
-    // doSomething;
+  const handleOnReport = async (statusFilter, CommentID: string) => {
+    if (!applicationStore.user) return
+    const statusResult = [] as Array<string>
+    for (const status in statusFilter) {
+      if (statusFilter[status]) statusResult.push(status)
+    }
+    report(
+      {
+        AccountID: applicationStore.user.uid,
+        Status: statusResult,
+        Description: '',
+      },
+      CommentID
+    )
+    const reportData = await getReport(CommentID)
+    if (reportData && reportData.length >= 5) {
+      edit({ IsReport: true }, CommentID, 'Comment')
+    }
   }
 
   const handleOnEditCommentChange = (oldComment, event: any) => {
     setNewCommentEdited(event.target.value)
     checkChangeData(oldComment, event)
+  }
+
+  const handleOnViewPage = (
+    ID: string,
+    TH: string,
+    ENG: string,
+    tag: string
+  ) => {
+    statusFilter[tag] = true
+    localStorage.setItem('tagSearch', JSON.stringify(statusFilter))
+    history.push(`/all-post/${ID}+${TH}+${ENG}/page=1`)
   }
 
   const checkChangeData = (attr, event) => {
@@ -275,7 +317,60 @@ const PostPage = () => {
     const className =
       'h6 w-100 bg-white hover-darken py-1 px-2 text-left rounded-lg'
     const [popoverOpen, setPopoverOpen] = useState(false)
+    const [openReport, setOpenReport] = useState(false)
+    const [openDisablComment, setOpenDisablComment] = useState(false)
     const toggle = () => setPopoverOpen(!popoverOpen)
+    const [filter, setFilter] = useState([
+      'เนื้อหาไม่เหมาะสม',
+      'ใช้คำหยาบ',
+      'สแปม',
+      'คุกคามทางเพศ',
+    ])
+
+    const statusFilter = {
+      เนื้อหาไม่เหมาะสม: false,
+      ใช้คำหยาบ: false,
+      สแปม: false,
+      คุกคามทางเพศ: false,
+    }
+
+    const [resultFilter, setResultFilter] = useState(statusFilter)
+
+    const changeStatus = (TagID: string) => {
+      statusFilter[TagID] = !statusFilter[TagID]
+      setOpenReport(true)
+      setResultFilter(statusFilter)
+    }
+
+    const handleOnDelete = async () => {
+      await handleOnDeleteComment(item.data[0])
+      setOpenDisablComment(false)
+    }
+
+    const handleOnReportComment = async (statusFilter, CommentID: string) => {
+      await handleOnReport(statusFilter, item.data[0])
+      setOpenReport(false)
+    }
+
+    const handleOnClick = (type: string) => {
+      toggle()
+      if (type == 'Comment') {
+        setOpenDisablComment(true)
+      } else {
+        setOpenReport(true)
+      }
+    }
+
+    const closeReportModal = () => {
+      const statusFilter = {
+        เนื้อหาไม่เหมาะสม: false,
+        ใช้คำหยาบ: false,
+        สแปม: false,
+        คุกคามทางเพศ: false,
+      }
+      setResultFilter(statusFilter)
+      setOpenReport(false)
+    }
 
     return (
       <span>
@@ -284,8 +379,8 @@ const PostPage = () => {
           style={{ minWidth: '225px' }}
           placement={item.placement}
           target={'Popover-' + id}
-          // isOpen={popoverOpen}
-          // toggle={toggle}
+          isOpen={popoverOpen}
+          toggle={toggle}
           trigger="legacy"
         >
           <PopoverBody className="px-2 pt-2 py-1">
@@ -298,30 +393,94 @@ const PostPage = () => {
                 แก้ไข...
               </Button>
 
-              <ModalDisableComment
-                CommentID={item.data[0]}
-                onClick={handleOnDeleteComment}
+              <Button
+                variant="primary"
+                className={className}
+                hidden={applicationStore.user?.uid != item.data[1].AccountID}
+                onClick={() => handleOnClick('Comment')}
               >
-                <Button
-                  variant="primary"
-                  className={className}
-                  hidden={applicationStore.user?.uid != item.data[1].AccountID}
-                >
-                  ลบความคิดเห็น
-                </Button>
-              </ModalDisableComment>
+                ลบความคิดเห็น
+              </Button>
 
-              <ModalReport
-                CommentID={item.data[0]}
-                onClick={handleOnDeleteComment}
+              <Button
+                className={className}
+                onClick={() => handleOnClick('Report')}
+                hidden={applicationStore.user?.uid == item.data[1].AccountID}
               >
-                <Button className={className} onClick={handleOnReport}>
-                  รายงานความไม่เหมาะสม
-                </Button>
-              </ModalReport>
+                รายงานความไม่เหมาะสม
+              </Button>
             </div>
           </PopoverBody>
         </UncontrolledPopover>
+
+        <Modal
+          onClose={closeReportModal}
+          onOpen={() => setOpenReport(true)}
+          open={openReport}
+          size="tiny"
+          className="h-auto"
+          dimmer="inverted"
+        >
+          <Modal.Header>Report</Modal.Header>
+          <Modal.Content>
+            {filter.map((filter) => (
+              <div style={{ color: 'black', fontSize: '18px' }}>
+                <form>
+                  <input
+                    type="checkbox"
+                    className="checkbox-round"
+                    style={{
+                      boxSizing: 'border-box',
+                    }}
+                    onClick={() => changeStatus(filter)}
+                  />
+                  <label>&nbsp;&nbsp;{filter}</label>
+                </form>
+              </div>
+            ))}
+          </Modal.Content>
+          <Modal.Actions>
+            <ButtonB color="black" onClick={closeReportModal}>
+              ยกเลิก
+            </ButtonB>
+            <ButtonB
+              onClick={() => handleOnReportComment(statusFilter, item.data[0])}
+              negative
+              disabled={
+                !resultFilter['เนื้อหาไม่เหมาะสม'] &&
+                !resultFilter['ใช้คำหยาบ'] &&
+                !resultFilter['สแปม'] &&
+                !resultFilter['คุกคามทางเพศ']
+              }
+            >
+              ตกลง
+            </ButtonB>
+          </Modal.Actions>
+        </Modal>
+
+        <Modal
+          onClose={() => setOpenDisablComment(false)}
+          onOpen={() => setOpenDisablComment(true)}
+          open={openDisablComment}
+          size="tiny"
+          className="h-auto"
+          dimmer="inverted"
+        >
+          <Modal.Header>Delete Comment</Modal.Header>
+          <Modal.Content>
+            <Modal.Description>
+              <p style={{ fontSize: '16px' }}>คุณต้องการลบความคิดเห็นนี้ ?</p>
+            </Modal.Description>
+          </Modal.Content>
+          <Modal.Actions>
+            <ButtonB color="black" onClick={() => setOpenDisablComment(false)}>
+              ยกเลิก
+            </ButtonB>
+            <ButtonB onClick={() => handleOnDelete()} negative>
+              ตกลง
+            </ButtonB>
+          </Modal.Actions>
+        </Modal>
       </span>
     )
   }
@@ -392,25 +551,26 @@ const PostPage = () => {
 
   const mockTags = postData?.TagID ? postData?.TagID : ['']
   const SubjectID = postData?.SubjectID ? postData?.SubjectID : 'รหัสวิชา'
+  const SubjectTH = postData?.SubjectTH ? postData?.SubjectTH : 'ชื่อวิชา'
   const SubjectENG = postData?.SubjectENG ? postData?.SubjectENG : 'SubjectName'
 
-  const colors = [
-    '#5697C4',
-    '#E0598B',
-    '#E278A3',
-    '#9163B6',
-    '#993767',
-    '#A34974',
-    '#BE5168',
-    '#C84A52',
-    '#E16452',
-    '#F19670',
-    '#E9D78E',
-    '#E4BE7F',
-    '#74C493',
-  ]
+  const colors = {
+    // '#5697C4',
+    // '#E0598B',
+    // '#E278A3',
+    // '#9163B6',
+    // '#993767',
+    // '#A34974',
+    // '#BE5168',
+    ทั่วไป: '#C84A52',
+    แบบฝึกหัด: '#E16452',
+    อื่นๆ: '#F19670',
+    สรุป: '#E9D78E',
+    Lecture: '#E4BE7F',
+    รีวิวรายวิชา: '#74C493',
+  }
 
-  const maxColor = colors.length
+  //const maxColor = colors.length
   return (
     <div className="white-bg pt-5">
       <Container className="style1 box-shadow bg-secondary mx-auto my-5 px-5 p-5">
@@ -423,8 +583,11 @@ const PostPage = () => {
                     className="d-inline-block mr-2 rounded-lg hover-darken-2"
                     key={tag}
                     style={{
-                      backgroundColor: colors[maxColor - (idx % maxColor) - 1],
+                      backgroundColor: colors[tag],
                     }}
+                    onClick={() =>
+                      handleOnViewPage(SubjectID, SubjectTH, SubjectENG, tag)
+                    }
                   >
                     <div className="style4 p-2 px-3 max-w-content cursor-pointer">
                       {tag}
@@ -484,44 +647,46 @@ const PostPage = () => {
         </div>
       </Container>
 
-      <Container className="style1 box-shadow bg-secondary mx-auto my-5 p-5 pt-4">
-        <h5 className="style12 mb-4">ไฟล์ที่แนบมาด้วย</h5>
-        <div className="max-w-content d-flex align-items-center flex-wrap">
-          {allFiles &&
-            linkFiles &&
-            allFiles.map((file, index) => {
-              const fileSP = file.name.split('.')
-              const extFile = fileSP[fileSP.length - 1]
-              return (
-                <a
-                  className="style13 mr-4 mb-4 hover-darken cursor-pointer"
-                  key={file.name}
-                  href={linkFiles[index]}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <div className="style14 d-flex flex-column pb-3">
-                    <div className="d-block mx-auto">
-                      <img
-                        src={extFile == 'pdf' ? pdf : jpg}
-                        style={{ width: '125px', height: '125px' }}
-                      />
-                    </div>
-                    <div className="style15 d-block mx-auto mb-0">
-                      <div
-                        className="text-truncate mb-3 px-3"
-                        style={{ maxWidth: '130px' }}
-                      >
-                        {fileSP[0]}
+      {allFiles && allFiles.length > 0 && (
+        <Container className="style1 box-shadow bg-secondary mx-auto my-5 p-5 pt-4">
+          <h5 className="style12 mb-4">ไฟล์ที่แนบมาด้วย</h5>
+          <div className="max-w-content d-flex align-items-center flex-wrap">
+            {allFiles &&
+              linkFiles &&
+              allFiles.map((file, index) => {
+                const fileSP = file.name.split('.')
+                const extFile = fileSP[fileSP.length - 1]
+                return (
+                  <a
+                    className="style13 mr-4 mb-4 hover-darken cursor-pointer"
+                    key={file.name}
+                    href={linkFiles[index]}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <div className="style14 d-flex flex-column pb-3">
+                      <div className="d-block mx-auto">
+                        <img
+                          src={extFile == 'pdf' ? pdf : jpg}
+                          style={{ width: '125px', height: '125px' }}
+                        />
                       </div>
-                      .{extFile}
+                      <div className="style15 d-block mx-auto mb-0">
+                        <div
+                          className="text-truncate mb-3 px-3"
+                          style={{ maxWidth: '130px' }}
+                        >
+                          {fileSP[0]}
+                        </div>
+                        .{extFile}
+                      </div>
                     </div>
-                  </div>
-                </a>
-              )
-            })}
-        </div>
-      </Container>
+                  </a>
+                )
+              })}
+          </div>
+        </Container>
+      )}
 
       <Container className="style1 box-shadow bg-secondary px-0 mt-5">
         <div className="mx-auto px-5 pt-5 pb-4">

@@ -135,8 +135,7 @@ const AllPostPage = () => {
                         className="max-w-content d-inline-block rounded px-2 py-1 ml-3 mb-2"
                         key={tag}
                         style={{
-                          backgroundColor:
-                            colors[maxColor - (idx % maxColor) - 1],
+                          backgroundColor: colors[tag],
                           color: '#FFFFFF',
                         }}
                       >
@@ -254,13 +253,19 @@ const AllPostPage = () => {
     return (
       <div className="d-flex justify-content-center m-4">
         <div className="mr-3">
-          <Button className={c} style={s} onClick={() => handleOnNextPage(1)}>
+          <Button
+            className={c}
+            style={s}
+            onClick={() => handleOnNextPage(1)}
+            disabled={(page as number) == 1}
+          >
             {a + a}
           </Button>
           <Button
             className={c}
             style={s}
             onClick={() => handleOnNextPage((page as number) - 1)}
+            disabled={(page as number) == 1}
           >
             {a}
           </Button>
@@ -325,6 +330,7 @@ const AllPostPage = () => {
             className={c}
             style={s}
             onClick={() => handleOnNextPage((page as number) + 1)}
+            disabled={(page as number) == Math.ceil(allPost.length / 10)}
           >
             {b}
           </Button>
@@ -332,6 +338,7 @@ const AllPostPage = () => {
             className={c}
             style={s}
             onClick={() => handleOnNextPage(Math.ceil(allPost.length / 10))}
+            disabled={(page as number) == Math.ceil(allPost.length / 10)}
           >
             {b + b}
           </Button>
@@ -375,22 +382,22 @@ const AllPostPage = () => {
     fetch()
   }, [page])
 
-  const colors = [
-    '#5697C4',
-    '#E0598B',
-    '#E278A3',
-    '#9163B6',
-    '#993767',
-    '#A34974',
-    '#BE5168',
-    '#C84A52',
-    '#E16452',
-    '#F19670',
-    '#E9D78E',
-    '#E4BE7F',
-    '#74C493',
-  ]
-  const maxColor = colors.length
+  const colors = {
+    // '#5697C4',
+    // '#E0598B',
+    // '#E278A3',
+    // '#9163B6',
+    // '#993767',
+    // '#A34974',
+    // '#BE5168',
+    ทั่วไป: '#C84A52',
+    แบบฝึกหัด: '#E16452',
+    อื่นๆ: '#F19670',
+    สรุป: '#E9D78E',
+    Lecture: '#E4BE7F',
+    รีวิวรายวิชา: '#74C493',
+  }
+  // const maxColor = colors.length
 
   return (
     <div className="blue-bg2 jumbotron jumbotron-fluid mb-0">
