@@ -70,9 +70,11 @@
   left: 400px;
   bottom: 10px; */
 }
+
 .textpost {
   margin-left: 3px;
 }
+
 .textcode {
   /* position: relative; */
   text-align: center;
@@ -120,6 +122,7 @@
   box-shadow: 2px 6px 8px rgba(0, 0, 0, 0.25);
   border-radius: 20px;
 }
+
 .category {
   position: relative;
   top: -20px;
@@ -130,6 +133,7 @@
   font-size: 20px;
   color: white;
 }
+
 .title {
   /* position: relative; */
   /* left: 30px;
@@ -164,7 +168,6 @@
   font-weight: normal;
   font-size: 18px;
   line-height: 21px;
-
   color: #525252;
 }
 
@@ -172,6 +175,7 @@
   width: 55px;
   height: 55px;
 }
+
 .pdfcount {
   text-align: left;
   /* position: relative;
@@ -180,6 +184,7 @@
   font-family: Roboto;
   font-size: 9px;
 }
+
 .pdfrow {
   /* display: flex;
   flex-direction: row; */
@@ -198,6 +203,7 @@
   width: 45px;
   height: 45px;
 }
+
 .Name {
   position: relative;
   left: 8px;
@@ -231,10 +237,10 @@
   width: 45px;
   height: 53px;
 }
+
 .textmore {
   position: relative;
   left: 7px;
-
   font-size: 10px;
 }
 
