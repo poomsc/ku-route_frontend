@@ -12,6 +12,8 @@ import moreitem from '../assets/icons/more.png'
 import { Container, Card, Row, Col, Button, Form } from 'reactstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import filepdf1 from '../Data/pdf1'
+import TimerIcon from '@mui/icons-material/Timer'
+import PersonIcon from '@mui/icons-material/Person'
 import PDF from '../assets/icons/PDF.png'
 import JPG from './../assets/icons/JPG.png'
 import { useEffect, useState } from 'react'
@@ -130,7 +132,7 @@ const AllPostPage = () => {
                   <tr className="TAG d-block w-content my-1 mx-2 mb-3">
                     {menu[1].TagID.map((tag, idx) => (
                       <div
-                        className="hover-darken-2 max-w-content d-inline-block rounded cursor-pointer px-2 py-1 ml-3 mb-2"
+                        className="max-w-content d-inline-block rounded px-2 py-1 ml-3 mb-2"
                         key={tag}
                         style={{
                           backgroundColor:
@@ -224,13 +226,17 @@ const AllPostPage = () => {
               </div>
             </div>
             <div
-              className="Time text-right"
-              style={{
-                marginTop: '-32px',
-                marginRight: '10px',
-              }}
+              className="mx-3 px-2 d-flex justify-content-between"
+              style={{ marginTop: '-32px' }}
             >
-              {'Posted ' + convertTStoDate(menu[1].DateEdited)}
+              <div className="Time text-truncate" style={{ maxWidth: '150px' }}>
+                <PersonIcon style={{ marginTop: '-5px' }} />
+                {' ' + info?.DisplayName}
+              </div>
+              <div className="Time">
+                <TimerIcon style={{ marginTop: '-5px' }} />
+                {' Posted ' + convertTStoDate(menu[1].DateEdited)}
+              </div>
             </div>
           </Container>
         </div>

@@ -12,6 +12,8 @@ import { BsFillCaretDownFill } from 'react-icons/bs'
 import { constTags } from 'constants/index'
 import { useHistory, useLocation } from 'react-router'
 import applicationStore from 'stores/applicationStore'
+import TimerIcon from '@mui/icons-material/Timer'
+import PersonIcon from '@mui/icons-material/Person'
 import '../App.css'
 import lineblack from '../assets/icons/lineback.png'
 import moreitem from '../assets/icons/more.png'
@@ -145,12 +147,13 @@ const HomePage = () => {
       const fileUrl = await Promise.all(
         allpost.map((Post) => get4File(Post[0]))
       )
-      const info = await Promise.all(
+      const infoo = await Promise.all(
         allpost.map((Post) => get_info(Post[1]?.AccountID))
       )
+
       setallpostData(allpost)
       setFileUrl(fileUrl)
-      setInfo(info)
+      setInfo(infoo)
     }
     fetch()
   }, [])
@@ -180,7 +183,7 @@ const HomePage = () => {
                   <tr className="TAG d-block w-content my-1 mx-2 mb-3">
                     {menu[1].TagID.map((tag, idx) => (
                       <div
-                        className="hover-darken-2 max-w-content d-inline-block rounded cursor-pointer px-2 py-1 ml-3 mb-2"
+                        className="max-w-content d-inline-block rounded px-2 py-1 ml-3 mb-2"
                         key={tag}
                         style={{
                           backgroundColor:
@@ -274,13 +277,17 @@ const HomePage = () => {
               </div>
             </div>
             <div
-              className="Time text-right"
-              style={{
-                marginTop: '-32px',
-                marginRight: '10px',
-              }}
+              className="mx-3 px-2 d-flex justify-content-between"
+              style={{ marginTop: '-32px' }}
             >
-              {'Posted ' + convertTStoDate(menu[1].DateEdited)}
+              <div className="Time text-truncate" style={{ maxWidth: '150px' }}>
+                <PersonIcon style={{ marginTop: '-5px' }} />
+                {' ' + info?.DisplayName}
+              </div>
+              <div className="Time">
+                <TimerIcon style={{ marginTop: '-5px' }} />
+                {' Posted ' + convertTStoDate(menu[1].DateEdited)}
+              </div>
             </div>
           </Container>
         </div>
@@ -509,6 +516,7 @@ const HomePage = () => {
             </div>
           </div>
         </div>
+        {console.log(info)}
       </div>
     </Jumbotron>
     // {/* <div>
