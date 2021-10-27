@@ -141,8 +141,8 @@ const EditPostMenu = () => {
                   <td>{object[1]?.SubjectID}</td>
                   <td>{object[1]?.Title}</td>
                   <td>
-                    {object[1]?.Description.length > 40
-                      ? object[1]?.Description.substring(0, 40) + '...'
+                    {object[1]?.Description.length > 20
+                      ? object[1]?.Description.substring(0, 20) + '...'
                       : object[1]?.Description}
                   </td>
                   <td>
