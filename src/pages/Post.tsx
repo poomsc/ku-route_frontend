@@ -221,6 +221,11 @@ const PostPage = () => {
                   {item.text?.Faculty}
                 </p>
                 <div className="mt-2"></div>
+                <p className="p-0 m-0 font-weight-light text-break">
+                  {' '}
+                  <small>{'"' + item.text?.About + '"'}</small>
+                </p>
+                <div className="mt-2"></div>
                 <div className="max-h-content p-0 m-0 d-flex">
                   <p className="p-0 m-0 font-weight-bolder d-inline-flex mr-2">
                     {item.text?.Privacy[2] && item.text?.Mail ? 'E-mail: ' : ''}

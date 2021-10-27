@@ -183,7 +183,7 @@ const HomePage = () => {
                   <tr className="TAG d-block w-content my-1 mx-2 mb-3">
                     {menu[1].TagID.map((tag, idx) => (
                       <div
-                        className="hover-darken-2 max-w-content d-inline-block rounded cursor-pointer px-2 py-1 ml-3 mb-2"
+                        className="max-w-content d-inline-block rounded px-2 py-1 ml-3 mb-2"
                         key={tag}
                         style={{
                           backgroundColor:
