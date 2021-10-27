@@ -139,10 +139,14 @@ const EditPostMenu = () => {
               {mypostData.map((object, idx) => (
                 <tr className="hover-darken bg-white">
                   <td>{object[1]?.SubjectID}</td>
-                  <td>{object[1]?.Title}</td>
                   <td>
-                    {object[1]?.Description.length > 40
-                      ? object[1]?.Description.substring(0, 40) + '...'
+                    {object[1]?.Title.length > 20
+                      ? object[1]?.Title.substring(0, 20) + '...'
+                      : object[1]?.Title}
+                  </td>
+                  <td>
+                    {object[1]?.Description.length > 20
+                      ? object[1]?.Description.substring(0, 20) + '...'
                       : object[1]?.Description}
                   </td>
                   <td>
@@ -161,7 +165,7 @@ const EditPostMenu = () => {
                     />
                     {/* {object?.NumFile[1]} */}
                   </td>
-                  <td>{convertTStoDate(object[1]?.DateEdited)}</td>
+                  <td>{convertTStoDate(object[1]?.DateCreate)}</td>
                   <td>
                     <div
                       onClick={() => handleOnViewPage(object[0])}

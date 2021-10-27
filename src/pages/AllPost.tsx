@@ -33,9 +33,7 @@ export function convertTStoDate(timestamp) {
 
   if (timeDiff < 60) {
     //second
-    const second = Math.floor(timeDiff)
-    if (second == 1) return second.toString() + ' second ago'
-    return second.toString() + ' seconds ago'
+    return 'just now'
   } else if (timeDiff < 3600) {
     //minute
     const minute = Math.floor(timeDiff / 60)

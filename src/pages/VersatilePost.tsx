@@ -146,7 +146,7 @@ const VersatilePost = observer(() => {
     console.log(topicSelected, filesUpload.status, applicationStore.user)
     if (
       !topicSelected ||
-      filesUpload.status !== 'done' ||
+      (filesUpload.allFiles.length > 0 && filesUpload.status !== 'done') ||
       !applicationStore.user
     )
       return
