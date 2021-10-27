@@ -17,7 +17,7 @@ import { constTags } from 'constants/index'
 import Subjects from 'constants/subjects.json'
 import { get_one_post, get_file, delete_file } from 'service/system'
 import { edit, editPost } from 'service/user'
-import { DocumentData } from '@firebase/firestore'
+import { DocumentData, serverTimestamp } from '@firebase/firestore'
 import { getDownloadURL, StorageReference } from '@firebase/storage'
 import pdf from './../assets/icons/PDF.png'
 import jpg from './../assets/icons/JPG.png'
@@ -189,6 +189,7 @@ const VersatilePost = observer(() => {
         SubjectENG: topicSelected.split('(')[1].replace(')', ''),
         Title: title,
         Description: description,
+        DateEdited: serverTimestamp(),
       },
       postInfo[0],
       filesUpload.allFiles,

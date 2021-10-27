@@ -122,16 +122,16 @@ const EditPostMenu = () => {
                   <th scope="col">รหัสวิชา</th>
                   <th scope="col">หัวเรื่อง</th>
                   <th scope="col">ข้อความ</th>
-                  <th scope="col">ไฟล์แนบ</th>
-                  <th scope="col">เวลา</th>
+                  <th scope="col">เวลาอัพโหลด</th>
+                  <th scope="col">แก้ไขล่าสุด</th>
                   <th>
-                    <img
+                    {/* <img
                       src={logo_sort}
                       width="10.5px"
                       height="7px"
                       onClick={() => handleOnClick()}
-                    />
-                    <> sort by date</>
+                    /> */}
+                    {/* <> sort by date</> */}
                   </th>
                 </tr>
               </thead>
@@ -139,33 +139,14 @@ const EditPostMenu = () => {
               {mypostData.map((object, idx) => (
                 <tr className="hover-darken bg-white">
                   <td>{object[1]?.SubjectID}</td>
-                  <td>
-                    {object[1]?.Title.length > 20
-                      ? object[1]?.Title.substring(0, 20) + '...'
-                      : object[1]?.Title}
+                  <td className="text-truncate" style={{ maxWidth: 150 }}>
+                    {object[1]?.Title}
                   </td>
-                  <td>
-                    {object[1]?.Description.length > 20
-                      ? object[1]?.Description.substring(0, 20) + '...'
-                      : object[1]?.Description}
-                  </td>
-                  <td>
-                    <img
-                      src={logo_pdf}
-                      style={{ padding: '2px' }}
-                      width="24px"
-                      height="24px"
-                    />
-                    {/* {object?.NumFile[0]} */}
-                    <img
-                      src={logo_image}
-                      style={{ padding: '2px' }}
-                      width="24px"
-                      height="24px"
-                    />
-                    {/* {object?.NumFile[1]} */}
+                  <td className="text-truncate" style={{ maxWidth: 150 }}>
+                    {object[1]?.Description}
                   </td>
                   <td>{convertTStoDate(object[1]?.DateCreate)}</td>
+                  <td>{convertTStoDate(object[1]?.DateEdited)}</td>
                   <td>
                     <div
                       onClick={() => handleOnViewPage(object[0])}
