@@ -53,7 +53,6 @@ const EditPostMenu = () => {
     )) as DocumentData
     setmypostData(mypost)
   }
-
   var InitialSorted = 0
   const [setSortStated, setClick] = useState(InitialSorted)
   const [mockDatas, setData] = useState(mypostData)
