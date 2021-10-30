@@ -37,7 +37,7 @@ import { create_comment, like, disable, edit, report } from 'service/user'
 import { getDocLike, getLikeOfPost } from 'service/system'
 import { awaitExpression } from '@babel/types'
 import { getDownloadURL, StorageReference } from '@firebase/storage'
-import { Document, Page, pdfjs } from 'react-pdf'
+import { Document, Page } from '@react-pdf/renderer'
 import {
   Button,
   Popover,
@@ -53,6 +53,13 @@ import { ApplicationVerifier } from '@firebase/auth'
 import { height } from '@mui/system'
 
 const PostPage = () => {
+  const [numPages, setNumPages] = useState(null)
+  const [pageNumber, setPageNumber] = useState(1)
+
+  function onDocumentLoadSuccess({ numPages }) {
+    setNumPages(numPages)
+  }
+
   const [postData, setPostData] = useState<DocumentData>()
   const [infoData, setInfoData] = useState<DocumentData>()
   const [commentData, setCommentData] = useState<DocumentData>()
