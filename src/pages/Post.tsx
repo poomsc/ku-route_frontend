@@ -262,6 +262,27 @@ const PostPage = () => {
                   {' '}
                   {item.text?.Faculty}
                 </p>
+
+                {item.text?.Branch ? (
+                  <div>
+                    <div className="max-h-content p-0 m-0 d-flex">
+                      <p className="p-0 m-0 font-weight-bolder d-inline-flex mr-2">
+                        {'สาขา: '}
+                      </p>
+                      <p className="p-0 m-0 font-weight-light text-break">
+                        {' '}
+                        {item.text?.Branch}
+                      </p>
+                    </div>
+
+                    <p className="p-0 m-0 font-weight-light text-break tiny-red-warn">
+                      ** สาขาที่ผู้ใช้พิมพ์อาจจะไม่ถูกต้อง/ตรงความเป็นจริง
+                      กรุณาตรวจสอบข้อมูลสาขาก่อนอ้างถึงผู้ใช้นี้
+                    </p>
+                  </div>
+                ) : (
+                  <></>
+                )}
                 <div className="mt-2"></div>
                 <p className="p-0 m-0 font-weight-light text-break">
                   {' '}

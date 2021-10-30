@@ -1,11 +1,5 @@
 import React, { SyntheticEvent, useState, useEffect } from 'react'
-import {
-  Alert,
-  Button,
-  Container,
-  FormControl,
-  InputGroup,
-} from 'react-bootstrap'
+import { Alert, Button, FormControl, InputGroup } from 'react-bootstrap'
 import defaultUserProfile from 'assets/icons/user-icon.png'
 import { Dropdown as SMTDropdown } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
@@ -16,10 +10,7 @@ import { edit } from 'service/user'
 import Slide from '@mui/material/Slide'
 import LockLabel from '@material-ui/icons/Lock'
 import applicationStore from 'stores/applicationStore'
-import { useHistory } from 'react-router'
-import PrivacyTipIcon from '@mui/icons-material/PrivacyTip'
 import { observer } from 'mobx-react'
-import { border } from '@mui/system'
 import facebook from 'assets/icons/facebook.png'
 import instagram from 'assets/icons/instagram.png'
 import mail from 'assets/icons/mail.png'
@@ -27,13 +18,12 @@ import phone from 'assets/icons/phone.png'
 import PhoneInput from 'react-phone-input-2'
 import Switch from 'react-switch'
 import 'react-phone-input-2/lib/style.css'
-import { Face, Facebook, Instagram } from '@material-ui/icons'
-import Logo from 'src/assets/icons/logo.png'
 
 const facultyList = [] as any
 let facultyLoader = 0
 let currentFaculty, newFacultySelected
 let sectionChangeStatus = [
+  false,
   false,
   false,
   false,
@@ -100,6 +90,7 @@ const EditProfilePage = observer(() => {
   const [userInfo, setUserInfo] = useState<DocumentData>()
   const [title, setTitle] = useState<string>()
   const [userFaculty, setUserFaculty] = useState<string>()
+  const [branch, setBranch] = useState<string>()
   const [about, setAbout] = useState<string>()
   const [mail, setMail] = useState<string>()
   const [phone, setPhone] = useState<string>()
@@ -133,6 +124,7 @@ const EditProfilePage = observer(() => {
       }
 
       setTitle(rawInfo?.DisplayName)
+      setBranch(rawInfo?.Branch)
       setFaculty(rawFaculty)
       setAbout(rawInfo?.About)
       setMail(rawInfo?.Mail)
@@ -147,7 +139,7 @@ const EditProfilePage = observer(() => {
 
   useEffect(() => {
     if (!firstRender) {
-      checkChangeData(userInfo?.Privacy, privacyToggle, 7)
+      checkChangeData(userInfo?.Privacy, privacyToggle, 8)
     }
   }, [privacyToggle])
 
@@ -206,21 +198,24 @@ const EditProfilePage = observer(() => {
       changedInfo['Faculty'] = newFaculty
     }
     if (sectionChangeStatus[2]) {
-      changedInfo['About'] = about
+      changedInfo['Branch'] = branch
     }
     if (sectionChangeStatus[3]) {
-      changedInfo['Mail'] = mail
+      changedInfo['About'] = about
     }
     if (sectionChangeStatus[4]) {
-      changedInfo['Phone'] = phone
+      changedInfo['Mail'] = mail
     }
     if (sectionChangeStatus[5]) {
-      changedInfo['Facebook'] = facebook
+      changedInfo['Phone'] = phone
     }
     if (sectionChangeStatus[6]) {
-      changedInfo['Instagram'] = instagram
+      changedInfo['Facebook'] = facebook
     }
     if (sectionChangeStatus[7]) {
+      changedInfo['Instagram'] = instagram
+    }
+    if (sectionChangeStatus[8]) {
       changedInfo['Privacy'] = privacyToggle
     }
     changedInfo['DateEdited'] = serverTimestamp()
@@ -234,7 +229,6 @@ const EditProfilePage = observer(() => {
   }
 
   const handleOnDisplayNameChange = (event: any) => {
-    console.log(firstRender)
     setTitle(event.target.value)
     checkChangeData(userInfo?.DisplayName, event.target.value, 0)
   }
@@ -245,9 +239,14 @@ const EditProfilePage = observer(() => {
     checkChangeData(userInfo?.Faculty, event.target.value, 1)
   }
 
+  const handleOnBranchChange = (event: any) => {
+    setBranch(event.target.value)
+    checkChangeData(userInfo?.Branch, event.target.value, 2)
+  }
+
   const handleOnAboutChange = (event: any) => {
     setAbout(event.target.value)
-    checkChangeData(userInfo?.About, event.target.value, 2)
+    checkChangeData(userInfo?.About, event.target.value, 3)
   }
 
   const handleOnContactChange = (event: any, slot: number) => {
@@ -270,7 +269,7 @@ const EditProfilePage = observer(() => {
         contactChecker = userInfo?.Instagram
         setInstagram(message)
     }
-    checkChangeData(contactChecker, message, slot + 3)
+    checkChangeData(contactChecker, message, slot + 4)
   }
 
   const checkChangeData = (attr, value, index: number) => {
@@ -278,15 +277,14 @@ const EditProfilePage = observer(() => {
     if (index != 1) {
       if (index == 0 && value == '') {
         sectionChangeStatus[index] = false
-      } else if (index == 7) {
+      } else if (index == 8) {
         for (let i = 0; i < 6; i++) {
-          console.log(i + ' ' + attr[i] + ' ' + value[i])
           if (attr[i] != value[i]) {
-            sectionChangeStatus[7] = true
+            sectionChangeStatus[8] = true
             break
           }
           if (i == 5) {
-            sectionChangeStatus[7] = false
+            sectionChangeStatus[8] = false
           }
         }
       } else if (attr && !(value === attr)) {
@@ -311,7 +309,8 @@ const EditProfilePage = observer(() => {
       !sectionChangeStatus[4] &&
       !sectionChangeStatus[5] &&
       !sectionChangeStatus[6] &&
-      !sectionChangeStatus[7]
+      !sectionChangeStatus[7] &&
+      !sectionChangeStatus[8]
     ) {
       setSaveButtonClickable(false)
     } else {
@@ -459,10 +458,10 @@ const EditProfilePage = observer(() => {
         <InputGroup className="rounded-10 bg-white shadow mb-4">
           <FormControl
             aria-label="title"
-            value={'To be Added ...'}
+            value={branch}
             className="rounded-10 border-0"
-            placeholder="ฉันมีชื่อเล่นว่า"
-            // onChange={handleOnDisplayNameChange}
+            placeholder="สาขา"
+            onChange={handleOnBranchChange}
             maxLength={50}
           />
           {/* <div

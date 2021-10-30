@@ -221,3 +221,8 @@
     border-radius: 0px 4px 4px 0px;
     border: none; */
 }
+
+.tiny-red-warn {
+  color: red;
+  font-size: 10px;
+}
