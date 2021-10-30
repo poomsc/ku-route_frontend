@@ -46,7 +46,7 @@ const NavBar = observer(() => {
     signOut()
   }
   return (
-    <Navbar sticky="top" bg="light" expand="lg">
+    <Navbar sticky="top" bg="light">
       <Container className="py-2 d-flex">
         <Navbar.Brand href="/">
           <img
