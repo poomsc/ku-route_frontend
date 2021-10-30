@@ -469,7 +469,15 @@ const VersatilePost = observer(() => {
           )}
           <div className="mx-2" />
           <Button
-            className="pl-1"
+            className={
+              'pl-1' +
+              ((filesUpload.allFiles.length > 0 && fileStatus() != '#007bff') ||
+              tagsSelected.length == 0 ||
+              !topicSelected ||
+              !title
+                ? ''
+                : ' animation-pulse-button')
+            }
             style={{ width: '7rem' }}
             onClick={isNewPost ? handleOnCreatePost : handleOnEditPost}
             disabled={

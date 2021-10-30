@@ -589,9 +589,13 @@ const PostPage = () => {
   }
 
   let postOwner = infoData?.DisplayName ? infoData?.DisplayName : ''
-  let datePosted = postData?.DateEdited
-    ? new Date(postData?.DateEdited?.seconds * 1000).toLocaleString()
+  let dateCreated = postData?.DateCreate
+    ? new Date(postData?.DateCreate?.seconds * 1000).toLocaleString()
     : '00/00/0000, 00:00:00 AM'
+  let dateEdited =
+    Math.abs(postData?.DateCreate.seconds - postData?.DateEdited.seconds) > 1
+      ? new Date(postData?.DateEdited?.seconds * 1000).toLocaleString()
+      : null
   let title = postData?.Title ? postData?.Title : ''
   let descript = postData?.Description ? postData?.Description : ''
   let labelCount = 0
@@ -715,7 +719,18 @@ const PostPage = () => {
                 </div>
               </div>
             </div>
-            <div className="style9 d-inline-block">{datePosted}</div>
+            <div className="d-flex-block">
+              <div className="style9 text-right">
+                {'Created: ' + dateCreated}
+              </div>
+              {dateEdited ? (
+                <div className="style9 text-right">
+                  {'Last Edited: ' + dateEdited}
+                </div>
+              ) : (
+                <></>
+              )}
+            </div>
           </div>
         </div>
 
@@ -890,6 +905,7 @@ const PostPage = () => {
                     >
                       <Button
                         className="rounded-circle m-0 p-2 hover-darken"
+                        style={{ width: '40px', height: '40px' }}
                         id={'Popover-' + labelCount}
                       >
                         <MoreLabel />
