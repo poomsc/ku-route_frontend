@@ -47,9 +47,10 @@ const EditPostMenu = () => {
     history.push(`post/${PostID}`)
   }
 
-  const handleOnEditPost = (PostID: string) => {
+  const handleOnEditPost = (e: React.MouseEvent, PostID: string) => {
     // localStorage.setItem('currentViewPost', PostID)
     history.push(`/edit-post/${PostID}`)
+    e.stopPropagation()
   }
 
   const handelOnDelete = async () => {
@@ -154,7 +155,7 @@ const EditPostMenu = () => {
                   <td>{convertTStoDate(object[1]?.DateEdited)}</td>
                   <td>
                     <div
-                      onClick={() => handleOnEditPost(object[0])}
+                      onClick={(e) => handleOnEditPost(e, object[0])}
                       className="fixbutton max-w-content d-inline-block cursor-pointer hover-darken-2"
                     >
                       <img src={logo_edit} width="10.5px" height="10px" />
