@@ -442,7 +442,7 @@ const VersatilePost = observer(() => {
 
       <div className="mx-auto my-5" style={{ maxWidth: '70rem' }}>
         <div className="d-flex justify-content-center">
-          {!isNewPost && (
+          {/* {!isNewPost && (
             <Button
               className="pl-1"
               variant="danger"
@@ -452,10 +452,18 @@ const VersatilePost = observer(() => {
               <DeleteIcon className="mr-1 ml-0" />
               DELETE
             </Button>
-          )}
+          )} */}
           <div className="mx-2" />
           <Button
-            className="pl-1"
+            className={
+              'pl-1' +
+              ((filesUpload.allFiles.length > 0 && fileStatus() != '#007bff') ||
+              tagsSelected.length == 0 ||
+              !topicSelected ||
+              !title
+                ? ''
+                : ' animation-pulse-button')
+            }
             style={{ width: '7rem' }}
             onClick={isNewPost ? handleOnCreatePost : handleOnEditPost}
             disabled={
