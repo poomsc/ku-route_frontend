@@ -900,7 +900,7 @@ const PostPage = () => {
                         {commentData[index][1]?.DateCreate !=
                           commentData[index][1]?.DateEdited && (
                           <div className="style24 d-block text-truncate">
-                            Edited
+                            {/* Edited */}
                           </div>
                         )}
                       </div>
