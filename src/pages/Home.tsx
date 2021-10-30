@@ -201,9 +201,9 @@ const HomePage = () => {
                 <div className="title text-truncate mx-3 px-2 mt-1 my-2">
                   {menu[1].Title}
                 </div>
-                <div className="row ml-2">
-                  <div className="texttitle col-8 ">{menu[1].SubjectENG}</div>
-                  <div className="texttitle col-4 ">{menu[1].SubjectID}</div>
+                <div className="row mx-3 px-2 d-flex justify-content-between">
+                  <div className="texttitle">{menu[1].SubjectENG}</div>
+                  <div className="texttitle">{menu[1].SubjectID}</div>
                 </div>
                 <div className="mx-3 px-2 mb-2">
                   <img className="line-black w-100" src={lineblack} />
@@ -372,7 +372,7 @@ const HomePage = () => {
           ค้นหาชื่อวิชา / รหัสวิชาที่อยากรู้
         </p>
         <div className="d-flex justify-content-center">
-          <Form className="w-75">
+          <Form className="w-75 ">
             <div className="form-group shadow d-flex w-100 rounded-lg">
               <SMTDropdown
                 id="home-search-block"

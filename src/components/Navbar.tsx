@@ -93,6 +93,10 @@ const NavBar = observer(() => {
                 >
                   CREATE POST
                 </Link>
+                <div
+                  className="mr-2 ml-3"
+                  style={{ backgroundColor: '#909090', width: '1px' }}
+                ></div>
                 <NavDropdown title={navDropdownTitle} id="basic-nav-dropdown">
                   <NavDropdown.Item
                     href="/edit-profile"
