@@ -344,7 +344,6 @@ const EditProfilePage = observer(() => {
             style={{
               borderRadius: '50%',
               border: '0.25rem solid #A0A0A0',
-              // width: '100', height: '100'
             }}
           />
         </div>

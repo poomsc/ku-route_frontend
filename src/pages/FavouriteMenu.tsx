@@ -70,15 +70,18 @@ const FavouriteMenu = () => {
     <div className="blue-bg hxladpasdsaipaspiapsdiaspdpiasdipasdpiasdpiasdipasdpid">
       <Container className="rounded-10 bg-primary-dark text-white font-weight-bold d-flex">
         <div className="Menutab">
-          <Link to="/edit-profile" style={{ color: 'white' }}>
+          <Link to="/edit-profile" style={{ color: 'white', fontSize: '23px' }}>
             Edit Profile
           </Link>{' '}
           <br />
-          <Link to="/my-post" style={{ color: 'white' }}>
+          <Link to="/my-post" style={{ color: 'white', fontSize: '23px' }}>
             My Posts
           </Link>{' '}
           <br />
-          <Link to="/favourite-post" style={{ color: 'white' }}>
+          <Link
+            to="/favourite-post"
+            style={{ color: 'white', fontSize: '23px' }}
+          >
             Favourite
           </Link>
           {/* <div className="Menu2">
