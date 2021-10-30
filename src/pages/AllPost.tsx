@@ -4,7 +4,7 @@ import '../allPost.css'
 import file_pic from '../assets/icons/file-pic.png'
 import write_pic from '../assets/icons/Comment.png'
 import post_pic from '../assets/icons/post-pic.png'
-import pdf from '../assets/icons/post-pic.png'
+// import pdf from '../assets/icons/post-pic.png'
 import profile from '../assets/icons/profile.png'
 import linewhite from '../assets/icons/line.png'
 import lineblack from '../assets/icons/lineback.png'
@@ -14,8 +14,8 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import filepdf1 from '../Data/pdf1'
 import TimerIcon from '@mui/icons-material/Timer'
 import PersonIcon from '@mui/icons-material/Person'
-import PDF from '../assets/icons/PDF.png'
-import JPG from './../assets/icons/JPG.png'
+import pdf from '../assets/icons/PDF.png'
+import jpg from './../assets/icons/JPG.png'
 import { useEffect, useState } from 'react'
 import { DocumentData, serverTimestamp } from '@firebase/firestore'
 import { DateSearch } from 'service/search'
@@ -27,6 +27,7 @@ import { height } from '@mui/system'
 import { get4File, get_info } from 'service/system'
 import { ISubject } from 'interface/subject.interface'
 import Subjects from 'constants/subjects.json'
+import other from './../assets/icons/others.png'
 
 export function convertTStoDate(timestamp) {
   if (!timestamp) return
@@ -50,6 +51,24 @@ export function convertTStoDate(timestamp) {
     const date = new Date(timestamp.seconds * 1000)
     return date.toLocaleString().split(',')[0]
   }
+}
+
+function renderIconFile(extFile: string, linkfile: string) {
+  if (extFile == 'pdf') return pdf
+  else if (
+    extFile == 'jpg' ||
+    extFile == 'jpeg' ||
+    extFile == 'jpe' ||
+    extFile == 'jif' ||
+    extFile == 'jfif' ||
+    extFile == 'png' ||
+    extFile == 'apng' ||
+    extFile == 'avif' ||
+    extFile == 'sgv' ||
+    extFile == 'webp'
+  )
+    return linkfile
+  else return other
 }
 
 const AllPostPage = () => {
@@ -177,8 +196,7 @@ const AllPostPage = () => {
                     {file.map((file, index) => {
                       if (index == 3) return
                       const fileSP = file[1].name.split('.')
-                      const extFile =
-                        fileSP[fileSP.length - 1] == 'pdf' ? PDF : JPG
+                      const extFile = fileSP[fileSP.length - 1]
                       return (
                         <a
                           className=""
@@ -188,7 +206,10 @@ const AllPostPage = () => {
                           rel="noopener noreferrer"
                           onClick={(e) => e.stopPropagation()}
                         >
-                          <img className="pdf d-inline-block" src={extFile} />
+                          <img
+                            className="pdf d-inline-block"
+                            src={renderIconFile(extFile, file[0])}
+                          />
                           <div
                             className="text-center text-truncate mr-1 textmore"
                             style={{ maxWidth: '55px' }}

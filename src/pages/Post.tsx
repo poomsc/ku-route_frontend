@@ -20,6 +20,7 @@ import sendArrow from './../assets/icons/sendArrow.png'
 import Comment from './../assets/icons/Comment.png'
 import Like from './../assets/icons/Like.png'
 import Unlike from './../assets/icons/Unlike.png'
+import other from './../assets/icons/others.png'
 import { collection, DocumentData, serverTimestamp } from '@firebase/firestore'
 import {
   createHistoryComment,
@@ -620,6 +621,24 @@ const PostPage = () => {
   }
 
   //const maxColor = colors.length
+  function renderIconFile(extFile: string, linkfile: string) {
+    if (extFile == 'pdf') return pdf
+    else if (
+      extFile == 'jpg' ||
+      extFile == 'jpeg' ||
+      extFile == 'jpe' ||
+      extFile == 'jif' ||
+      extFile == 'jfif' ||
+      extFile == 'png' ||
+      extFile == 'apng' ||
+      extFile == 'avif' ||
+      extFile == 'sgv' ||
+      extFile == 'webp'
+    )
+      return linkfile
+    else return other
+  }
+
   return (
     <div className="white-bg pt-5">
       <Container className="style1 box-shadow bg-secondary mx-auto my-5 px-5 p-5">
@@ -725,7 +744,7 @@ const PostPage = () => {
                     <div className="style14 d-flex flex-column pb-3">
                       <div className="d-block mx-auto">
                         <img
-                          src={extFile == 'pdf' ? pdf : jpg}
+                          src={renderIconFile(extFile, linkFiles[index])}
                           style={{ width: '125px', height: '125px' }}
                         />
                       </div>
