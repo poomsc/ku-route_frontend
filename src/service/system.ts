@@ -190,11 +190,11 @@ async function get_info_comment(comment: DocumentData) {
   }
 }
 
-async function get4File(PostID: string) {
+async function get6File(PostID: string) {
   try {
     const listRef = ref(storage, PostID + '/')
     // Find all the prefixes and items.
-    const result = await list(listRef, { maxResults: 4 })
+    const result = await list(listRef, { maxResults: 6 })
     const linkUrl = await Promise.all(
       result.items.map((file) => getDownloadURL(file))
     )
@@ -325,7 +325,7 @@ export {
   get_mylikepost,
   get_comment,
   get_info_comment,
-  get4File,
+  get6File,
   get_file,
   delete_post,
   delete_file,

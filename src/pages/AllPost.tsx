@@ -24,7 +24,7 @@ import applicationStore from 'stores/applicationStore'
 import React from 'react'
 import { useHistory, useLocation } from 'react-router'
 import { height } from '@mui/system'
-import { get4File, get_info } from 'service/system'
+import { get6File, get_info } from 'service/system'
 import { ISubject } from 'interface/subject.interface'
 import Subjects from 'constants/subjects.json'
 import other from './../assets/icons/others.png'
@@ -111,7 +111,7 @@ const AllPostPage = () => {
       (page as number) * 10
     )
     const fileUrl = await Promise.all(
-      subsetpage.map((Post) => get4File(Post[0]))
+      subsetpage.map((Post) => get6File(Post[0]))
     )
     const info = await Promise.all(
       subsetpage.map((Post) => get_info(Post[1]?.AccountID))
@@ -193,39 +193,52 @@ const AllPostPage = () => {
 
                 <div className="pdfrow mx-3 px-2 mb-2 pb-2">
                   <div className="d-flex align-content-start flex-wrap">
-                    {file.map((file, index) => {
-                      if (index == 3) return
-                      const fileSP = file[1].name.split('.')
-                      const extFile = fileSP[fileSP.length - 1]
-                      return (
-                        <a
-                          className=""
-                          key={file[1].name}
-                          href={file[0]}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <img
-                            className="pdf d-inline-block"
-                            src={renderIconFile(extFile, file[0])}
-                          />
-                          <div
-                            className="text-center text-truncate mr-1 textmore"
-                            style={{ maxWidth: '55px' }}
+                    {file.length ? (
+                      file.map((file, index) => {
+                        if (index == 5) return
+                        const fileSP = file[1].name.split('.')
+                        const extFile = fileSP[fileSP.length - 1]
+                        return (
+                          <a
+                            className=""
+                            key={file[1].name}
+                            href={file[0]}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
                           >
-                            {file[1].name}
-                          </div>
-                        </a>
-                      )
-                    })}
-                    {file && file.length > 3 && (
+                            <div className="d-flex justify-content-center">
+                              <img
+                                className="pdf d-inline-block"
+                                src={renderIconFile(extFile, file[0])}
+                              />
+                            </div>
+                            <div
+                              className="text-center text-truncate textmore"
+                              style={{ maxWidth: '55px' }}
+                            >
+                              {file[1].name}
+                            </div>
+                          </a>
+                        )
+                      })
+                    ) : (
+                      <p>{'< ไม่มีไฟล์แนบ >'}</p>
+                    )}
+                    {file && file.length > 5 && (
                       <a
                         className="pdfcount cursor-pointer d-inline-block"
                         //onClick={() => handleOnViewPage(PostID)}
                       >
-                        <img className="moreItem" src={moreitem} />
-                        <div className="textmore">ดูเพิ่มเติม</div>
+                        <div style={{ width: '55px', height: '55px' }}>
+                          <img className="moreItem" src={moreitem} />
+                        </div>
+                        <div
+                          className="text-center text-truncate"
+                          style={{ maxWidth: '55px' }}
+                        >
+                          ดูเพิ่มเติม
+                        </div>
                       </a>
                     )}
                   </div>
@@ -268,14 +281,14 @@ const AllPostPage = () => {
     if (!resultPost || resultPost.length == 0) return
     const a = '<'
     const b = '>'
-    const c = 'mr-2 hover-darken-2 mx-1 font-weight-bold'
+    const c = 'mr-2 mx-1 font-weight-bold'
     const s = { width: '40px', backgroundColor: '#FFFFFF' }
     const sc = { width: '40px', backgroundColor: '#b9fff3' }
     return (
       <div className="d-flex justify-content-center m-4">
         <div className="mr-3">
           <Button
-            className={c}
+            className={c + ((page as number) == 1 ? '' : ' hover-darken-2')}
             style={s}
             onClick={() => handleOnNextPage(1)}
             disabled={(page as number) == 1}
@@ -283,7 +296,7 @@ const AllPostPage = () => {
             {a + a}
           </Button>
           <Button
-            className={c}
+            className={c + ((page as number) == 1 ? '' : ' hover-darken-2')}
             style={s}
             onClick={() => handleOnNextPage((page as number) - 1)}
             disabled={(page as number) == 1}
@@ -294,7 +307,7 @@ const AllPostPage = () => {
 
         {(page as number) - 2 > 0 && (
           <Button
-            className={c}
+            className={c + ' hover-darken-2'}
             style={s}
             onClick={() => handleOnNextPage((page as number) - 2)}
           >
@@ -303,19 +316,19 @@ const AllPostPage = () => {
         )}
         {(page as number) - 1 > 0 && (
           <Button
-            className={c}
+            className={c + ' hover-darken-2'}
             style={s}
             onClick={() => handleOnNextPage((page as number) - 1)}
           >
             {(page as number) - 1}
           </Button>
         )}
-        <Button className={c} style={sc}>
+        <Button className={c + ' hover-darken-2'} style={sc}>
           {page as number}
         </Button>
         {allPost.length / 10 > (page as number) && (
           <Button
-            className={c}
+            className={c + ' hover-darken-2'}
             style={s}
             onClick={() => handleOnNextPage((page as number) + 1)}
           >
@@ -324,7 +337,7 @@ const AllPostPage = () => {
         )}
         {allPost.length / 10 > (page as number) + 1 && (
           <Button
-            className={c}
+            className={c + ' hover-darken-2'}
             style={s}
             onClick={() => handleOnNextPage((page as number) + 2)}
           >
@@ -332,13 +345,13 @@ const AllPostPage = () => {
           </Button>
         )}
         {allPost.length / 10 > (page as number) + 2 && (
-          <Button className={c} style={s}>
+          <Button className={c + ' hover-darken-2'} style={s}>
             ...
           </Button>
         )}
         {allPost.length / 10 > (page as number) + 2 && (
           <Button
-            className={c}
+            className={c + ' hover-darken-2'}
             style={s}
             onClick={() => handleOnNextPage(Math.ceil(allPost.length / 10))}
           >
@@ -348,7 +361,12 @@ const AllPostPage = () => {
 
         <div className="ml-3">
           <Button
-            className={c}
+            className={
+              c +
+              ((page as number) == Math.ceil(allPost.length / 10)
+                ? ''
+                : ' hover-darken-2')
+            }
             style={s}
             onClick={() => handleOnNextPage((page as number) + 1)}
             disabled={(page as number) == Math.ceil(allPost.length / 10)}
@@ -356,7 +374,12 @@ const AllPostPage = () => {
             {b}
           </Button>
           <Button
-            className={c}
+            className={
+              c +
+              ((page as number) == Math.ceil(allPost.length / 10)
+                ? ''
+                : ' hover-darken-2')
+            }
             style={s}
             onClick={() => handleOnNextPage(Math.ceil(allPost.length / 10))}
             disabled={(page as number) == Math.ceil(allPost.length / 10)}
@@ -390,7 +413,7 @@ const AllPostPage = () => {
         (page as number) * 10
       )
       const fileUrl = await Promise.all(
-        subsetpage.map((Post) => get4File(Post[0]))
+        subsetpage.map((Post) => get6File(Post[0]))
       )
       const info = await Promise.all(
         subsetpage.map((Post) => get_info(Post[1]?.AccountID))
