@@ -125,7 +125,10 @@ const FavouriteMenu = () => {
               {likepostData.map((object, idx) => {
                 if (!object) return
                 return (
-                  <tr>
+                  <tr
+                    className="hover-darken bg-white"
+                    onClick={() => handleOnViewPage(object[0])}
+                  >
                     <td>{object[1]?.SubjectID}</td>
                     <td className="text-truncate" style={{ maxWidth: 150 }}>
                       {object[1]?.Title}
@@ -136,12 +139,6 @@ const FavouriteMenu = () => {
                     <td>{convertTStoDate(object[1]?.DateCreate)}</td>
                     <td>{convertTStoDate(object[1]?.DateEdited)}</td>
                     <td>
-                      <div
-                        onClick={() => handleOnViewPage(object[0])}
-                        className="viewbutton max-w-content d-inline-block cursor-pointer"
-                      >
-                        VIEW
-                      </div>
                       <ModalFavouriteMenu
                         PostID={object[0]}
                         onClick={handleOnDelete}
