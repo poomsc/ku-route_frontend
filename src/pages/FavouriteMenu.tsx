@@ -8,7 +8,7 @@ import logo_image from '../assets/icons/Image.png'
 import logo_delete from '../assets/icons/Vector.png'
 import '../FavouriteMenu.css'
 import applicationStore from 'stores/applicationStore'
-import { get_mylikepost, get_one_post } from 'service/system'
+import { get_mylikepost, get_one_post, get_allpost } from 'service/system'
 import { DocumentData } from '@firebase/firestore'
 import { useHistory } from 'react-router'
 import { convertTStoDate } from './AllPost'
@@ -24,7 +24,6 @@ const FavouriteMenu = () => {
       const likepost = (await get_mylikepost(
         applicationStore.user.uid
       )) as DocumentData
-      // console.log(likepost)
 
       setlikepostData(likepost)
     }
@@ -33,8 +32,8 @@ const FavouriteMenu = () => {
 
   const history = useHistory()
   const handleOnViewPage = (PostID: string) => {
-    localStorage.setItem('currentViewPost', PostID)
-    history.push('/post')
+    //localStorage.setItem('currentViewPost', PostID)
+    history.push(`post/${PostID}`)
   }
 
   const handleOnDelete = async (PostID: string) => {
@@ -68,7 +67,7 @@ const FavouriteMenu = () => {
     }
   }
   return (
-    <div className="blue-bg">
+    <div className="blue-bg hxladpasdsaipaspiapsdiaspdpiasdipasdpiasdpiasdipasdpid">
       <Container className="rounded-10 bg-primary-dark text-white font-weight-bold d-flex">
         <div className="Menutab">
           <Link to="/edit-profile" style={{ color: 'white' }}>
@@ -82,7 +81,7 @@ const FavouriteMenu = () => {
           <Link to="/favourite-post" style={{ color: 'white' }}>
             Favourite
           </Link>
-          <div className="Menu2">
+          {/* <div className="Menu2">
             <Link to="/" style={{ color: 'white' }}>
               About us
             </Link>{' '}
@@ -98,9 +97,9 @@ const FavouriteMenu = () => {
             <Link to="/" style={{ color: 'white' }}>
               FAQs
             </Link>
-          </div>
+          </div> */}
         </div>
-        <Container className="white-bg d-flex">
+        <Container className="white-bg d-flex e0igjegewrer9-grewgerggwiwjf9-qweff">
           <div className="Info">
             <h1 style={{ color: 'black' }}>โพสที่ถูกใจ </h1>
             <div className="table">
@@ -109,60 +108,45 @@ const FavouriteMenu = () => {
                   <th scope="col">รหัสวิชา</th>
                   <th scope="col">หัวเรื่อง</th>
                   <th scope="col">ข้อความ</th>
-                  <th scope="col">ไฟล์แนบ</th>
-                  <th scope="col">เวลา</th>
+                  <th scope="col">เวลาอัพโหลด</th>
+                  <th scope="col">แก้ไขล่าสุด</th>
                   <th>
-                    <img
+                    {/* <img
                       src={logo_sort}
                       width="10.5px"
                       height="7px"
                       onClick={() => handleOnClick()}
                     />
-                    <> sort by date</>
+                    <> sort by date</> */}
                   </th>
                 </tr>
               </thead>
 
-              {likepostData.map((object, idx) => (
-                <tr>
-                  <td>{object[1]?.SubjectID}</td>
-                  <td>{object[1]?.Title}</td>
-                  <td>
-                    {object[1]?.Description.length > 40
-                      ? object[1]?.Description.substring(0, 40) + '...'
-                      : object[1]?.Description}
-                  </td>
-                  <td>
-                    <img
-                      src={logo_pdf}
-                      style={{ padding: '2px' }}
-                      width="24px"
-                      height="24px"
-                    />
-                    {/* {object.NumFile[0]} */}
-                    <img
-                      src={logo_image}
-                      style={{ padding: '2px' }}
-                      width="24px"
-                      height="24px"
-                    />
-                    {/* {object.NumFile[1]} */}
-                  </td>
-                  <td>{convertTStoDate(object[1]?.DateEdited)}</td>
-                  <td>
-                    <div
-                      onClick={() => handleOnViewPage(object[0])}
-                      className="viewbutton max-w-content d-inline-block cursor-pointer"
-                    >
-                      VIEW
-                    </div>
-                    <ModalFavouriteMenu
-                      PostID={object[0]}
-                      onClick={handleOnDelete}
-                    />
-                  </td>
-                </tr>
-              ))}
+              {likepostData.map((object, idx) => {
+                if (!object) return
+                return (
+                  <tr
+                    className="hover-darken bg-white"
+                    onClick={() => handleOnViewPage(object[0])}
+                  >
+                    <td>{object[1]?.SubjectID}</td>
+                    <td className="text-truncate" style={{ maxWidth: 150 }}>
+                      {object[1]?.Title}
+                    </td>
+                    <td className="text-truncate" style={{ maxWidth: 150 }}>
+                      {object[1]?.Description}
+                    </td>
+                    <td>{convertTStoDate(object[1]?.DateCreate)}</td>
+                    <td>{convertTStoDate(object[1]?.DateEdited)}</td>
+                    <td>
+                      <ModalFavouriteMenu
+                        PostID={object[0]}
+                        onClick={handleOnDelete}
+                      />
+                    </td>
+                  </tr>
+                )
+              })}
             </div>
           </div>
         </Container>

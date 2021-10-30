@@ -14,9 +14,10 @@ import {
   get_faculty,
   getDocLike,
   getLikeOfPost,
+  get_allpost,
 } from 'service/system'
 import { like } from 'service/user'
-import { BasicSearch } from 'service/search'
+import { DateSearch } from 'service/search'
 import { title } from 'process'
 import { edit } from 'service/user'
 import { serverTimestamp } from '@firebase/firestore'
@@ -39,7 +40,7 @@ const App = () => {
   //edit({Faculty:'คณะหมูกรอบ'}, 'QgeVAV0fQHgqv99ttcdB', 'Account')
   // getDocLike('Like:sf77wrdhiENidGmA1GwWPaEfEXp1_bGzcRjPiMQyoDPIA2q7n')?
   // console.log(getLikeOfPost('bGzcRjPiMQyoDPIA2q7n'))
-
+  // console.log(get_allpost())
   return <Routes />
 }
 

@@ -6,6 +6,7 @@
   background-repeat: no-repeat;
   background-size: cover;
 }
+
 .blue-bg {
   background-image: url('./assets/images/blue-bg.png');
   background-position: center;
@@ -15,6 +16,7 @@
   -moz-background-size: cover;
   -o-background-size: cover;
   min-height: 100vh;
+  /* overflow: hidden; */
 }
 
 .white-bg {
@@ -37,6 +39,7 @@
   align-items: center;
   text-align: center;
 }
+
 .header-block {
   padding-bottom: 20px;
 }
@@ -58,6 +61,7 @@
 p {
   font-size: smaller;
 }
+
 #caption {
   color: grey;
 }
@@ -81,6 +85,7 @@ p {
   background-size: cover;
   border-radius: 0 0 1rem 1rem;
 }
+
 hr {
   border: 0;
   clear: both;
@@ -94,26 +99,28 @@ hr {
   -moz-box-shadow: 0 6px 6px -6px #777;
   box-shadow: 0 6px 6px -6px #777;
 }
+
 /* Small devices (landscape phones, 576px and up) */
+
 @media (min-width: 576px) {
   .rightCard {
     border-radius: 0px 0px 1rem 1rem;
   }
-
   .lowerCard {
     border-radius: 0 0 1rem 1rem;
   }
-
   .header-block {
     padding-bottom: 4vh;
   }
 }
 
 /* Medium devices (tablets, 768px and up) The navbar toggle appears at this breakpoint */
+
 @media (min-width: 768px) {
 }
 
 /* Large devices (desktops, 992px and up) */
+
 @media (min-width: 992px) {
   .rightCard {
     border-radius: 0px 1rem 1rem 0px;
@@ -127,6 +134,7 @@ hr {
 }
 
 /* Extra large devices (large desktops, 1200px and up) */
+
 @media (min-width: 1200px) {
   .upperCard {
     border-radius: 0 1rem 0 0;
