@@ -113,6 +113,7 @@ const EditProfilePage = observer(() => {
     false,
     false,
   ])
+  const [photoURL, setphotoURL] = useState<string | null>()
 
   const [successAlertHidden, setSuccessAlertHidden] = useState(true)
   const [failAlertHidden, setFailAlertHidden] = useState(true)
@@ -141,6 +142,7 @@ const EditProfilePage = observer(() => {
       setInstagram(rawInfo?.Instagram)
       setPrivacyToggle(rawInfo?.Privacy)
       setFirstRender(false)
+      setphotoURL(rawInfo?.PhotoURL)
     }
     fetch()
   }, [])
@@ -336,12 +338,13 @@ const EditProfilePage = observer(() => {
         </h2>
         <div className="edit-profile-picture-section">
           <img
-            src={defaultUserProfile}
+            src={photoURL ? photoURL : defaultUserProfile}
             className="img-fluid mx-auto my-5 d-block"
             alt="Responsive image"
             style={{
               borderRadius: '50%',
               border: '0.25rem solid #A0A0A0',
+              // width: '100', height: '100'
             }}
           />
         </div>
