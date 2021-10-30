@@ -209,7 +209,20 @@ const PostPage = () => {
     tag: string
   ) => {
     statusFilter[tag] = true
-    localStorage.setItem('tagSearch', JSON.stringify(statusFilter))
+    if (tag == 'none') {
+      localStorage.setItem(
+        'tagSearch',
+        JSON.stringify({
+          รีวิวรายวิชา: false,
+          สรุป: false,
+          Lecture: false,
+          แบบฝึกหัด: false,
+          อื่นๆ: false,
+        })
+      )
+    } else {
+      localStorage.setItem('tagSearch', JSON.stringify(statusFilter))
+    }
     history.push(`/all-post/${ID}+${TH}+${ENG}/page=1`)
   }
 
@@ -678,6 +691,9 @@ const PostPage = () => {
             <div
               className="style5 d-inline-block py-2 m-0 text-right cursor-pointer"
               style={{ maxWidth: '35%' }}
+              onClick={() =>
+                handleOnViewPage(SubjectID, SubjectTH, SubjectENG, 'none')
+              }
             >
               {SubjectID} | {SubjectENG}
             </div>
@@ -897,12 +913,12 @@ const PostPage = () => {
                         <div className="style24 d-block text-truncate">
                           {convertTStoDate(commentData[index][1]?.DateCreate)}
                         </div>
-                        {commentData[index][1]?.DateCreate !=
+                        {/* {commentData[index][1]?.DateCreate !=
                           commentData[index][1]?.DateEdited && (
                           <div className="style24 d-block text-truncate">
                             {/* Edited */}
                           </div>
-                        )}
+                        )} */}
                       </div>
                     </div>
 
