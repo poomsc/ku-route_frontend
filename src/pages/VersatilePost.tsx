@@ -23,6 +23,8 @@ import pdf from './../assets/icons/PDF.png'
 import jpg from './../assets/icons/JPG.png'
 import CloseLabel from '@material-ui/icons/Close'
 import other from './../assets/icons/others.png'
+import logo_short from '../assets/icons/logo-short.png'
+import { Modal, Button as ButtonB, Header, Icon } from 'semantic-ui-react'
 
 function renderIconFile(extFile: string, linkfile: string) {
   if (extFile == 'pdf') return pdf
@@ -41,8 +43,6 @@ function renderIconFile(extFile: string, linkfile: string) {
     return linkfile
   else return other
 }
-import logo_short from '../assets/icons/logo-short.png'
-import { Modal, Button as ButtonB, Header, Icon } from 'semantic-ui-react'
 
 const pathType = { '/create-post': true, '/edit-post': false }
 
