@@ -1,17 +1,17 @@
 import { observer } from 'mobx-react'
-import { useState } from 'react'
-import { Button, Modal } from 'semantic-ui-react'
+import { useEffect, useState, ReactElement } from 'react'
+import { Button, Modal, Dropdown } from 'semantic-ui-react'
 import applicationStore from 'stores/applicationStore'
 import { disable } from 'service/user'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import logo_delete from '../assets/icons/Vector.png'
 
-interface Props {
+interface postProps {
   onClick: (PostID: string) => void
   PostID: string
 }
 
-const ModalFavouriteMenu = observer(({ PostID, onClick }: Props) => {
+const ModalFavouriteMenu = observer(({ PostID, onClick }: postProps) => {
   const [open, setOpen] = useState<boolean>(false)
 
   const handleOnDelete = async () => {
@@ -35,14 +35,14 @@ const ModalFavouriteMenu = observer(({ PostID, onClick }: Props) => {
         </div>
       }
       open={open}
-      size="mini"
-      dimmer="blurring"
+      size="tiny"
+      dimmer="inverted"
       className="h-auto"
     >
       <Modal.Header>Unlike Post</Modal.Header>
       <Modal.Content>
         <Modal.Description>
-          <p>คุณต้องการยกเลิกถูกใจโพสต์นี้ ?</p>
+          <p style={{ fontSize: '16px' }}>คุณต้องการยกเลิกถูกใจโพสต์นี้ ?</p>
         </Modal.Description>
       </Modal.Content>
       <Modal.Actions>
@@ -57,7 +57,7 @@ const ModalFavouriteMenu = observer(({ PostID, onClick }: Props) => {
   )
 })
 
-const ModalEditPostMenu = observer(({ PostID, onClick }: Props) => {
+const ModalEditPostMenu = observer(({ PostID, onClick }: postProps) => {
   const [open, setOpen] = useState<boolean>(false)
 
   const handleOnDelete = async () => {
@@ -77,14 +77,14 @@ const ModalEditPostMenu = observer(({ PostID, onClick }: Props) => {
         </div>
       }
       open={open}
-      size="mini"
-      dimmer="blurring"
+      size="tiny"
+      dimmer="inverted"
       className="h-auto"
     >
       <Modal.Header>Delete Post</Modal.Header>
       <Modal.Content>
         <Modal.Description>
-          <p>คุณต้องการลบโพสต์นี้ ?</p>
+          <p style={{ fontSize: '16px' }}>คุณต้องการลบโพสต์นี้ ?</p>
         </Modal.Description>
       </Modal.Content>
       <Modal.Actions>

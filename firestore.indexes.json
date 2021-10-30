@@ -1,0 +1,139 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "Comment",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "PostID",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "Status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "DateCreate",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "Like",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "AccountID",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "Status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "DateCreate",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "Post",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "AccountID",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "Status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "DateCreate",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "Post",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "Status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "DateCreate",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "Post",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "TagID",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "Status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "SubjectID",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "DateCreate",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "Post",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "TagID",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "Status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "SubjectID",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "DateCreate",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "Post",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "TagID",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "Status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "SubjectID",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "DateEdited",
+          "order": "ASCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

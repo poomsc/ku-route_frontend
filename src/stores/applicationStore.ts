@@ -11,6 +11,7 @@ class applicationStore {
   openModalText: boolean = false
   likePostData: DocumentData | null = null
   DeletePost: string = ''
+  ModalDeleteComment: boolean = false
 
   constructor() {
     makeAutoObservable(this)
@@ -40,6 +41,10 @@ class applicationStore {
 
   setDeletePost(PostID: string) {
     this.DeletePost = PostID as string
+  }
+
+  setModalDeleteComment(Status: boolean) {
+    this.ModalDeleteComment = Status as boolean
   }
 }
 

@@ -9,7 +9,6 @@ import {
 } from 'firebase/firestore'
 import { IFileWithMeta } from 'react-dropzone-uploader'
 import { upload_file } from './file'
-
 interface registerProps {
   UID: string
   Name: string
@@ -21,6 +20,8 @@ interface postProps {
   AccountID: string
   TagID: string[]
   SubjectID: string
+  SubjectTH: string
+  SubjectENG: string
   Title: string
   Description: string
 }
@@ -29,6 +30,12 @@ interface commentProps {
   AccountID: string
   PostID: string
   Description: string
+}
+
+interface reportProps {
+  AccountID: string
+  Description: string
+  Status: string[]
 }
 
 async function register({ UID, Name, Surname, Email }: registerProps) {
@@ -43,6 +50,11 @@ async function register({ UID, Name, Surname, Email }: registerProps) {
     DateEdited: serverTimestamp(),
     DateLastlogin: serverTimestamp(),
     Status: true,
+    Phone: '',
+    Instagram: '',
+    Facebook: '',
+    Mail: '',
+    Privacy: [true, true, true, true, true, true],
   }
   try {
     console.log('Account is being added...')
@@ -56,7 +68,15 @@ async function register({ UID, Name, Surname, Email }: registerProps) {
 }
 
 async function create_post(
-  { AccountID, TagID, SubjectID, Title, Description }: postProps,
+  {
+    AccountID,
+    TagID,
+    SubjectID,
+    SubjectTH,
+    SubjectENG,
+    Title,
+    Description,
+  }: postProps,
   allFiles: IFileWithMeta[],
   callBack?: () => void
 ) {
@@ -66,6 +86,8 @@ async function create_post(
     AccountID,
     TagID,
     SubjectID,
+    SubjectTH,
+    SubjectENG,
     Title,
     Description,
     DateCreate: serverTimestamp(),
@@ -97,6 +119,7 @@ async function create_comment({
     DateCreate: serverTimestamp(),
     DateEdited: serverTimestamp(),
     Status: true,
+    IsReport: false,
   }
   try {
     console.log('Comment is being added...')
@@ -141,6 +164,25 @@ async function edit(props: any, ID, col) {
   }
 }
 
+async function editPost(
+  props: any,
+  ID,
+  allFiles: IFileWithMeta[],
+  callBack?: () => void
+) {
+  //edit_post, edit_comment, edit_info
+  try {
+    const docRef = await updateDoc(doc(firestore, 'Post', ID), {
+      ...props,
+    })
+    await Promise.all(allFiles.map((file) => upload_file(file.file, ID))) //new file upload
+    callBack && callBack()
+    return 'Successful'
+  } catch (error) {
+    // alert(error)
+  }
+}
+
 async function disable(props: any, ID, col) {
   //unlike, disable_post, disable_comment
   try {
@@ -154,4 +196,34 @@ async function disable(props: any, ID, col) {
   }
 }
 
-export { register, create_post, create_comment, like, edit, disable }
+async function report(
+  { AccountID, Description, Status }: reportProps,
+  CommentID
+) {
+  try {
+    const data = {
+      AccountID,
+      Description,
+      DateCreate: serverTimestamp(),
+      Status,
+    }
+    const docRef = await setDoc(
+      doc(firestore, 'Comment', CommentID, 'Report', 'Report_' + AccountID),
+      data
+    )
+    return true
+  } catch (error) {
+    // alert(error)
+  }
+}
+
+export {
+  register,
+  create_post,
+  create_comment,
+  like,
+  edit,
+  editPost,
+  disable,
+  report,
+}
