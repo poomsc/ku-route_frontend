@@ -917,34 +917,32 @@ const PostPage = () => {
                           commentData[index][1]?.DateEdited && (
                           <div className="style24 d-block text-truncate">
                             {/* Edited */}
-                          </div>
-                        )} */}
                       </div>
                     </div>
+                  </div>
 
-                    <div
-                      className="p-0 m-0 max-w-content"
-                      style={{ width: '5%' }}
+                  <div
+                    className="p-0 m-0 max-w-content"
+                    style={{ width: '5%' }}
+                  >
+                    <Button
+                      className="rounded-circle m-0 p-2 hover-darken"
+                      style={{ width: '40px', height: '40px' }}
+                      id={'Popover-' + labelCount}
                     >
-                      <Button
-                        className="rounded-circle m-0 p-2 hover-darken"
-                        style={{ width: '40px', height: '40px' }}
-                        id={'Popover-' + labelCount}
-                      >
-                        <MoreLabel />
-                      </Button>
-                      <MoreItem
-                        key={labelCount}
-                        item={{
-                          placement: 'top',
-                          user: infoComment,
-                          data: commentData[index],
-                          className:
-                            'style25 d-inline-flex text-truncate font-weight-bold my-0 cursor-pointer p-0',
-                        }}
-                        id={genLoadLabel()}
-                      />
-                    </div>
+                      <MoreLabel />
+                    </Button>
+                    <MoreItem
+                      key={labelCount}
+                      item={{
+                        placement: 'top',
+                        user: infoComment,
+                        data: commentData[index],
+                        className:
+                          'style25 d-inline-flex text-truncate font-weight-bold my-0 cursor-pointer p-0',
+                      }}
+                      id={genLoadLabel()}
+                    />
                   </div>
                 </div>
               ))
