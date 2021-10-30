@@ -22,7 +22,11 @@ import { edit } from 'service/user'
 onAuthStateChanged(firebaseAuth, (user) => {
   if (user) {
     applicationStore.setUser(user)
-    edit({ DateLastlogin: serverTimestamp() }, user.uid, 'Account')
+    edit(
+      { DateLastlogin: serverTimestamp(), PhotoURL: user.photoURL },
+      user.uid,
+      'Account'
+    )
   }
   render(<App />, document.getElementById('root'))
 })

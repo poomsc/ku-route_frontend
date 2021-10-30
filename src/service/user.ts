@@ -1,3 +1,4 @@
+import { User } from '@firebase/auth'
 import { firestore } from 'config/firebase'
 import {
   collection,
@@ -14,6 +15,7 @@ interface registerProps {
   Name: string
   Surname: string
   Email: string
+  PhotoURL: string | null
 }
 
 interface postProps {
@@ -38,7 +40,13 @@ interface reportProps {
   Status: string[]
 }
 
-async function register({ UID, Name, Surname, Email }: registerProps) {
+async function register({
+  UID,
+  Name,
+  Surname,
+  Email,
+  PhotoURL,
+}: registerProps) {
   const data = {
     Name,
     Surname,
@@ -55,6 +63,7 @@ async function register({ UID, Name, Surname, Email }: registerProps) {
     Facebook: '',
     Mail: '',
     Privacy: [true, true, true, true, true, true],
+    PhotoURL,
   }
   try {
     console.log('Account is being added...')

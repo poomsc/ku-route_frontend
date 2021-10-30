@@ -64,7 +64,6 @@ const PostPage = () => {
   const [editCommentBlock, setEditCommentBlock] = useState(-1)
   const [newCommentEdited, setNewCommentEdited] = useState('')
   const [saveCommentEnable, setSaveCommentEnable] = useState(false)
-  const [trigger, setTrigger] = useState('legacy')
 
   const history = useHistory()
   const { pathname } = useLocation()
