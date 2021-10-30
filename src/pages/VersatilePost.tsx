@@ -22,6 +22,8 @@ import { getDownloadURL, StorageReference } from '@firebase/storage'
 import pdf from './../assets/icons/PDF.png'
 import jpg from './../assets/icons/JPG.png'
 import CloseLabel from '@material-ui/icons/Close'
+import logo_short from '../assets/icons/logo-short.png'
+import { Modal, Button as ButtonB, Header, Icon } from 'semantic-ui-react'
 
 const pathType = { '/create-post': true, '/edit-post': false }
 
@@ -35,6 +37,7 @@ const VersatilePost = observer(() => {
   const [allFiles, setAllFiles] = useState<StorageReference[]>()
   const [linkFiles, setLinkFiles] = useState<string[]>()
   const [deletedFile, setDeletedFile] = useState<string[]>([])
+  const [Posting, setPosting] = useState(false)
 
   const { pathname } = useLocation()
   const isNewPost = pathType[pathname]
@@ -151,6 +154,7 @@ const VersatilePost = observer(() => {
     )
       return
     // create_post
+    setPosting(true)
     await create_post(
       {
         AccountID: applicationStore.user.uid,
@@ -164,6 +168,7 @@ const VersatilePost = observer(() => {
       filesUpload.allFiles,
       goToMyPost
     )
+    setPosting(false)
   }
 
   const handleOnDeletePost = () => {
@@ -463,6 +468,28 @@ const VersatilePost = observer(() => {
             <FileUploadIcon className="mr-1 ml-1" />
             PUBLISH
           </Button>
+          <Modal
+            // onClose={}
+            // onOpen={() => setPosting(true)}
+            basic
+            open={Posting}
+            size="small"
+            className="h-auto"
+            dimmer="inverted"
+          >
+            <Header icon>
+              <Icon className="d-flex justify-content-center">
+                <div className="box " style={{ width: '40px', height: '40px' }}>
+                  <img src={logo_short} className="plane"></img>
+                </div>
+                <div style={{ marginTop: '5%', marginLeft: '15%' }}>
+                  Posting...
+                </div>
+              </Icon>
+            </Header>
+
+            <Modal.Content></Modal.Content>
+          </Modal>
         </div>
       </div>
     </div>

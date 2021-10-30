@@ -188,3 +188,30 @@ input[type="checkbox"]:checked+span {
 input[type="checkbox"]+span {
     margin-right: 4px;
 } */
+
+.box {
+  /* perspective: 120px; */
+}
+
+.plane {
+  /* width: 2em;
+  height: 2em; */
+  /* background-color: #2eaf7d; */
+  /* background-image:  url(assets/icons/logo-short.png) no-repeat fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover; */
+  /* background: url(assets/icons/logo-short.png) no-repeat fixed; */
+  transform: rotate(0);
+  animation: flip 3s infinite;
+}
+
+@keyframes flip {
+  50% {
+    transform: rotateY(180deg);
+  }
+  100% {
+    transform: rotateY(360deg);
+  }
+}
