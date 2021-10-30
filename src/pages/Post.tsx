@@ -20,6 +20,7 @@ import sendArrow from './../assets/icons/sendArrow.png'
 import Comment from './../assets/icons/Comment.png'
 import Like from './../assets/icons/Like.png'
 import Unlike from './../assets/icons/Unlike.png'
+import other from './../assets/icons/others.png'
 import { collection, DocumentData, serverTimestamp } from '@firebase/firestore'
 import {
   createHistoryComment,
@@ -49,6 +50,7 @@ import { modalClasses } from '@mui/material'
 import { Modal, Button as ButtonB } from 'semantic-ui-react'
 import { right } from '@popperjs/core'
 import { ApplicationVerifier } from '@firebase/auth'
+import { height } from '@mui/system'
 
 const PostPage = () => {
   const [numPages, setNumPages] = useState(null)
@@ -71,7 +73,6 @@ const PostPage = () => {
   const [editCommentBlock, setEditCommentBlock] = useState(-1)
   const [newCommentEdited, setNewCommentEdited] = useState('')
   const [saveCommentEnable, setSaveCommentEnable] = useState(false)
-  const [trigger, setTrigger] = useState('legacy')
 
   const history = useHistory()
   const { pathname } = useLocation()
@@ -255,27 +256,76 @@ const PostPage = () => {
             <p className="style25 p-0 m-0">{item.text?.DisplayName}</p>
           </PopoverHeader>
           <PopoverBody>
-            <div className="d-inline-flex">
-              <img className="style23 mr-3" src={userIcon} />
-              <div className="style25 d-flex-block">
-                {item && (
-                  <p className="p-0 m-0 font-weight-light">
-                    {item.text?.Privacy[0]
-                      ? item.text?.Name + ' ' + item.text?.Surname
-                      : ' '}
+            {/* <img className="style23 mr-3" src={item.text?.PhotoURL ? item.text?.Privacy[1] ? item.text?.PhotoURL : userIcon : userIcon} /> */}
+            <div className="d-block">
+              <div className="d-inline-flex max-h-content">
+                <img
+                  className="style23 mr-3"
+                  style={{ width: '80px', height: '80px' }}
+                  src={
+                    item.text?.PhotoURL
+                      ? item.text?.Privacy[1]
+                        ? item.text?.PhotoURL
+                        : userIcon
+                      : userIcon
+                  }
+                />
+                <div className="style25 d-flex-block">
+                  {item && (
+                    <p className="p-0 m-0 mb-1 font-weight-light">
+                      {item.text?.Privacy[0]
+                        ? item.text?.Name + ' ' + item.text?.Surname
+                        : ' '}
+                    </p>
+                  )}
+                  <p className="p-0 m-0 font-weight-light text-break">
+                    {' '}
+                    {item.text?.Faculty}
                   </p>
-                )}
-                <p className="p-0 m-0 font-weight-light text-break">
-                  {' '}
-                  {item.text?.Faculty}
-                </p>
+
+                  {item.text?.Branch ? (
+                    <div>
+                      <div className="max-h-content p-0 m-0 d-flex">
+                        <p className="p-0 m-0 font-weight-bolder d-inline-flex mr-2">
+                          {'สาขา: '}
+                        </p>
+                        <p className="p-0 m-0 font-weight-light text-break">
+                          {' '}
+                          {item.text?.Branch}
+                        </p>
+                      </div>
+
+                      <p className="p-0 m-0 font-weight-light text-break tiny-red-warn">
+                        ** สาขาที่ผู้ใช้พิมพ์อาจจะไม่ถูกต้อง/ตรงความเป็นจริง
+                        กรุณาตรวจสอบข้อมูลสาขาก่อนอ้างถึงผู้ใช้นี้
+                      </p>
+                    </div>
+                  ) : (
+                    <></>
+                  )}
+                </div>
+              </div>
+
+              <div
+                className="mt-3"
+                style={{
+                  height: '1px',
+                  backgroundColor: '#A0A0A0',
+                  width: '100%',
+                }}
+              ></div>
+              <div className="mt-4 px-1">
                 <div className="mt-2"></div>
                 <p className="p-0 m-0 font-weight-light text-break">
                   {' '}
-                  <small>{'"' + item.text?.About + '"'}</small>
+                  {item.text?.About && item.text?.About != '' ? (
+                    <small>{'"' + item.text?.About + '"'}</small>
+                  ) : (
+                    <></>
+                  )}
                 </p>
                 <div className="mt-2"></div>
-                <div className="max-h-content p-0 m-0 d-flex">
+                <div className="style25 max-h-content p-0 m-0 d-flex">
                   <p className="p-0 m-0 font-weight-bolder d-inline-flex mr-2">
                     {item.text?.Privacy[2] && item.text?.Mail ? 'E-mail: ' : ''}
                   </p>
@@ -283,7 +333,7 @@ const PostPage = () => {
                     {item.text?.Privacy[2] ? item.text?.Mail : ''}
                   </p>
                 </div>
-                <div className="max-h-content p-0 m-0 d-flex">
+                <div className="style25 max-h-content p-0 m-0 d-flex">
                   <p className="p-0 m-0 font-weight-bolder d-inline-flex mr-2">
                     {item.text?.Privacy[3] && item.text?.Phone ? 'Phone: ' : ''}
                   </p>
@@ -291,7 +341,7 @@ const PostPage = () => {
                     {item.text?.Privacy[3] ? item.text?.Phone : ''}
                   </p>
                 </div>
-                <div className="max-h-content p-0 m-0 d-flex">
+                <div className="style25 max-h-content p-0 m-0 d-flex">
                   <p className="p-0 m-0 font-weight-bolder d-inline-flex mr-2">
                     {item.text?.Privacy[4] && item.text?.Facebook
                       ? 'Facebook: '
@@ -301,7 +351,7 @@ const PostPage = () => {
                     {item.text?.Privacy[4] ? item.text?.Facebook : ''}
                   </p>
                 </div>
-                <div className="max-h-content p-0 m-0 d-flex">
+                <div className="style25 max-h-content p-0 m-0 d-flex">
                   <p className="p-0 m-0 font-weight-bolder d-inline-flex mr-2">
                     {item.text?.Privacy[5] && item.text?.Instagram
                       ? 'Instagram: '
@@ -578,6 +628,24 @@ const PostPage = () => {
   }
 
   //const maxColor = colors.length
+  function renderIconFile(extFile: string, linkfile: string) {
+    if (extFile == 'pdf') return pdf
+    else if (
+      extFile == 'jpg' ||
+      extFile == 'jpeg' ||
+      extFile == 'jpe' ||
+      extFile == 'jif' ||
+      extFile == 'jfif' ||
+      extFile == 'png' ||
+      extFile == 'apng' ||
+      extFile == 'avif' ||
+      extFile == 'sgv' ||
+      extFile == 'webp'
+    )
+      return linkfile
+    else return other
+  }
+
   return (
     <div className="white-bg pt-5">
       <Container className="style1 box-shadow bg-secondary mx-auto my-5 px-5 p-5">
@@ -625,7 +693,16 @@ const PostPage = () => {
                   โพสต์โดย
                 </p>
                 <div className="cursor-pointer d-flex">
-                  <img className="style8 d-inline-block mx-2" src={user_icon} />{' '}
+                  <img
+                    className="style8 d-inline-block mx-2"
+                    src={
+                      infoData?.PhotoURL
+                        ? infoData?.Privacy[1]
+                          ? infoData?.PhotoURL
+                          : userIcon
+                        : userIcon
+                    }
+                  />{' '}
                   <p
                     className="textPostStyle h4 font-weight-bold d-inline-vlock mt-1"
                     id={'Popover-' + labelCount}
@@ -674,7 +751,7 @@ const PostPage = () => {
                     <div className="style14 d-flex flex-column pb-3">
                       <div className="d-block mx-auto">
                         <img
-                          src={extFile == 'pdf' ? pdf : jpg}
+                          src={renderIconFile(extFile, linkFiles[index])}
                           style={{ width: '125px', height: '125px' }}
                         />
                       </div>
@@ -764,7 +841,16 @@ const PostPage = () => {
                         className=" d-inline-block"
                         style={{ verticalAlign: 'top' }}
                       >
-                        <img className="style23 mr-3" src={userIcon} />
+                        <img
+                          className="style23 mr-3"
+                          src={
+                            infoComment?.PhotoURL
+                              ? infoComment?.Privacy[1]
+                                ? infoComment?.PhotoURL
+                                : userIcon
+                              : userIcon
+                          }
+                        />
                       </div>
                       <div className="d-inline-block" style={{ width: '70%' }}>
                         <p className="h6 d-inline-block mr-1 my-0">by</p>

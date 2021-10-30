@@ -100,7 +100,13 @@ async function signInWithGoogle() {
     if (olduser && user.emailVerified) {
       edit({ DateLastlogin: serverTimestamp() }, user.uid, 'Account')
     } else {
-      register({ UID: user.uid, Name: Name[0], Surname: Name[1], Email: email })
+      register({
+        UID: user.uid,
+        Name: Name[0],
+        Surname: Name[1],
+        Email: email,
+        PhotoURL: user.photoURL,
+      })
     }
 
     applicationStore.setUser(user)

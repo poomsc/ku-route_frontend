@@ -13,6 +13,7 @@ import { firestore } from 'config/firebase'
 
 const NavBar = observer(() => {
   // const [infoData, setInfoData] = useState<DocumentData>()
+  const [photoURL, setphotoURL] = useState<string | null>()
 
   useEffect(() => {
     async function fetch() {
@@ -20,6 +21,7 @@ const NavBar = observer(() => {
       const info = (await get_info(applicationStore.user.uid)) as DocumentData
       // setInfoData(info)
       applicationStore.setUserDisplayName(info?.DisplayName)
+      setphotoURL(info?.PhotoURL)
     }
     fetch()
   }, [applicationStore.user?.uid, applicationStore.userDisplayName])
@@ -33,11 +35,14 @@ const NavBar = observer(() => {
   const navDropdownTitle = (
     <div style={{ color: '#02353C' }}>
       <img
-        src={user_icon}
+        src={photoURL ? photoURL : user_icon}
         className="mr-1"
         width="auto"
-        height="20px"
+        height="32px"
         alt="userIcon"
+        style={{
+          borderRadius: '50%',
+        }}
       />
       {userName}
     </div>
@@ -46,7 +51,7 @@ const NavBar = observer(() => {
     signOut()
   }
   return (
-    <Navbar sticky="top" bg="light" expand="lg">
+    <Navbar sticky="top" bg="light">
       <Container className="py-2 d-flex">
         <Navbar.Brand href="/">
           <img

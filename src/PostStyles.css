@@ -180,7 +180,7 @@
   background: #e4e6e7;
   width: 40px;
   height: 40px;
-  border-radius: 50px;
+  border-radius: 50%;
 }
 
 .style24 {
@@ -220,4 +220,13 @@
   /* background: #FFFFFF;
     border-radius: 0px 4px 4px 0px;
     border: none; */
+}
+
+.tiny-red-warn {
+  color: red;
+  font-size: 10px;
+}
+
+.shadow-ex {
+  box-shadow: 0px 0px 10px 10px #909090;
 }
