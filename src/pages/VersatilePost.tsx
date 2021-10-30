@@ -22,6 +22,25 @@ import { getDownloadURL, StorageReference } from '@firebase/storage'
 import pdf from './../assets/icons/PDF.png'
 import jpg from './../assets/icons/JPG.png'
 import CloseLabel from '@material-ui/icons/Close'
+import other from './../assets/icons/others.png'
+
+function renderIconFile(extFile: string, linkfile: string) {
+  if (extFile == 'pdf') return pdf
+  else if (
+    extFile == 'jpg' ||
+    extFile == 'jpeg' ||
+    extFile == 'jpe' ||
+    extFile == 'jif' ||
+    extFile == 'jfif' ||
+    extFile == 'png' ||
+    extFile == 'apng' ||
+    extFile == 'avif' ||
+    extFile == 'sgv' ||
+    extFile == 'webp'
+  )
+    return linkfile
+  else return other
+}
 
 const pathType = { '/create-post': true, '/edit-post': false }
 
@@ -383,7 +402,7 @@ const VersatilePost = observer(() => {
                     <div className="style14 d-flex flex-column pb-3">
                       <div className="d-block mx-auto">
                         <img
-                          src={extFile == 'pdf' ? pdf : jpg}
+                          src={renderIconFile(extFile, linkFiles[index])}
                           style={{ width: '125px', height: '125px' }}
                         />
                       </div>
