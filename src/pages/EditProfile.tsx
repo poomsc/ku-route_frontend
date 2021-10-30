@@ -338,12 +338,13 @@ const EditProfilePage = observer(() => {
         <div className="edit-profile-picture-section">
           <img
             src={photoURL ? photoURL : defaultUserProfile}
-            className="img-fluid mx-auto my-5 d-block"
+            className="img-fluid mx-auto my-5 d-block shadow"
             alt="Responsive image"
             style={{
               borderRadius: '50%',
               border: '0.25rem solid #A0A0A0',
-              // width: '100', height: '100'
+              width: '20%',
+              height: '20%',
             }}
           />
         </div>

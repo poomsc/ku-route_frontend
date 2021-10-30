@@ -49,6 +49,7 @@ import { modalClasses } from '@mui/material'
 import { Modal, Button as ButtonB } from 'semantic-ui-react'
 import { right } from '@popperjs/core'
 import { ApplicationVerifier } from '@firebase/auth'
+import { height } from '@mui/system'
 
 const PostPage = () => {
   const [postData, setPostData] = useState<DocumentData>()
@@ -247,48 +248,76 @@ const PostPage = () => {
             <p className="style25 p-0 m-0">{item.text?.DisplayName}</p>
           </PopoverHeader>
           <PopoverBody>
-            <div className="d-inline-flex">
-              <img className="style23 mr-3" src={userIcon} />
-              <div className="style25 d-flex-block">
-                {item && (
-                  <p className="p-0 m-0 font-weight-light">
-                    {item.text?.Privacy[0]
-                      ? item.text?.Name + ' ' + item.text?.Surname
-                      : ' '}
+            {/* <img className="style23 mr-3" src={item.text?.PhotoURL ? item.text?.Privacy[1] ? item.text?.PhotoURL : userIcon : userIcon} /> */}
+            <div className="d-block">
+              <div className="d-inline-flex max-h-content">
+                <img
+                  className="style23 mr-3"
+                  style={{ width: '80px', height: '80px' }}
+                  src={
+                    item.text?.PhotoURL
+                      ? item.text?.Privacy[1]
+                        ? item.text?.PhotoURL
+                        : userIcon
+                      : userIcon
+                  }
+                />
+                <div className="style25 d-flex-block">
+                  {item && (
+                    <p className="p-0 m-0 mb-1 font-weight-light">
+                      {item.text?.Privacy[0]
+                        ? item.text?.Name + ' ' + item.text?.Surname
+                        : ' '}
+                    </p>
+                  )}
+                  <p className="p-0 m-0 font-weight-light text-break">
+                    {' '}
+                    {item.text?.Faculty}
                   </p>
-                )}
-                <p className="p-0 m-0 font-weight-light text-break">
-                  {' '}
-                  {item.text?.Faculty}
-                </p>
 
-                {item.text?.Branch ? (
-                  <div>
-                    <div className="max-h-content p-0 m-0 d-flex">
-                      <p className="p-0 m-0 font-weight-bolder d-inline-flex mr-2">
-                        {'สาขา: '}
-                      </p>
-                      <p className="p-0 m-0 font-weight-light text-break">
-                        {' '}
-                        {item.text?.Branch}
+                  {item.text?.Branch ? (
+                    <div>
+                      <div className="max-h-content p-0 m-0 d-flex">
+                        <p className="p-0 m-0 font-weight-bolder d-inline-flex mr-2">
+                          {'สาขา: '}
+                        </p>
+                        <p className="p-0 m-0 font-weight-light text-break">
+                          {' '}
+                          {item.text?.Branch}
+                        </p>
+                      </div>
+
+                      <p className="p-0 m-0 font-weight-light text-break tiny-red-warn">
+                        ** สาขาที่ผู้ใช้พิมพ์อาจจะไม่ถูกต้อง/ตรงความเป็นจริง
+                        กรุณาตรวจสอบข้อมูลสาขาก่อนอ้างถึงผู้ใช้นี้
                       </p>
                     </div>
+                  ) : (
+                    <></>
+                  )}
+                </div>
+              </div>
 
-                    <p className="p-0 m-0 font-weight-light text-break tiny-red-warn">
-                      ** สาขาที่ผู้ใช้พิมพ์อาจจะไม่ถูกต้อง/ตรงความเป็นจริง
-                      กรุณาตรวจสอบข้อมูลสาขาก่อนอ้างถึงผู้ใช้นี้
-                    </p>
-                  </div>
-                ) : (
-                  <></>
-                )}
+              <div
+                className="mt-3"
+                style={{
+                  height: '1px',
+                  backgroundColor: '#A0A0A0',
+                  width: '100%',
+                }}
+              ></div>
+              <div className="mt-4 px-1">
                 <div className="mt-2"></div>
                 <p className="p-0 m-0 font-weight-light text-break">
                   {' '}
-                  <small>{'"' + item.text?.About + '"'}</small>
+                  {item.text?.About && item.text?.About != '' ? (
+                    <small>{'"' + item.text?.About + '"'}</small>
+                  ) : (
+                    <></>
+                  )}
                 </p>
                 <div className="mt-2"></div>
-                <div className="max-h-content p-0 m-0 d-flex">
+                <div className="style25 max-h-content p-0 m-0 d-flex">
                   <p className="p-0 m-0 font-weight-bolder d-inline-flex mr-2">
                     {item.text?.Privacy[2] && item.text?.Mail ? 'E-mail: ' : ''}
                   </p>
@@ -296,7 +325,7 @@ const PostPage = () => {
                     {item.text?.Privacy[2] ? item.text?.Mail : ''}
                   </p>
                 </div>
-                <div className="max-h-content p-0 m-0 d-flex">
+                <div className="style25 max-h-content p-0 m-0 d-flex">
                   <p className="p-0 m-0 font-weight-bolder d-inline-flex mr-2">
                     {item.text?.Privacy[3] && item.text?.Phone ? 'Phone: ' : ''}
                   </p>
@@ -304,7 +333,7 @@ const PostPage = () => {
                     {item.text?.Privacy[3] ? item.text?.Phone : ''}
                   </p>
                 </div>
-                <div className="max-h-content p-0 m-0 d-flex">
+                <div className="style25 max-h-content p-0 m-0 d-flex">
                   <p className="p-0 m-0 font-weight-bolder d-inline-flex mr-2">
                     {item.text?.Privacy[4] && item.text?.Facebook
                       ? 'Facebook: '
@@ -314,7 +343,7 @@ const PostPage = () => {
                     {item.text?.Privacy[4] ? item.text?.Facebook : ''}
                   </p>
                 </div>
-                <div className="max-h-content p-0 m-0 d-flex">
+                <div className="style25 max-h-content p-0 m-0 d-flex">
                   <p className="p-0 m-0 font-weight-bolder d-inline-flex mr-2">
                     {item.text?.Privacy[5] && item.text?.Instagram
                       ? 'Instagram: '
@@ -638,7 +667,16 @@ const PostPage = () => {
                   โพสต์โดย
                 </p>
                 <div className="cursor-pointer d-flex">
-                  <img className="style8 d-inline-block mx-2" src={user_icon} />{' '}
+                  <img
+                    className="style8 d-inline-block mx-2"
+                    src={
+                      infoData?.PhotoURL
+                        ? infoData?.Privacy[1]
+                          ? infoData?.PhotoURL
+                          : userIcon
+                        : userIcon
+                    }
+                  />{' '}
                   <p
                     className="textPostStyle h4 font-weight-bold d-inline-vlock mt-1"
                     id={'Popover-' + labelCount}
@@ -777,7 +815,16 @@ const PostPage = () => {
                         className=" d-inline-block"
                         style={{ verticalAlign: 'top' }}
                       >
-                        <img className="style23 mr-3" src={userIcon} />
+                        <img
+                          className="style23 mr-3"
+                          src={
+                            infoComment?.PhotoURL
+                              ? infoComment?.Privacy[1]
+                                ? infoComment?.PhotoURL
+                                : userIcon
+                              : userIcon
+                          }
+                        />
                       </div>
                       <div className="d-inline-block" style={{ width: '70%' }}>
                         <p className="h6 d-inline-block mr-1 my-0">by</p>
