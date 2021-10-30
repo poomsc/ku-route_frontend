@@ -31,7 +31,7 @@ const ModalFavouriteMenu = observer(({ PostID, onClick }: postProps) => {
       onOpen={() => setOpen(true)}
       trigger={
         <div className="removebutton max-w-content d-inline-block cursor-pointer">
-          REMOVE
+          <img src={logo_delete} width="10.5px" height="10px" />
         </div>
       }
       open={open}
@@ -73,7 +73,7 @@ const ModalEditPostMenu = observer(({ PostID, onClick }: postProps) => {
       onOpen={() => setOpen(true)}
       trigger={
         <div className="removebutton max-w-content d-inline-block cursor-pointer hover-darken">
-          REMOVE
+          <img src={logo_delete} width="10.5px" height="10.5px" />
         </div>
       }
       open={open}

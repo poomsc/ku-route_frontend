@@ -10,6 +10,7 @@ import logo_sort from '../assets/icons/dropdownArrow.png'
 import logo_image from '../assets/icons/Image.png'
 import logo_delete from '../assets/icons/Vector.png'
 import logo_fix from '../assets/icons/fix.png'
+import logo_edit from '../assets/icons/write-pic.png'
 import { DocumentData } from '@firebase/firestore'
 import applicationStore from 'stores/applicationStore'
 import { get_my_post, get_one_post } from 'service/system'
@@ -134,9 +135,11 @@ const EditPostMenu = () => {
                   </th>
                 </tr>
               </thead>
-
               {mypostData.map((object, idx) => (
-                <tr className="hover-darken bg-white">
+                <tr
+                  className="hover-darken bg-white"
+                  onClick={() => handleOnViewPage(object[0])}
+                >
                   <td>{object[1]?.SubjectID}</td>
                   <td className="text-truncate" style={{ maxWidth: 150 }}>
                     {object[1]?.Title}
@@ -148,16 +151,10 @@ const EditPostMenu = () => {
                   <td>{convertTStoDate(object[1]?.DateEdited)}</td>
                   <td>
                     <div
-                      onClick={() => handleOnViewPage(object[0])}
-                      className="viewbutton max-w-content d-inline-block cursor-pointer"
-                    >
-                      VIEW
-                    </div>
-                    <div
                       onClick={() => handleOnEditPost(object[0])}
                       className="fixbutton max-w-content d-inline-block cursor-pointer hover-darken-2"
                     >
-                      EDIT
+                      <img src={logo_edit} width="10.5px" height="10px" />
                     </div>
                     <ModalEditPostMenu
                       PostID={object[0]}
