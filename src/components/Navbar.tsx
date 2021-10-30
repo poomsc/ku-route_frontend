@@ -38,7 +38,7 @@ const NavBar = observer(() => {
         src={photoURL ? photoURL : user_icon}
         className="mr-1"
         width="auto"
-        height="40px"
+        height="32px"
         alt="userIcon"
         style={{
           borderRadius: '50%',
