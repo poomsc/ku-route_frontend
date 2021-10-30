@@ -53,7 +53,7 @@ const EditPostMenu = () => {
     e.stopPropagation()
   }
 
-  const handelOnDelete = async () => {
+  const handleOnDelete = async () => {
     if (!applicationStore.user) return
     const mypost = (await get_my_post(
       applicationStore.user.uid
@@ -162,7 +162,7 @@ const EditPostMenu = () => {
                     </div>
                     <ModalEditPostMenu
                       PostID={object[0]}
-                      onClick={handelOnDelete}
+                      onClick={handleOnDelete}
                     />
                   </td>
                 </tr>

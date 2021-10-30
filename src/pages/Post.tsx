@@ -37,7 +37,7 @@ import { create_comment, like, disable, edit, report } from 'service/user'
 import { getDocLike, getLikeOfPost } from 'service/system'
 import { awaitExpression } from '@babel/types'
 import { getDownloadURL, StorageReference } from '@firebase/storage'
-import { Document, Page, pdfjs } from 'react-pdf'
+import { Document, Page } from '@react-pdf/renderer'
 import {
   Button,
   Popover,
@@ -53,6 +53,13 @@ import { ApplicationVerifier } from '@firebase/auth'
 import { height } from '@mui/system'
 
 const PostPage = () => {
+  const [numPages, setNumPages] = useState(null)
+  const [pageNumber, setPageNumber] = useState(1)
+
+  function onDocumentLoadSuccess({ numPages }) {
+    setNumPages(numPages)
+  }
+
   const [postData, setPostData] = useState<DocumentData>()
   const [infoData, setInfoData] = useState<DocumentData>()
   const [commentData, setCommentData] = useState<DocumentData>()
@@ -202,7 +209,20 @@ const PostPage = () => {
     tag: string
   ) => {
     statusFilter[tag] = true
-    localStorage.setItem('tagSearch', JSON.stringify(statusFilter))
+    if (tag == 'none') {
+      localStorage.setItem(
+        'tagSearch',
+        JSON.stringify({
+          รีวิวรายวิชา: false,
+          สรุป: false,
+          Lecture: false,
+          แบบฝึกหัด: false,
+          อื่นๆ: false,
+        })
+      )
+    } else {
+      localStorage.setItem('tagSearch', JSON.stringify(statusFilter))
+    }
     history.push(`/all-post/${ID}+${TH}+${ENG}/page=1`)
   }
 
@@ -671,6 +691,9 @@ const PostPage = () => {
             <div
               className="style5 d-inline-block py-2 m-0 text-right cursor-pointer"
               style={{ maxWidth: '35%' }}
+              onClick={() =>
+                handleOnViewPage(SubjectID, SubjectTH, SubjectENG, 'none')
+              }
             >
               {SubjectID} | {SubjectENG}
             </div>
@@ -890,38 +913,36 @@ const PostPage = () => {
                         <div className="style24 d-block text-truncate">
                           {convertTStoDate(commentData[index][1]?.DateCreate)}
                         </div>
-                        {commentData[index][1]?.DateCreate !=
+                        {/* {commentData[index][1]?.DateCreate !=
                           commentData[index][1]?.DateEdited && (
                           <div className="style24 d-block text-truncate">
-                            Edited
-                          </div>
-                        )}
+                            {/* Edited */}
                       </div>
                     </div>
+                  </div>
 
-                    <div
-                      className="p-0 m-0 max-w-content"
-                      style={{ width: '5%' }}
+                  <div
+                    className="p-0 m-0 max-w-content"
+                    style={{ width: '5%' }}
+                  >
+                    <Button
+                      className="rounded-circle m-0 p-2 hover-darken"
+                      style={{ width: '40px', height: '40px' }}
+                      id={'Popover-' + labelCount}
                     >
-                      <Button
-                        className="rounded-circle m-0 p-2 hover-darken"
-                        style={{ width: '40px', height: '40px' }}
-                        id={'Popover-' + labelCount}
-                      >
-                        <MoreLabel />
-                      </Button>
-                      <MoreItem
-                        key={labelCount}
-                        item={{
-                          placement: 'top',
-                          user: infoComment,
-                          data: commentData[index],
-                          className:
-                            'style25 d-inline-flex text-truncate font-weight-bold my-0 cursor-pointer p-0',
-                        }}
-                        id={genLoadLabel()}
-                      />
-                    </div>
+                      <MoreLabel />
+                    </Button>
+                    <MoreItem
+                      key={labelCount}
+                      item={{
+                        placement: 'top',
+                        user: infoComment,
+                        data: commentData[index],
+                        className:
+                          'style25 d-inline-flex text-truncate font-weight-bold my-0 cursor-pointer p-0',
+                      }}
+                      id={genLoadLabel()}
+                    />
                   </div>
                 </div>
               ))

@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react'
-import { useEffect, useState, ReactElement } from 'react'
+import React, { useEffect, useState, ReactElement } from 'react'
 import { Button, Modal, Dropdown } from 'semantic-ui-react'
 import applicationStore from 'stores/applicationStore'
 import { disable } from 'service/user'
@@ -14,8 +14,9 @@ interface postProps {
 const ModalFavouriteMenu = observer(({ PostID, onClick }: postProps) => {
   const [open, setOpen] = useState<boolean>(false)
 
-  const handleOnDelete = async () => {
+  const handleOnDelete = async (e: React.MouseEvent) => {
     if (!applicationStore.user) return
+    e.stopPropagation()
     await disable(
       {},
       'Like:' + applicationStore.user.uid + '_' + PostID,
@@ -25,10 +26,20 @@ const ModalFavouriteMenu = observer(({ PostID, onClick }: postProps) => {
     onClick(PostID)
   }
 
+  const ModalOpen = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setOpen(true)
+  }
+
+  const ModalClose = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setOpen(false)
+  }
+
   return (
     <Modal
-      onClose={() => setOpen(false)}
-      onOpen={() => setOpen(true)}
+      onClose={(e) => ModalClose(e)}
+      onOpen={(e) => ModalOpen(e)}
       trigger={
         <div className="removebutton max-w-content d-inline-block cursor-pointer">
           <img src={logo_delete} width="10.5px" height="10px" />
@@ -46,10 +57,10 @@ const ModalFavouriteMenu = observer(({ PostID, onClick }: postProps) => {
         </Modal.Description>
       </Modal.Content>
       <Modal.Actions>
-        <Button color="black" onClick={() => setOpen(false)}>
+        <Button color="black" onClick={(e) => ModalClose(e)}>
           ยกเลิก
         </Button>
-        <Button onClick={() => handleOnDelete()} negative>
+        <Button onClick={(e) => handleOnDelete(e)} negative>
           ตกลง
         </Button>
       </Modal.Actions>
@@ -60,17 +71,28 @@ const ModalFavouriteMenu = observer(({ PostID, onClick }: postProps) => {
 const ModalEditPostMenu = observer(({ PostID, onClick }: postProps) => {
   const [open, setOpen] = useState<boolean>(false)
 
-  const handleOnDelete = async () => {
+  const handleOnDelete = async (e: React.MouseEvent) => {
     if (!applicationStore.user) return
+    e.stopPropagation()
     await disable({}, PostID, 'Post')
     setOpen(false)
     onClick(PostID)
   }
 
+  const ModalOpen = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setOpen(true)
+  }
+
+  const ModalClose = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setOpen(false)
+  }
+
   return (
     <Modal
-      onClose={() => setOpen(false)}
-      onOpen={() => setOpen(true)}
+      onClose={(e) => ModalClose(e)}
+      onOpen={(e) => ModalOpen(e)}
       trigger={
         <div className="removebutton max-w-content d-inline-block cursor-pointer hover-darken">
           <img src={logo_delete} width="10.5px" height="10.5px" />
@@ -88,10 +110,10 @@ const ModalEditPostMenu = observer(({ PostID, onClick }: postProps) => {
         </Modal.Description>
       </Modal.Content>
       <Modal.Actions>
-        <Button color="black" onClick={() => setOpen(false)}>
+        <Button color="black" onClick={(e) => ModalClose(e)}>
           ยกเลิก
         </Button>
-        <Button onClick={() => handleOnDelete()} negative>
+        <Button onClick={(e) => handleOnDelete(e)} negative>
           ตกลง
         </Button>
       </Modal.Actions>
