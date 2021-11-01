@@ -120,7 +120,7 @@ const HomePage = () => {
   )
 
   const goToAllPost = (ID: string, TH: string, ENG: string) => {
-    history.push(`/all-post/${ID}+${TH}+${ENG}/page=1`)
+    history.push(`/all-post/${ID}/page=1`)
   }
 
   const changeStatus = (TagID: string) => {

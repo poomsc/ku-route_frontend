@@ -29,6 +29,12 @@ import { ISubject } from 'interface/subject.interface'
 import Subjects from 'constants/subjects.json'
 import other from './../assets/icons/others.png'
 
+interface dropdownType {
+  ID: string
+  TH: string
+  ENG: string
+}
+
 export function convertTStoDate(timestamp) {
   if (!timestamp) return
   const timeCurrent = new Date().getTime() / 1000
@@ -85,21 +91,19 @@ const AllPostPage = () => {
   const tagSearch = tagJSON ? JSON.parse(tagJSON) : null
   const { pathname } = useLocation()
   const path = pathname.split('/')
+  const [subject, setSubject] = useState<string[] | null>(['ID', 'TH', 'ENG'])
 
   const page = isNormalInteger(path[path.length - 1].replace('page=', ''))
     ? parseInt(path[path.length - 1].replace('page=', ''))
     : null
 
-  if (!currentSearch || !tagSearch || !page) {
+  if (!subject || !tagSearch || !page) {
     history.push('/')
   }
 
-  const SubjectIDandTH = currentSearch
-    ? currentSearch.split(' ')
-    : [' ', 'ชื่อวิชา่']
-  const SubjectENG = currentSearch
-    ? currentSearch.split('(')[1].replace(')', '')
-    : 'SubjectName'
+  const SubjectID = subject ? subject[0] : 'ID'
+  const SubjectTH = subject ? subject[1] : 'ชื่อวิชา่'
+  const SubjectENG = subject ? subject[2] : 'SubjectName'
 
   const handleOnViewPage = (PostID: string) => {
     history.push(`/post/${PostID}`)
@@ -122,11 +126,7 @@ const AllPostPage = () => {
     history.listen(() => {
       window.scrollTo(0, 0)
     })
-    history.push(
-      `/all-post/${SubjectIDandTH[0]}+${
-        SubjectIDandTH[1]
-      }+${SubjectENG}/page=${page.toString()}`
-    )
+    history.push(`/all-post/${SubjectID}/page=${page.toString()}`)
   }
 
   function renderPost(menu, index, col, file, info) {
@@ -173,7 +173,7 @@ const AllPostPage = () => {
                 </div>
                 <div className="row mx-3 px-2 d-flex justify-content-between">
                   <div className="texttitle">{SubjectENG}</div>
-                  <div className="texttitle">{SubjectIDandTH[0]}</div>
+                  <div className="texttitle">{SubjectID}</div>
                 </div>
                 <div className="mx-3 px-2 mb-2">
                   <img className="line-black w-100" src={lineblack} />
@@ -398,13 +398,27 @@ const AllPostPage = () => {
 
   useEffect(() => {
     async function fetch() {
-      if (!currentSearch || !tagSearch) return
+      const _subjects = (Subjects as ISubject[]).map((s, i) => {
+        return {
+          ID: s.subjectCode,
+          TH: s.subjectNameTh,
+          ENG: s.subjectNameEn,
+          key: i,
+        }
+      })
+      const includingSubject = _subjects.find((s) => s.ID === path[2])
+      setSubject(
+        includingSubject
+          ? [includingSubject.ID, includingSubject.TH, includingSubject.ENG]
+          : null
+      )
+      if (!includingSubject || !tagSearch) return
       const tagResult = [] as Array<string>
       for (const TagID in tagSearch) {
         if (tagSearch[TagID]) tagResult.push(TagID)
       }
       const posts = (await DateSearch(
-        SubjectIDandTH[0],
+        includingSubject.ID,
         tagResult,
         'desc'
       )) as DocumentData
@@ -453,7 +467,7 @@ const AllPostPage = () => {
               style={{ width: '65%', maxWidth: '700px' }}
             >
               <div className="SubjectENG max-w-content">{SubjectENG}</div>
-              <div className="SubjectTH max-w-content">{SubjectIDandTH[1]}</div>
+              <div className="SubjectTH max-w-content">{SubjectTH}</div>
             </div>
             <div
               className="Subjectnum d-inline-block"
@@ -477,9 +491,7 @@ const AllPostPage = () => {
                   <div className="textnum d-block font-weight-bold pt-1">
                     รหัสวิชา
                   </div>
-                  <div className="textcode d-block py-3">
-                    {SubjectIDandTH[0]}
-                  </div>
+                  <div className="textcode d-block py-3">{SubjectID}</div>
                 </div>
               </div>
             </div>

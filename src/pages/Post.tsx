@@ -223,7 +223,6 @@ const PostPage = () => {
       localStorage.setItem('tagSearch', JSON.stringify(statusFilter))
     }
     history.push(`/all-post/${ID}/page=1`)
-    // history.push(`/all-post/${ID}+${TH}+${ENG}/page=1`)
   }
 
   const checkChangeData = (attr, event) => {
