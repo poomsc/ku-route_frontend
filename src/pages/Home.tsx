@@ -23,7 +23,7 @@ import linewhite from '../assets/icons/line.png'
 import profile from '../assets/icons/profile.png'
 import { get_allpost } from 'service/system'
 import { DocumentData } from '@firebase/firestore'
-import { get4File, get_info } from 'service/system'
+import { get6File, get_info } from 'service/system'
 import '../allPost.css'
 import { getDownloadURL } from '@firebase/storage'
 import pdf from '../assets/icons/PDF.png'
@@ -165,7 +165,7 @@ const HomePage = () => {
     async function fetch() {
       const allpost = (await get_allpost()) as DocumentData
       const fileUrl = await Promise.all(
-        allpost.map((Post) => get4File(Post[0]))
+        allpost.map((Post) => get6File(Post[0]))
       )
       const infoo = await Promise.all(
         allpost.map((Post) => get_info(Post[1]?.AccountID))
@@ -243,40 +243,53 @@ const HomePage = () => {
 
                 <div className="pdfrow mx-3 px-2 mb-2 pb-2">
                   <div className="d-flex align-content-start flex-wrap">
-                    {file &&
+                    {file && file.length ? (
                       file.map((file, index) => {
-                        if (index == 3) return
+                        if (index == 5) return
                         const fileSP = file[1].name.split('.')
                         const extFile = fileSP[fileSP.length - 1]
                         return (
                           <a
-                            className=""
+                            className="mr-1"
                             key={file[1].name}
                             href={file[0]}
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
                           >
-                            <img
-                              className="pdf d-inline-block"
-                              src={renderIconFile(extFile, file[0])}
-                            />
+                            <div className="d-flex justify-content-center">
+                              <img
+                                className="pdf"
+                                src={renderIconFile(extFile, file[0])}
+                              />
+                            </div>
                             <div
-                              className="text-center text-truncate mr-1 textmore"
+                              className="text-center text-truncate textmore"
                               style={{ maxWidth: '55px' }}
                             >
                               {file[1].name}
                             </div>
                           </a>
                         )
-                      })}
-                    {file && file.length > 3 && (
+                      })
+                    ) : (
+                      <p>{'< ไม่มีไฟล์แนบ >'}</p>
+                    )}
+                    {file && file.length > 5 && (
                       <a
                         className="pdfcount cursor-pointer d-inline-block"
                         //onClick={() => handleOnViewPage(PostID)}
                       >
-                        <img className="moreItem" src={moreitem} />
-                        <div className="textmore">ดูเพิ่มเติม</div>
+                        <div style={{ width: '55px', height: '55px' }}>
+                          <img className="moreItem" src={moreitem} />
+                        </div>
+
+                        <div
+                          className="text-center text-truncate"
+                          style={{ maxWidth: '55px' }}
+                        >
+                          ดูเพิ่มเติม
+                        </div>
                       </a>
                     )}
                   </div>

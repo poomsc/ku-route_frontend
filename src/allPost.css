@@ -234,13 +234,12 @@
   position: relative;
   top: 4px;
   left: 5px;
-  width: 45px;
-  height: 53px;
+  max-width: 82.5%;
+  max-height: 82.5%;
 }
 
 .textmore {
   position: relative;
-  left: 7px;
   font-size: 10px;
 }
 
