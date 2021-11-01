@@ -278,6 +278,7 @@ const VersatilePost = observer(() => {
         <SMTDropdown
           placeholder={isNewPost ? 'กรุณาเลือกวิชา' : topicSelected}
           // value={topicSelected}
+          id="home-search-block2"
           fluid
           search
           selection
