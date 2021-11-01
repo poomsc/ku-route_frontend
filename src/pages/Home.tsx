@@ -26,6 +26,26 @@ import { DocumentData } from '@firebase/firestore'
 import { get4File, get_info } from 'service/system'
 import '../allPost.css'
 import { getDownloadURL } from '@firebase/storage'
+import pdf from '../assets/icons/PDF.png'
+import other from './../assets/icons/others.png'
+
+function renderIconFile(extFile: string, linkfile: string) {
+  if (extFile == 'pdf') return pdf
+  else if (
+    extFile == 'jpg' ||
+    extFile == 'jpeg' ||
+    extFile == 'jpe' ||
+    extFile == 'jif' ||
+    extFile == 'jfif' ||
+    extFile == 'png' ||
+    extFile == 'apng' ||
+    extFile == 'avif' ||
+    extFile == 'sgv' ||
+    extFile == 'webp'
+  )
+    return linkfile
+  else return other
+}
 
 function convertTStoDate(timestamp) {
   if (!timestamp) return
@@ -201,9 +221,9 @@ const HomePage = () => {
                 <div className="title text-truncate mx-3 px-2 mt-1 my-2">
                   {menu[1].Title}
                 </div>
-                <div className="row ml-2">
-                  <div className="texttitle col-8 ">{menu[1].SubjectENG}</div>
-                  <div className="texttitle col-4 ">{menu[1].SubjectID}</div>
+                <div className="row mx-3 px-2 d-flex justify-content-between">
+                  <div className="texttitle">{menu[1].SubjectENG}</div>
+                  <div className="texttitle">{menu[1].SubjectID}</div>
                 </div>
                 <div className="mx-3 px-2 mb-2">
                   <img className="line-black w-100" src={lineblack} />
@@ -227,8 +247,7 @@ const HomePage = () => {
                       file.map((file, index) => {
                         if (index == 3) return
                         const fileSP = file[1].name.split('.')
-                        const extFile =
-                          fileSP[fileSP.length - 1] == 'pdf' ? PDF : JPG
+                        const extFile = fileSP[fileSP.length - 1]
                         return (
                           <a
                             className=""
@@ -238,7 +257,10 @@ const HomePage = () => {
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
                           >
-                            <img className="pdf d-inline-block" src={extFile} />
+                            <img
+                              className="pdf d-inline-block"
+                              src={renderIconFile(extFile, file[0])}
+                            />
                             <div
                               className="text-center text-truncate mr-1 textmore"
                               style={{ maxWidth: '55px' }}
@@ -372,7 +394,7 @@ const HomePage = () => {
           ค้นหาชื่อวิชา / รหัสวิชาที่อยากรู้
         </p>
         <div className="d-flex justify-content-center">
-          <Form className="w-75">
+          <Form className="w-75 ">
             <div className="form-group shadow d-flex w-100 rounded-lg">
               <SMTDropdown
                 id="home-search-block"

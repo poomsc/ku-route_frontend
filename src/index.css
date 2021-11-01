@@ -15,9 +15,15 @@ a {
 }
 
 .search {
-  color: white;
+  background-color: black;
 }
 
 #home-search-block .search {
   color: black !important;
+}
+
+.divider {
+  margin-right: 15px;
+  overflow: clip;
+  white-space: nowrap;
 }

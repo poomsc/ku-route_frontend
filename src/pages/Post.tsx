@@ -37,7 +37,6 @@ import { create_comment, like, disable, edit, report } from 'service/user'
 import { getDocLike, getLikeOfPost } from 'service/system'
 import { awaitExpression } from '@babel/types'
 import { getDownloadURL, StorageReference } from '@firebase/storage'
-import { Document, Page } from '@react-pdf/renderer'
 import {
   Button,
   Popover,
@@ -779,17 +778,26 @@ const PostPage = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <div className="style14 d-flex flex-column pb-3">
-                      <div className="d-block mx-auto">
-                        <img
-                          src={renderIconFile(extFile, linkFiles[index])}
-                          style={{ width: '125px', height: '125px' }}
-                        />
+                    <div
+                      className="style14 d-flex flex-column pb-3"
+                      style={{ maxWidth: '125px', height: '185px' }}
+                    >
+                      <div className="d-block m-2">
+                        <div style={{ width: '111px', height: '111px' }}>
+                          <img
+                            className=" rounded-lg"
+                            src={renderIconFile(extFile, linkFiles[index])}
+                            style={{
+                              maxWidth: '100%',
+                              maxHeight: '100%',
+                            }}
+                          />
+                        </div>
                       </div>
                       <div className="style15 d-block mx-auto mb-0">
                         <div
                           className="text-truncate mb-3 px-3"
-                          style={{ maxWidth: '130px' }}
+                          style={{ maxWidth: '120px' }}
                         >
                           {fileSP[0]}
                         </div>
@@ -916,35 +924,33 @@ const PostPage = () => {
                         {/* {commentData[index][1]?.DateCreate !=
                           commentData[index][1]?.DateEdited && (
                           <div className="style24 d-block text-truncate">
-                            Edited
-                          </div>
-                        )} */}
+                            {/* Edited */}
                       </div>
                     </div>
+                  </div>
 
-                    <div
-                      className="p-0 m-0 max-w-content"
-                      style={{ width: '5%' }}
+                  <div
+                    className="p-0 m-0 max-w-content"
+                    style={{ width: '5%' }}
+                  >
+                    <Button
+                      className="rounded-circle m-0 p-2 hover-darken"
+                      style={{ width: '40px', height: '40px' }}
+                      id={'Popover-' + labelCount}
                     >
-                      <Button
-                        className="rounded-circle m-0 p-2 hover-darken"
-                        style={{ width: '40px', height: '40px' }}
-                        id={'Popover-' + labelCount}
-                      >
-                        <MoreLabel />
-                      </Button>
-                      <MoreItem
-                        key={labelCount}
-                        item={{
-                          placement: 'top',
-                          user: infoComment,
-                          data: commentData[index],
-                          className:
-                            'style25 d-inline-flex text-truncate font-weight-bold my-0 cursor-pointer p-0',
-                        }}
-                        id={genLoadLabel()}
-                      />
-                    </div>
+                      <MoreLabel />
+                    </Button>
+                    <MoreItem
+                      key={labelCount}
+                      item={{
+                        placement: 'top',
+                        user: infoComment,
+                        data: commentData[index],
+                        className:
+                          'style25 d-inline-flex text-truncate font-weight-bold my-0 cursor-pointer p-0',
+                      }}
+                      id={genLoadLabel()}
+                    />
                   </div>
                 </div>
               ))

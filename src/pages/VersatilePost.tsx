@@ -404,17 +404,26 @@ const VersatilePost = observer(() => {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <div className="style14 d-flex flex-column pb-3">
-                      <div className="d-block mx-auto">
-                        <img
-                          src={renderIconFile(extFile, linkFiles[index])}
-                          style={{ width: '125px', height: '125px' }}
-                        />
+                    <div
+                      className="style14 d-flex flex-column pb-3"
+                      style={{ maxWidth: '125px', height: '185px' }}
+                    >
+                      <div className="d-block m-2">
+                        <div style={{ width: '111px', height: '111px' }}>
+                          <img
+                            className=" rounded-lg"
+                            src={renderIconFile(extFile, linkFiles[index])}
+                            style={{
+                              maxWidth: '100%',
+                              maxHeight: '100%',
+                            }}
+                          />
+                        </div>
                       </div>
                       <div className="style15 d-block mx-auto mb-0">
                         <div
                           className="text-truncate mb-3 px-3"
-                          style={{ maxWidth: '130px' }}
+                          style={{ maxWidth: '120px' }}
                         >
                           {fileSP[0]}
                         </div>

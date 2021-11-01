@@ -171,9 +171,9 @@ const AllPostPage = () => {
                 <div className="title text-truncate mx-3 px-2 mt-1 my-2">
                   {menu[1].Title}
                 </div>
-                <div className="row ml-2">
-                  <div className="texttitle col-8 ">{SubjectENG}</div>
-                  <div className="texttitle col-4 ">{SubjectID}</div>
+                <div className="row mx-3 px-2 d-flex justify-content-between">
+                  <div className="texttitle">{SubjectENG}</div>
+                  <div className="texttitle">{SubjectID}</div>
                 </div>
                 <div className="mx-3 px-2 mb-2">
                   <img className="line-black w-100" src={lineblack} />
