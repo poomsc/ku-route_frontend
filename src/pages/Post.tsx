@@ -927,30 +927,29 @@ const PostPage = () => {
                             {/* Edited */}
                       </div>
                     </div>
-                  </div>
-
-                  <div
-                    className="p-0 m-0 max-w-content"
-                    style={{ width: '5%' }}
-                  >
-                    <Button
-                      className="rounded-circle m-0 p-2 hover-darken"
-                      style={{ width: '40px', height: '40px' }}
-                      id={'Popover-' + labelCount}
+                    <div
+                      className="p-0 m-0 max-w-content"
+                      style={{ width: '5%' }}
                     >
-                      <MoreLabel />
-                    </Button>
-                    <MoreItem
-                      key={labelCount}
-                      item={{
-                        placement: 'top',
-                        user: infoComment,
-                        data: commentData[index],
-                        className:
-                          'style25 d-inline-flex text-truncate font-weight-bold my-0 cursor-pointer p-0',
-                      }}
-                      id={genLoadLabel()}
-                    />
+                      <Button
+                        className="rounded-circle m-0 p-2 hover-darken"
+                        style={{ width: '40px', height: '40px' }}
+                        id={'Popover-' + labelCount}
+                      >
+                        <MoreLabel />
+                      </Button>
+                      <MoreItem
+                        key={labelCount}
+                        item={{
+                          placement: 'top',
+                          user: infoComment,
+                          data: commentData[index],
+                          className:
+                            'style25 d-inline-flex text-truncate font-weight-bold my-0 cursor-pointer p-0',
+                        }}
+                        id={genLoadLabel()}
+                      />
+                    </div>
                   </div>
                 </div>
               ))

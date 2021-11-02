@@ -8,6 +8,7 @@ import DropFileZone, {
   getCurrentFileSuccess,
   getInQueue,
   isDropZoneReady,
+  setDefaultTrackerValue,
 } from 'components/DropFileZone'
 import applicationStore from 'stores/applicationStore'
 import { observer } from 'mobx-react-lite'
@@ -79,7 +80,7 @@ const VersatilePost = observer(() => {
     allFiles: IFileWithMeta[]
   }>({ status: 'started', allFiles: [] })
 
-  const [dropZoneComplete, setDropZoneComplete] = useState(false)
+  const [dropZoneComplete, setDropZoneComplete] = useState(true)
   const [dropZoneQueue, setDropZoneQueue] = useState(0)
   const [dropZoneCurrentComplete, setDropZoneCurrentComplete] = useState(0)
 
@@ -99,6 +100,8 @@ const VersatilePost = observer(() => {
     setTitle('')
     setDescription('')
     setTagSelected([])
+    setUnselectedTagCount(0)
+    setFilesUpload({ status: 'started', allFiles: [] })
   }, [PostID])
 
   useEffect(() => {
@@ -220,6 +223,7 @@ const VersatilePost = observer(() => {
       goToMyPost
     )
     setPosting(false)
+    setDefaultTrackerValue()
   }
 
   const handleOnDeletePost = () => {
@@ -255,6 +259,7 @@ const VersatilePost = observer(() => {
     deletedFile?.map((file) => {
       delete_file(file)
     })
+    setDefaultTrackerValue()
   }
 
   const handelOnDeletedFile = async (filepath: any) => {

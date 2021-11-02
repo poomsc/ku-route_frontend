@@ -10,7 +10,7 @@ interface Props {
 
 let currentFileSuccessCount = 0
 let inQueue = 0
-let bool = false
+let bool = true
 
 function getCurrentFileSuccess() {
   return currentFileSuccessCount
@@ -18,6 +18,12 @@ function getCurrentFileSuccess() {
 
 function getInQueue() {
   return inQueue
+}
+
+function setDefaultTrackerValue() {
+  currentFileSuccessCount = 0
+  inQueue = 0
+  bool = true
 }
 
 function isDropZoneReady() {
@@ -67,10 +73,6 @@ const DropFileZone = ({ onChange }: Props) => {
     }, 10)
   }
 
-  // useEffect(() => {
-
-  // }, [han])
-
   const getUploadParams = ({ meta }) => {
     return { url: 'https://httpbin.org/post' }
   }
@@ -94,4 +96,9 @@ const DropFileZone = ({ onChange }: Props) => {
 }
 
 export default DropFileZone
-export { getCurrentFileSuccess, getInQueue, isDropZoneReady }
+export {
+  getCurrentFileSuccess,
+  getInQueue,
+  isDropZoneReady,
+  setDefaultTrackerValue,
+}
