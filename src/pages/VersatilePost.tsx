@@ -62,10 +62,44 @@ const VersatilePost = observer(() => {
   const [deletedFile, setDeletedFile] = useState<string[]>([])
   const [Posting, setPosting] = useState(false)
 
+  const preprocessTags = generateRandomColor(
+    constTags.map((text) => {
+      return { text }
+    })
+  )
+
+  const [topicSelected, setTopicSelected] = useState<string>()
+  const [unselectedTagCount, setUnselectedTagCount] = useState(0)
+  const [title, setTitle] = useState<string>('')
+  const [description, setDescription] = useState<string>('')
+  const [tags, setTags] = useState<{ [name: string]: string }[]>(preprocessTags)
+  const [tagsSelected, setTagSelected] = useState<string[]>([])
+  const [filesUpload, setFilesUpload] = useState<{
+    status: StatusValue
+    allFiles: IFileWithMeta[]
+  }>({ status: 'started', allFiles: [] })
+
+  const [dropZoneComplete, setDropZoneComplete] = useState(false)
+  const [dropZoneQueue, setDropZoneQueue] = useState(0)
+  const [dropZoneCurrentComplete, setDropZoneCurrentComplete] = useState(0)
+
   const { pathname } = useLocation()
   const isNewPost = pathType[pathname]
   const PostID = pathname.split('/')[2]
   const finishFileTracking = 0
+
+  useEffect(() => {
+    if (PostID) return
+    setAllFiles([])
+    setLinkFiles([])
+    setPostInfo([])
+    setPosting(false)
+    setDeletedFile([])
+    setTopicSelected(undefined)
+    setTitle('')
+    setDescription('')
+    setTagSelected([])
+  }, [PostID])
 
   useEffect(() => {
     async function fetch() {
@@ -96,29 +130,10 @@ const VersatilePost = observer(() => {
       key: i,
     }
   })
-  const preprocessTags = generateRandomColor(
-    constTags.map((text) => {
-      return { text }
-    })
-  )
 
   const [subjects, setSubjects] = useState<dropdownType[]>(
     _subjects.slice(0, 10)
   )
-
-  const [topicSelected, setTopicSelected] = useState<string>()
-  const [unselectedTagCount, setUnselectedTagCount] = useState(0)
-  const [title, setTitle] = useState<string>('')
-  const [description, setDescription] = useState<string>('')
-  const [tags, setTags] = useState<{ [name: string]: string }[]>(preprocessTags)
-  const [tagsSelected, setTagSelected] = useState<string[]>([])
-  const [filesUpload, setFilesUpload] = useState<{
-    status: StatusValue
-    allFiles: IFileWithMeta[]
-  }>({ status: 'started', allFiles: [] })
-  const [dropZoneComplete, setDropZoneComplete] = useState(false)
-  const [dropZoneQueue, setDropZoneQueue] = useState(0)
-  const [dropZoneCurrentComplete, setDropZoneCurrentComplete] = useState(0)
 
   useEffect(() => {
     if (isNewPost || !postInfo[1]) return
