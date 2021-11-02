@@ -4,10 +4,14 @@ import { useHistory, useLocation } from 'react-router'
 import { generateRandomColor, removeElementFromArray } from 'utils'
 import { BsFillCaretDownFill } from 'react-icons/bs'
 import { Dropdown as SMTDropdown } from 'semantic-ui-react'
-import DropFileZone from 'components/DropFileZone'
+import DropFileZone, {
+  getCurrentFileSuccess,
+  getInQueue,
+  isDropZoneReady,
+} from 'components/DropFileZone'
 import applicationStore from 'stores/applicationStore'
 import { observer } from 'mobx-react-lite'
-import { IFileWithMeta, StatusValue } from 'react-dropzone-uploader'
+import Dropzone, { IFileWithMeta, StatusValue } from 'react-dropzone-uploader'
 import { create_post } from 'service/user'
 import { delete_post } from 'service/system'
 import FileUploadIcon from '@mui/icons-material/FileUpload'
@@ -61,6 +65,8 @@ const VersatilePost = observer(() => {
   const { pathname } = useLocation()
   const isNewPost = pathType[pathname]
   const PostID = pathname.split('/')[2]
+  const finishFileTracking = 0
+
   useEffect(() => {
     async function fetch() {
       if (!PostID) return
@@ -110,6 +116,9 @@ const VersatilePost = observer(() => {
     status: StatusValue
     allFiles: IFileWithMeta[]
   }>({ status: 'started', allFiles: [] })
+  const [dropZoneComplete, setDropZoneComplete] = useState(false)
+  const [dropZoneQueue, setDropZoneQueue] = useState(0)
+  const [dropZoneCurrentComplete, setDropZoneCurrentComplete] = useState(0)
 
   useEffect(() => {
     if (isNewPost || !postInfo[1]) return
@@ -152,9 +161,17 @@ const VersatilePost = observer(() => {
   }
 
   const onFileChange = (status: StatusValue, allFiles: IFileWithMeta[]) => {
-    console.log(filesUpload.status)
+    // console.log(filesUpload.status)
     setFilesUpload({ status, allFiles })
   }
+
+  useEffect(() => {
+    setTimeout(() => {
+      setDropZoneComplete(isDropZoneReady())
+      setDropZoneCurrentComplete(getCurrentFileSuccess())
+      setDropZoneQueue(getInQueue())
+    }, 10)
+  }, [onFileChange])
 
   const onSearchChange = (event: any) => {
     setSubjects(
@@ -226,13 +243,13 @@ const VersatilePost = observer(() => {
   }
 
   const handelOnDeletedFile = async (filepath: any) => {
-    console.log('path: ' + filepath)
+    // console.log('path: ' + filepath)
     if (!deletedFile.includes(filepath)) {
       setDeletedFile([...deletedFile, filepath])
     } else {
       setDeletedFile(deletedFile.filter((item) => item !== filepath))
     }
-    console.log(deletedFile)
+    // console.log(deletedFile)
   }
 
   const fileStatus = () => {
@@ -241,12 +258,11 @@ const VersatilePost = observer(() => {
     return (allFiles?.length ? allFiles?.length : 0) -
       deletedFile.length +
       filesUpload.allFiles.length
-      ? filesUpload.status != 'uploading'
-        ? filesUpload.status == 'done' || filesUpload.status == 'removed'
-          ? '#007bff'
-          : '#ffc107'
+      ? dropZoneComplete
+        ? '#007bff'
         : '#ffc107'
-      : '#FF5A5A'
+      : // : '#FF5A5A'
+        '#343A40'
   }
 
   return (
@@ -255,29 +271,39 @@ const VersatilePost = observer(() => {
         {isNewPost ? 'สร้างโพสต์' : 'แก้ไขโพสต์'}
       </h2>
 
-      <div
-        className="rounded-25 shadow mx-auto mb-4"
-        style={{ maxWidth: '70rem' }}
-      >
+      <div className="mx-auto mb-4" style={{ maxWidth: '70rem' }}>
         {/* {console.log(topicSelected === postInfo[1]?.SubjectID)} */}
-        <SMTDropdown
-          placeholder={isNewPost ? 'กรุณาเลือกวิชา' : topicSelected}
-          // value={topicSelected}
-          fluid
-          search
-          selection
-          options={subjects.slice(0, 10)}
-          onChange={handleOnSelectSubject}
-          onSearchChange={onSearchChange}
-          // searchQuery={searchQuery}
-          className="rounded-10 bg-primary-dark text-white font-weight-bold d-flex"
-          icon={
-            <div className="ml-auto">
-              <BsFillCaretDownFill />
-            </div>
-          }
-        />
+        <div className="rounded-25 shadow">
+          <SMTDropdown
+            placeholder={isNewPost ? 'กรุณาเลือกวิชา' : topicSelected}
+            // value={topicSelected}
+            fluid
+            search
+            selection
+            options={subjects.slice(0, 10)}
+            onChange={handleOnSelectSubject}
+            onSearchChange={onSearchChange}
+            // searchQuery={searchQuery}
+            className="rounded-10 bg-primary-dark text-white font-weight-bold d-flex"
+            icon={
+              <div className="ml-auto">
+                <BsFillCaretDownFill />
+              </div>
+            }
+          />
+        </div>
+        {!topicSelected ? (
+          <p
+            className="text-danger font-weight-bold d-block"
+            style={{ marginTop: '10px' }}
+          >
+            * กรุณาเลือกวิชา
+          </p>
+        ) : (
+          <></>
+        )}
       </div>
+
       <div
         className="bg-secondary p-5 rounded-25 shadow mx-auto mb-4"
         style={{ maxWidth: '70rem' }}
@@ -305,6 +331,17 @@ const VersatilePost = observer(() => {
             {title?.length}/50
           </div>
         </InputGroup>
+
+        {title == '' || !title?.replace(/\s/g, '').length ? (
+          <p
+            className="text-danger font-weight-bold d-block"
+            style={{ marginTop: '-5px' }}
+          >
+            * หัวเรื่องไม่สามารถเป็นค่าว่างหรือมีแต่อักขระเว้นว่างได้
+          </p>
+        ) : (
+          <></>
+        )}
 
         <p className="font-weight-bold">ข้อความ</p>
         <InputGroup>
@@ -371,6 +408,16 @@ const VersatilePost = observer(() => {
             </Dropdown.Menu>
           </Dropdown>
         </div>
+        {tags?.length - unselectedTagCount == tags?.length ? (
+          <p
+            className="text-danger font-weight-bold d-block"
+            style={{ marginTop: '10px' }}
+          >
+            * กรุณาใส่ Tag
+          </p>
+        ) : (
+          <></>
+        )}
       </div>
 
       <div
@@ -450,6 +497,17 @@ const VersatilePost = observer(() => {
             })}
         </div>
         <DropFileZone onChange={onFileChange} />
+        {dropZoneQueue ? (
+          <p className="mt-3 h5 text-right" style={{ color: '#2484FF' }}>
+            {'File complete: ' +
+              dropZoneCurrentComplete +
+              ' / ' +
+              dropZoneQueue}
+          </p>
+        ) : (
+          <></>
+        )}
+
         <p
           className={
             'style13 w-100 px-3 py-1 text-center mt-4 rounded-lg shadow-sm text-white'
@@ -460,10 +518,10 @@ const VersatilePost = observer(() => {
             borderColor: fileStatus(),
           }}
         >
-          {fileStatus() != '#FF5A5A'
+          {fileStatus() != '#343A40'
             ? fileStatus() != '#ffc107'
               ? 'File ready !'
-              : 'Waiting...'
+              : 'Processing...'
             : 'Choose file to publish'}
         </p>
       </div>
@@ -488,7 +546,8 @@ const VersatilePost = observer(() => {
               ((filesUpload.allFiles.length > 0 && fileStatus() != '#007bff') ||
               tagsSelected.length == 0 ||
               !topicSelected ||
-              !title
+              !title ||
+              !title.replace(/\s/g, '').length
                 ? ''
                 : ' animation-pulse-button')
             }
@@ -498,7 +557,8 @@ const VersatilePost = observer(() => {
               (filesUpload.allFiles.length > 0 && fileStatus() != '#007bff') ||
               tagsSelected.length == 0 ||
               !topicSelected ||
-              !title
+              !title ||
+              !title.replace(/\s/g, '').length
             }
           >
             <FileUploadIcon className="mr-1 ml-1" />

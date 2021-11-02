@@ -277,7 +277,7 @@ const EditProfilePage = observer(() => {
   const checkChangeData = (attr, value, index: number) => {
     // Check equal of two string
     if (index != 1) {
-      if (index == 0 && value == '') {
+      if (index == 0 && (value == '' || !value.replace(/\s/g, '').length)) {
         sectionChangeStatus[index] = false
       } else if (index == 8) {
         for (let i = 0; i < 6; i++) {
@@ -426,9 +426,9 @@ const EditProfilePage = observer(() => {
         <p
           className="text-danger font-weight-bold"
           style={{ marginTop: '-5px' }}
-          hidden={title !== ''}
+          hidden={title !== '' && !!title?.replace(/\s/g, '').length}
         >
-          * ชื่อเล่นไม่สามารถเป็นค่าว่างได้
+          * ชื่อเล่นไม่สามารถเป็นค่าว่างหรือมีแต่อักขระเว้นว่างได้
         </p>
 
         <p className="font-weight-bold">คณะ</p>
