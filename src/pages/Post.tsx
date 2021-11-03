@@ -83,7 +83,11 @@ const PostPage = () => {
       window.scrollTo(0, 0)
     })
     async function fetch() {
-      const post = (await get_one_post(PostID)) as DocumentData
+      const post = (await get_one_post(PostID)) as DocumentData | null
+      if (!post) {
+        history.push('/not-found')
+        return
+      }
       const info = (await get_info(post[1]?.AccountID)) as DocumentData
       const comment = (await get_comment(PostID)) as DocumentData
       const infoComment = await get_info_comment(comment)
@@ -656,7 +660,8 @@ const PostPage = () => {
       extFile == 'apng' ||
       extFile == 'avif' ||
       extFile == 'sgv' ||
-      extFile == 'webp'
+      extFile == 'webp' ||
+      extFile == 'gif'
     )
       return linkfile
     else return other

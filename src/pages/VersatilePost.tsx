@@ -102,6 +102,7 @@ const VersatilePost = observer(() => {
     setTagSelected([])
     setUnselectedTagCount(0)
     setFilesUpload({ status: 'started', allFiles: [] })
+    setDefaultTrackerValue()
   }, [PostID])
 
   useEffect(() => {
@@ -156,6 +157,7 @@ const VersatilePost = observer(() => {
     setTagSelected(postInfo[1]?.TagID)
     setDescription(postInfo[1]?.Description)
     setUnselectedTagCount(postInfo[1]?.TagID.length)
+    setDefaultTrackerValue()
   }, [isNewPost, postInfo])
 
   const history = useHistory()
@@ -202,8 +204,11 @@ const VersatilePost = observer(() => {
   const handleOnCreatePost = async () => {
     console.log(topicSelected, filesUpload.status, applicationStore.user)
     if (
+      (filesUpload.allFiles.length > 0 && fileStatus() != '#007bff') ||
+      tagsSelected.length == 0 ||
       !topicSelected ||
-      (filesUpload.allFiles.length > 0 && filesUpload.status !== 'done') ||
+      !title ||
+      !title.replace(/\s/g, '').length ||
       !applicationStore.user
     )
       return
