@@ -98,9 +98,9 @@ async function signInWithGoogle() {
     const Name = user.displayName?.split(' ') as Array<string>
     const email = user.email as string
     if (olduser && user.emailVerified) {
-      edit({ DateLastlogin: serverTimestamp() }, user.uid, 'Account')
+      await edit({ DateLastlogin: serverTimestamp() }, user.uid, 'Account')
     } else {
-      register({
+      await register({
         UID: user.uid,
         Name: Name[0],
         Surname: Name[1],

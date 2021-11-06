@@ -233,13 +233,11 @@ const PostPage = () => {
     let changedInfo = {}
     changedInfo['Description'] = text
     changedInfo['DateEdited'] = serverTimestamp()
-    edit(changedInfo, targetUUID, databaseTarget)
+    await edit(changedInfo, targetUUID, databaseTarget)
     const comment = (await get_comment(PostID)) as DocumentData
     const infoComment = await get_info_comment(comment)
-    if (comment?.length && infoComment?.length) {
-      setCommentData(comment)
-      setInfoCommentData(infoComment)
-    }
+    setCommentData(comment)
+    setInfoCommentData(infoComment)
     setSaveCommentEnable(false)
     setEditCommentBlock(-1)
     setNewCommentEdited('')
@@ -662,8 +660,8 @@ const PostPage = () => {
   }
 
   return (
-    <div className="white-bg pt-5">
-      <Container className="style1 box-shadow bg-secondary mx-auto my-5 px-5 p-5">
+    <div className="white-bg pt-5 pb-5">
+      <Container className="style1 box-shadow bg-secondary mx-auto my-3 px-5 p-5">
         <div className="">
           <div className="w-content d-flex justify-content-between">
             <div className="max-w-content d-inline-block">
