@@ -20,8 +20,14 @@ const NavBar = observer(() => {
       if (!applicationStore.user) return
       const info = (await get_info(applicationStore.user.uid)) as DocumentData
       // setInfoData(info)
-      applicationStore.setUserDisplayName(info?.DisplayName)
-      setphotoURL(info?.PhotoURL)
+      applicationStore.setUserDisplayName(
+        info?.DisplayName
+          ? info?.DisplayName
+          : applicationStore.user.displayName
+      )
+      setphotoURL(
+        info?.PhotoURL ? info?.PhotoURL : applicationStore.user.photoURL
+      )
     }
     fetch()
   }, [applicationStore.user?.uid, applicationStore.userDisplayName])
