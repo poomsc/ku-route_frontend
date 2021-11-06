@@ -169,17 +169,6 @@ const PostPage = () => {
     setEditCommentBlock(index)
   }
 
-  const handleOnDeleteComment = async (CommentID: string) => {
-    if (!applicationStore.user) return
-    await disable({}, CommentID, 'Comment')
-    const comment = (await get_comment(PostID)) as DocumentData
-    const infoComment = await get_info_comment(comment)
-    if (comment?.length && infoComment?.length) {
-      setCommentData(comment)
-      setInfoCommentData(infoComment)
-    }
-  }
-
   const handleOnReport = async (statusFilter, CommentID: string) => {
     if (!applicationStore.user) return
     const statusResult = [] as Array<string>
@@ -416,7 +405,12 @@ const PostPage = () => {
     }
 
     const handleOnDelete = async () => {
-      await handleOnDeleteComment(item.data[0])
+      if (!applicationStore.user) return
+      await disable({}, item.data[0], 'Comment')
+      const comment = (await get_comment(item.data[0])) as DocumentData
+      const infoComment = (await get_info_comment(comment)) as DocumentData
+      setCommentData(comment)
+      setInfoCommentData(infoComment)
       setOpenDisablComment(false)
     }
 
