@@ -35,7 +35,7 @@ const NavBar = observer(() => {
   let isLoggedin = !!applicationStore.user
   let userName = applicationStore.userDisplayName
     ? applicationStore.userDisplayName
-    : 'userName'
+    : ''
   const { pathname } = useLocation()
   const currentPage = pathname
   const navDropdownTitle = (

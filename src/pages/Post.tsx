@@ -405,7 +405,7 @@ const PostPage = () => {
     const handleOnDelete = async () => {
       if (!applicationStore.user) return
       await disable({}, item.data[0], 'Comment')
-      const comment = (await get_comment(item.data[0])) as DocumentData
+      const comment = (await get_comment(item.data[1].PostID)) as DocumentData
       const infoComment = (await get_info_comment(comment)) as DocumentData
       setCommentData(comment)
       setInfoCommentData(infoComment)
